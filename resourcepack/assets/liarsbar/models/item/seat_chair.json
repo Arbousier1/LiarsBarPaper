@@ -1,5 +1,5 @@
 {
-  "credit": "LiarsBarPaper refined stool model",
+  "credit": "LiarsBarPaper Liar's Bar inspired tavern chair",
   "textures": {
     "navy": "minecraft:block/blue_concrete",
     "red": "minecraft:block/red_concrete",
@@ -7,155 +7,457 @@
     "gold": "minecraft:block/gold_block",
     "wood": "minecraft:block/dark_oak_planks",
     "dark": "minecraft:block/polished_blackstone",
-    "particle": "minecraft:block/gold_block"
+    "particle": "minecraft:block/dark_oak_planks"
   },
   "elements": [
     {
-      "name": "wood seat base",
-      "from": [2, 6, 2],
-      "to": [14, 7.8, 14],
+      "name": "front left leg",
+      "from": [
+        2.5,
+        0,
+        2.5
+      ],
+      "to": [
+        4.4,
+        6,
+        4.4
+      ],
       "faces": {
-        "north": {"texture": "#wood"},
-        "east": {"texture": "#wood"},
-        "south": {"texture": "#wood"},
-        "west": {"texture": "#wood"},
-        "up": {"texture": "#wood"},
-        "down": {"texture": "#wood"}
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "front right leg",
+      "from": [
+        11.6,
+        0,
+        2.5
+      ],
+      "to": [
+        13.5,
+        6,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "back left leg",
+      "from": [
+        2.5,
+        0,
+        11.8
+      ],
+      "to": [
+        4.4,
+        16.5,
+        13.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "back right leg",
+      "from": [
+        11.6,
+        0,
+        11.8
+      ],
+      "to": [
+        13.5,
+        16.5,
+        13.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "seat base",
+      "from": [
+        2,
+        6.2,
+        2
+      ],
+      "to": [
+        14,
+        7.8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
       }
     },
     {
       "name": "red cushion",
-      "from": [3, 8.05, 3],
-      "to": [13, 9.15, 13],
+      "from": [
+        3,
+        8.05,
+        3
+      ],
+      "to": [
+        13,
+        8.95,
+        13
+      ],
       "faces": {
-        "north": {"texture": "#red"},
-        "east": {"texture": "#red"},
-        "south": {"texture": "#red"},
-        "west": {"texture": "#red"},
-        "up": {"texture": "#red"},
-        "down": {"texture": "#red"}
+        "north": {
+          "texture": "#red"
+        },
+        "east": {
+          "texture": "#red"
+        },
+        "south": {
+          "texture": "#red"
+        },
+        "west": {
+          "texture": "#red"
+        },
+        "up": {
+          "texture": "#red"
+        },
+        "down": {
+          "texture": "#red"
+        }
       }
     },
     {
-      "name": "gold north cushion trim",
-      "from": [3, 9.35, 2],
-      "to": [13, 10, 3],
+      "name": "front brass seat trim",
+      "from": [
+        3,
+        9.15,
+        2
+      ],
+      "to": [
+        13,
+        9.8,
+        3
+      ],
       "faces": {
-        "north": {"texture": "#gold"},
-        "east": {"texture": "#gold"},
-        "south": {"texture": "#gold"},
-        "west": {"texture": "#gold"},
-        "up": {"texture": "#gold"},
-        "down": {"texture": "#gold"}
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
       }
     },
     {
-      "name": "gold south cushion trim",
-      "from": [3, 9.35, 13],
-      "to": [13, 10, 14],
+      "name": "back brass seat trim",
+      "from": [
+        3,
+        9.15,
+        13
+      ],
+      "to": [
+        13,
+        9.8,
+        14
+      ],
       "faces": {
-        "north": {"texture": "#gold"},
-        "east": {"texture": "#gold"},
-        "south": {"texture": "#gold"},
-        "west": {"texture": "#gold"},
-        "up": {"texture": "#gold"},
-        "down": {"texture": "#gold"}
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
       }
     },
     {
-      "name": "gold west cushion trim",
-      "from": [2, 9.35, 3],
-      "to": [3, 10, 13],
+      "name": "left brass seat trim",
+      "from": [
+        2,
+        9.15,
+        3
+      ],
+      "to": [
+        3,
+        9.8,
+        13
+      ],
       "faces": {
-        "north": {"texture": "#gold"},
-        "east": {"texture": "#gold"},
-        "south": {"texture": "#gold"},
-        "west": {"texture": "#gold"},
-        "up": {"texture": "#gold"},
-        "down": {"texture": "#gold"}
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
       }
     },
     {
-      "name": "gold east cushion trim",
-      "from": [13, 9.35, 3],
-      "to": [14, 10, 13],
+      "name": "right brass seat trim",
+      "from": [
+        13,
+        9.15,
+        3
+      ],
+      "to": [
+        14,
+        9.8,
+        13
+      ],
       "faces": {
-        "north": {"texture": "#gold"},
-        "east": {"texture": "#gold"},
-        "south": {"texture": "#gold"},
-        "west": {"texture": "#gold"},
-        "up": {"texture": "#gold"},
-        "down": {"texture": "#gold"}
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
       }
     },
     {
-      "name": "north west leg",
-      "from": [2.5, 0, 2.5],
-      "to": [4.5, 5.8, 4.5],
+      "name": "open back lower rail",
+      "from": [
+        4.6,
+        11,
+        12.3
+      ],
+      "to": [
+        11.4,
+        12.2,
+        14.1
+      ],
       "faces": {
-        "north": {"texture": "#navy"},
-        "east": {"texture": "#navy"},
-        "south": {"texture": "#navy"},
-        "west": {"texture": "#navy"},
-        "up": {"texture": "#navy"},
-        "down": {"texture": "#navy"}
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
       }
     },
     {
-      "name": "north east leg",
-      "from": [11.5, 0, 2.5],
-      "to": [13.5, 5.8, 4.5],
+      "name": "open back top rail",
+      "from": [
+        4.6,
+        15.2,
+        12.3
+      ],
+      "to": [
+        11.4,
+        16.7,
+        14.1
+      ],
       "faces": {
-        "north": {"texture": "#navy"},
-        "east": {"texture": "#navy"},
-        "south": {"texture": "#navy"},
-        "west": {"texture": "#navy"},
-        "up": {"texture": "#navy"},
-        "down": {"texture": "#navy"}
-      }
-    },
-    {
-      "name": "south west leg",
-      "from": [2.5, 0, 11.5],
-      "to": [4.5, 5.8, 13.5],
-      "faces": {
-        "north": {"texture": "#navy"},
-        "east": {"texture": "#navy"},
-        "south": {"texture": "#navy"},
-        "west": {"texture": "#navy"},
-        "up": {"texture": "#navy"},
-        "down": {"texture": "#navy"}
-      }
-    },
-    {
-      "name": "south east leg",
-      "from": [11.5, 0, 11.5],
-      "to": [13.5, 5.8, 13.5],
-      "faces": {
-        "north": {"texture": "#navy"},
-        "east": {"texture": "#navy"},
-        "south": {"texture": "#navy"},
-        "west": {"texture": "#navy"},
-        "up": {"texture": "#navy"},
-        "down": {"texture": "#navy"}
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
       }
     }
   ],
   "display": {
     "gui": {
-      "rotation": [30, 225, 0],
-      "translation": [0, 0, 0],
-      "scale": [0.65, 0.65, 0.65]
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.62,
+        0.62,
+        0.62
+      ]
     },
     "fixed": {
-      "rotation": [0, 0, 0],
-      "translation": [0, 0, 0],
-      "scale": [1, 1, 1]
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
     },
     "head": {
-      "rotation": [0, 0, 0],
-      "translation": [0, 0, 0],
-      "scale": [1, 1, 1]
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
     }
   }
 }
