@@ -15,6 +15,18 @@
         "custom_model_data": 9999456
       },
       "model": "liarsbar:item/gun/jijifujiji_liar_bar_gun"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999460
+      },
+      "model": "liarsbar:item/table_visual"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999461
+      },
+      "model": "liarsbar:item/seat_chair"
     }
   ]
 }

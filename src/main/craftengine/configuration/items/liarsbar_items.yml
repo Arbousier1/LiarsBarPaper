@@ -79,6 +79,26 @@ items:
       custom-model-data: 9999456
       item_name: "<!i><red>Liar's Bar Gun</red>"
 
+  liarsbar:table_visual:
+    material: carrot_on_a_stick
+    item_model: liarsbar:table_visual
+    model:
+      type: minecraft:model
+      path: liarsbar:item/table_visual
+    data:
+      custom-model-data: 9999460
+      item_name: "<!i><gold>Liar's Bar Table</gold>"
+
+  liarsbar:seat_chair:
+    material: carrot_on_a_stick
+    item_model: liarsbar:seat_chair
+    model:
+      type: minecraft:model
+      path: liarsbar:item/seat_chair
+    data:
+      custom-model-data: 9999461
+      item_name: "<!i><gold>Liar's Bar Chair</gold>"
+
   liarsbar:fantuan:
     material: paper
     item_model: liarsbar:fantuan

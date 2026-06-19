@@ -16,6 +16,20 @@
           "type": "minecraft:model",
           "model": "liarsbar:item/gun/jijifujiji_liar_bar_gun"
         }
+      },
+      {
+        "threshold": 9999460,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/table_visual"
+        }
+      },
+      {
+        "threshold": 9999461,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/seat_chair"
+        }
       }
     ]
   }
