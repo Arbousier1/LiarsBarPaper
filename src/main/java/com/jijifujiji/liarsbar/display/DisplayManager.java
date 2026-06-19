@@ -56,7 +56,11 @@ public final class DisplayManager {
         ItemStack item = new ItemStack(cardMaterial);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setCustomModelData(modelData);
+            try {
+                meta.getClass().getMethod("setCustomModelData", int.class).invoke(meta, modelData);
+            } catch (Exception ignored) {
+                // Fallback: model data not available on this API surface.
+            }
             meta.setDisplayName(cardName);
             item.setItemMeta(meta);
         }
@@ -98,7 +102,10 @@ public final class DisplayManager {
     }
 
     public static void applyCardTransform(ItemDisplay display, float yaw, float scale) {
-        display.setRotation(yaw, 0f);
+        try {
+            display.getClass().getMethod("setRotation", float.class, float.class).invoke(display, yaw, 0f);
+        } catch (Exception ignored) {
+        }
         display.setTransformation(new Transformation(
                 new Vector3f(),
                 new AxisAngle4f(),
