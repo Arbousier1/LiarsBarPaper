@@ -7,11 +7,11 @@ description: MC 版骗子酒馆 Paper 插件
 commands:
   liarbar:
     description: 骗子酒馆主命令
-    usage: /liarbar <create|delete|join|leave|start|stop|mode|select|play|challenge|info|help>
+    usage: /liarbar <set|build|create|delete|gambling|join|leave|start|stop|mode|select|play|challenge|info|help>
     aliases: [lb]
 permissions:
   liarsbar.admin:
-    description: 管理员权限（创建/删除桌子）
+    description: 管理员权限（创建/删除桌子、设置坐标、开关赌博）
     default: op
   liarsbar.player:
     description: 玩家权限（加入/离开游戏）

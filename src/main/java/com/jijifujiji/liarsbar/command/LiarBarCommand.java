@@ -33,12 +33,15 @@ public class LiarBarCommand implements CommandExecutor {
         String sub = args[0].toLowerCase();
         switch (sub) {
             case "create" -> handleCreate(player, args);
+            case "set" -> handleSet(player, args);
+            case "build" -> handleBuild(player, args);
             case "delete" -> handleDelete(player, args);
             case "join" -> handleJoin(player, args);
             case "leave" -> handleLeave(player);
             case "start" -> handleStart(player, args);
             case "stop" -> handleStop(player, args);
             case "mode" -> handleMode(player, args);
+            case "gambling" -> handleGambling(player, args);
             case "select" -> handleSelect(player, args);
             case "play" -> handlePlay(player, args);
             case "challenge" -> handleChallenge(player, args);
@@ -58,14 +61,57 @@ public class LiarBarCommand implements CommandExecutor {
             player.sendMessage(ChatColor.RED + "用法：/liarbar create <桌子ID>");
             return;
         }
-        String id = args[1];
+        String id = args[1].toLowerCase();
         Location loc = player.getLocation();
         Table table = plugin.getTableManager().createTable(id, loc);
         if (table == null) {
             player.sendMessage(ChatColor.RED + "桌子 " + id + " 已存在。");
             return;
         }
+        plugin.getConfigManager().setTableLocation(id, loc);
         player.sendMessage(ChatColor.GREEN + "成功创建桌子 " + ChatColor.GOLD + id);
+    }
+
+    private void handleSet(Player player, String[] args) {
+        if (!player.hasPermission("liarsbar.admin")) {
+            player.sendMessage(ChatColor.RED + "你没有权限设置桌子坐标。");
+            return;
+        }
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.RED + "用法：/liarbar set <桌子ID>");
+            return;
+        }
+        String id = args[1].toLowerCase();
+        Location loc = player.getLocation();
+        plugin.getConfigManager().setTableLocation(id, loc);
+        Table table = plugin.getTableManager().createTable(id, loc);
+        if (table != null) {
+            table.setLocation(loc);
+        }
+        player.sendMessage(ChatColor.GREEN + "已将 " + ChatColor.GOLD + id.toUpperCase() + ChatColor.GREEN + " 桌中心设为当前位置并保存到 config.yml");
+    }
+
+    private void handleBuild(Player player, String[] args) {
+        if (!player.hasPermission("liarsbar.admin")) {
+            player.sendMessage(ChatColor.RED + "你没有权限生成椅子。");
+            return;
+        }
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.RED + "用法：/liarbar build <桌子ID>");
+            return;
+        }
+        Table table = plugin.getTableManager().getTable(args[1]);
+        if (table == null) {
+            player.sendMessage(ChatColor.RED + "桌子不存在，请先用 /liarbar set 设置坐标。");
+            return;
+        }
+        if (table.getLocation() == null) {
+            player.sendMessage(ChatColor.RED + "该桌子没有设置坐标。");
+            return;
+        }
+        plugin.getChairManager().removeChairs(table);
+        plugin.getChairManager().spawnChairs(table);
+        player.sendMessage(ChatColor.GREEN + "已为 " + ChatColor.GOLD + table.getId().toUpperCase() + ChatColor.GREEN + " 桌生成 4 个座位。");
     }
 
     private void handleDelete(Player player, String[] args) {
@@ -144,6 +190,24 @@ public class LiarBarCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GREEN + "已将桌子模式设为：" + ChatColor.GOLD + mode.getDisplay());
     }
 
+    private void handleGambling(Player player, String[] args) {
+        if (!player.hasPermission("liarsbar.admin")) {
+            player.sendMessage(ChatColor.RED + "你没有权限设置赌博模式。");
+            return;
+        }
+        if (args.length < 2) {
+            boolean enabled = plugin.getConfigManager().isGamblingEnabled();
+            player.sendMessage(ChatColor.YELLOW + "当前赌博模式：" + (enabled ? ChatColor.GREEN + "开启" : ChatColor.RED + "关闭"));
+            return;
+        }
+        boolean enable = switch (args[1].toLowerCase()) {
+            case "on", "true", "1", "开" -> true;
+            default -> false;
+        };
+        plugin.getConfigManager().setGamblingEnabled(enable);
+        player.sendMessage(ChatColor.GREEN + "赌博模式已" + (enable ? ChatColor.GOLD + "开启" : ChatColor.RED + "关闭"));
+    }
+
     private void handleSelect(Player player, String[] args) {
         Table table = getTargetTable(player, args, 2);
         if (table == null) return;
@@ -199,13 +263,19 @@ public class LiarBarCommand implements CommandExecutor {
 
     private void sendHelp(Player player) {
         player.sendMessage(ChatColor.GOLD + "===== 骗子酒馆 Paper 插件 =====");
-        player.sendMessage(ChatColor.YELLOW + "/liarbar create <ID>" + ChatColor.WHITE + " 创建桌子");
-        player.sendMessage(ChatColor.YELLOW + "/liarbar delete <ID>" + ChatColor.WHITE + " 删除桌子");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar set <ID>" + ChatColor.WHITE + " 设置桌子中心坐标（写入 config.yml）");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar build <ID>" + ChatColor.WHITE + " 生成/刷新该桌的 4 个座位");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar create <ID>" + ChatColor.WHITE + " 快速创建并保存坐标");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar delete <ID>" + ChatColor.WHITE + " 删除桌子并清除座位");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar gambling [on|off]" + ChatColor.WHITE + " 查看/开关赌博模式");
         player.sendMessage(ChatColor.YELLOW + "/liarbar join <ID>" + ChatColor.WHITE + " 加入桌子");
         player.sendMessage(ChatColor.YELLOW + "/liarbar leave" + ChatColor.WHITE + " 离开桌子");
         player.sendMessage(ChatColor.YELLOW + "/liarbar mode <ID> <life|fantuan|kunkun>" + ChatColor.WHITE + " 设置模式");
         player.sendMessage(ChatColor.YELLOW + "/liarbar start [ID]" + ChatColor.WHITE + " 开始游戏");
         player.sendMessage(ChatColor.YELLOW + "/liarbar stop [ID]" + ChatColor.WHITE + " 结束游戏");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar select <ID> <1-5>" + ChatColor.WHITE + " 选择手牌");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar play [ID]" + ChatColor.WHITE + " 出牌");
+        player.sendMessage(ChatColor.YELLOW + "/liarbar challenge [ID]" + ChatColor.WHITE + " 质疑上家");
         player.sendMessage(ChatColor.YELLOW + "/liarbar info" + ChatColor.WHITE + " 查看桌子列表");
     }
 }

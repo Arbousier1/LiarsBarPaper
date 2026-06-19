@@ -1,11 +1,11 @@
 package com.jijifujiji.liarsbar.game;
 
+import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -13,9 +13,9 @@ import java.util.*;
 
 public class Table {
 
-    private final JavaPlugin plugin;
+    private final LiarsBarPlugin plugin;
     private final String id;
-    private final Location location;
+    private Location location;
     private final List<PlayerState> players = new ArrayList<>();
     private final List<Player> waitingPlayers = new ArrayList<>();
 
@@ -28,13 +28,14 @@ public class Table {
     private BukkitTask turnTimer;
     private int turnSecondsLeft;
     private int pendingShots = 0;
+    private int joinedCount = 0;
 
     private final Map<Player, Set<Integer>> selections = new HashMap<>();
 
-    public Table(JavaPlugin plugin, String id, Location location) {
+    public Table(LiarsBarPlugin plugin, String id, Location location) {
         this.plugin = plugin;
         this.id = id;
-        this.location = location.clone();
+        this.location = location == null ? null : location.clone();
     }
 
     public String getId() {
@@ -42,11 +43,19 @@ public class Table {
     }
 
     public Location getLocation() {
-        return location.clone();
+        return location == null ? null : location.clone();
+    }
+
+    public void setLocation(Location location) {
+        this.location = location.clone();
     }
 
     public GameState getState() {
         return state;
+    }
+
+    public BetMode getBetMode() {
+        return betMode;
     }
 
     public List<PlayerState> getPlayers() {
@@ -74,11 +83,30 @@ public class Table {
             player.sendMessage(ChatColor.RED + "本桌已满（最多4人）。");
             return;
         }
+        // 赌博模式下，饭团币/坤坤币模式需要扣费
+        if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE) {
+            if (!EconomyHandler.canAfford(player, betMode)) {
+                player.sendMessage(ChatColor.RED + "你的" + betMode.getDisplay() + "不足，请拿到" + betMode.getDisplay() + "后重新加入！");
+                return;
+            }
+            if (!EconomyHandler.pay(player, betMode)) {
+                player.sendMessage(ChatColor.RED + "扣费失败，请稍后重试。");
+                return;
+            }
+            broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 支付了一个" + betMode.getDisplay() + "，加入对局！");
+        } else {
+            broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 加入对局！");
+        }
         waitingPlayers.add(player);
-        broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 加入了骗子酒馆（当前 " + getAllParticipants().size() + " 人）");
+        joinedCount = getAllParticipants().size();
+        broadcast(ChatColor.YELLOW + "当前 " + ChatColor.GOLD + joinedCount + ChatColor.YELLOW + " 人加入游戏。");
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1f, 1.34f);
         if (state == GameState.IDLE) {
             state = GameState.WAITING;
+        }
+        // 满4人自动开始
+        if (getAllParticipants().size() >= 4) {
+            startGame(player);
         }
     }
 
@@ -115,6 +143,7 @@ public class Table {
             players.add(new PlayerState(waitingPlayers.get(i), i));
         }
         waitingPlayers.clear();
+        joinedCount = players.size();
         state = GameState.DEALING;
         broadcast(ChatColor.YELLOW + "游戏开始！模式：" + ChatColor.GOLD + ChatColor.BOLD + betMode.getDisplay());
         startRound();
@@ -303,7 +332,7 @@ public class Table {
         broadcast(reveal.toString());
 
         if (hasDemon) {
-            broadcast(ChatColor.YELLOW + "哦！是恶魔牌，除了出牌者所有人都要遭殃！");
+            broadcast(ChatColor.YELLOW + "哦！是" + ChatColor.RED + ChatColor.BOLD + "恶魔牌" + ChatColor.YELLOW + "，除了出牌者所有人都要遭殃！");
             List<PlayerState> targets = new ArrayList<>();
             for (PlayerState other : players) {
                 if (other != lastPlayer && other.isAlive()) {
@@ -329,10 +358,10 @@ public class Table {
 
         PlayerState loser;
         if (!allMainOrWild) {
-            broadcast(ChatColor.YELLOW + "哦！不是主牌，" + ChatColor.GOLD + lastPlayer.getPlayer().getName() + ChatColor.YELLOW + " 冲着自己来一枪吧！");
+            broadcast(ChatColor.YELLOW + "哦！不是" + ChatColor.RED + ChatColor.BOLD + "主牌" + ChatColor.YELLOW + "，" + ChatColor.GOLD + lastPlayer.getPlayer().getName() + ChatColor.YELLOW + " 冲着自己来一枪吧！");
             loser = lastPlayer;
         } else {
-            broadcast(ChatColor.YELLOW + "哇！是主牌，" + ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 按下扳机吧！");
+            broadcast(ChatColor.YELLOW + "哇！是" + ChatColor.RED + ChatColor.BOLD + "主牌" + ChatColor.YELLOW + "，" + ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 按下扳机吧！");
             loser = ps;
         }
         shoot(loser, () -> afterShoot(loser));
@@ -392,20 +421,40 @@ public class Table {
             state = GameState.ENDED;
             PlayerState winner = aliveWithCards.isEmpty() ? null : aliveWithCards.get(0);
             if (winner != null) {
-                broadcast(ChatColor.YELLOW + "恭喜 " + ChatColor.GOLD + ChatColor.BOLD + winner.getPlayer().getName() + ChatColor.YELLOW + " 获得了本局骗子酒馆的胜利！");
+                broadcast(ChatColor.YELLOW + "恭喜 " + ChatColor.GOLD + ChatColor.BOLD + winner.getPlayer().getName() + ChatColor.YELLOW + " 获得了本局骗子酒馆的胜利！赢得了 " + ChatColor.GOLD + joinedCount + ChatColor.YELLOW + " 个" + betMode.getDisplay() + "！");
                 winner.getPlayer().getWorld().spawnParticle(org.bukkit.Particle.FIREWORKS_SPARK, winner.getPlayer().getLocation().add(0, 2, 0), 30);
+                EconomyHandler.rewardWinner(winner.getPlayer(), betMode, joinedCount);
             } else {
                 broadcast(ChatColor.YELLOW + "所有玩家都出局了，本局没有胜者。");
             }
+            cleanup();
             return true;
         }
         return false;
+    }
+
+    private void cleanup() {
+        cancelTurnTimer();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            players.clear();
+            waitingPlayers.clear();
+            state = GameState.IDLE;
+        }, 100L);
     }
 
     public void endGame(Player sender) {
         cancelTurnTimer();
         state = GameState.ENDED;
         broadcast(ChatColor.YELLOW + "游戏被 " + sender.getName() + " 强制结束。");
+        // 赌博模式下强制结束会随机选一个胜者
+        if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE && !players.isEmpty()) {
+            List<PlayerState> alive = players.stream().filter(PlayerState::isAlive).toList();
+            if (!alive.isEmpty()) {
+                PlayerState randomWinner = alive.get((int) (Math.random() * alive.size()));
+                broadcast(ChatColor.YELLOW + "有人拉了结束按钮，随机玩家 " + ChatColor.GOLD + randomWinner.getPlayer().getName() + ChatColor.YELLOW + " 成为胜者！");
+                EconomyHandler.rewardWinner(randomWinner.getPlayer(), betMode, joinedCount);
+            }
+        }
         players.clear();
         waitingPlayers.clear();
         state = GameState.IDLE;

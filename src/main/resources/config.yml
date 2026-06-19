@@ -1,0 +1,31 @@
+# 骗子酒馆配置文件
+# gambling-mode: 是否允许玩家赌饭团币/坤坤币（true=开启，false=仅赌命）
+gambling-mode: true
+
+# 五张桌子的中心坐标，管理员也可在游戏内用 /liarbar set <a-e> 设置
+tables:
+  a:
+    world: world
+    x: 0
+    y: 64
+    z: 0
+  b:
+    world: world
+    x: 0
+    y: 64
+    z: 0
+  c:
+    world: world
+    x: 0
+    y: 64
+    z: 0
+  d:
+    world: world
+    x: 0
+    y: 64
+    z: 0
+  e:
+    world: world
+    x: 0
+    y: 64
+    z: 0

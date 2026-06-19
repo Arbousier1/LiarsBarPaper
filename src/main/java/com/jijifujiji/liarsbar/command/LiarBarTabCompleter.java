@@ -15,8 +15,9 @@ public class LiarBarTabCompleter implements TabCompleter {
 
     private final LiarsBarPlugin plugin;
     private static final List<String> SUBS = Arrays.asList(
-            "create", "delete", "join", "leave", "start", "stop", "mode", "select", "play", "challenge", "info", "help");
+            "set", "build", "create", "delete", "gambling", "join", "leave", "start", "stop", "mode", "select", "play", "challenge", "info", "help");
     private static final List<String> MODES = Arrays.asList("life", "fantuan", "kunkun");
+    private static final List<String> GAMBLING = Arrays.asList("on", "off");
 
     public LiarBarTabCompleter(LiarsBarPlugin plugin) {
         this.plugin = plugin;
@@ -32,7 +33,13 @@ public class LiarBarTabCompleter implements TabCompleter {
             }
         } else if (args.length == 2) {
             String sub = args[0].toLowerCase();
-            if (sub.equals("create")) return List.of("<桌子ID>");
+            if (sub.equals("create") || sub.equals("set") || sub.equals("build")) return List.of("<桌子ID>");
+            if (sub.equals("gambling")) {
+                for (String g : GAMBLING) {
+                    if (g.startsWith(args[1].toLowerCase())) result.add(g);
+                }
+                return result;
+            }
             if (sub.equals("delete") || sub.equals("join") || sub.equals("start") || sub.equals("stop") || sub.equals("mode") || sub.equals("select") || sub.equals("play") || sub.equals("challenge")) {
                 for (Table table : plugin.getTableManager().getTables()) {
                     if (table.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
