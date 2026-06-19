@@ -9,6 +9,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -120,6 +121,8 @@ public class Table {
         clearDisplay();
         if (location == null || location.getWorld() == null) return;
 
+        renderFurniture();
+
         // Mode label above table
         modeLabel = DisplayManager.spawnLabel(location.clone().add(0, 2.2, 0),
                 betMode.getDisplay(), Color.fromRGB(0x402020), false);
@@ -153,6 +156,47 @@ public class Table {
             if (player != null && player.isOnline()) {
                 movePlayerToSeat(player, entry.getKey());
             }
+        }
+    }
+
+    private void renderFurniture() {
+        addDisplay(DisplayManager.spawnBlock(location.clone().add(-1.55, 0.55, -1.55),
+                Material.DARK_OAK_PLANKS, new Vector3f(3.1f, 0.18f, 3.1f)));
+        addDisplay(DisplayManager.spawnBlock(location.clone().add(-1.25, 0.74, -1.25),
+                Material.GREEN_WOOL, new Vector3f(2.5f, 0.04f, 2.5f)));
+
+        double[][] legs = {{-1.25, -1.25}, {-1.25, 1.05}, {1.05, -1.25}, {1.05, 1.05}};
+        for (double[] leg : legs) {
+            addDisplay(DisplayManager.spawnBlock(location.clone().add(leg[0], -0.15, leg[1]),
+                    Material.DARK_OAK_LOG, new Vector3f(0.28f, 0.7f, 0.28f)));
+        }
+
+        for (int i = 0; i < 4; i++) {
+            Location seat = location.clone().add(SEAT_OFFSETS[i][0], 0.05, SEAT_OFFSETS[i][2]);
+            addDisplay(DisplayManager.spawnBlock(seat.clone().add(-0.4, 0, -0.4),
+                    Material.DARK_OAK_PLANKS, new Vector3f(0.8f, 0.18f, 0.8f)));
+            addChairBack(i, seat);
+        }
+    }
+
+    private void addChairBack(int seatIndex, Location seat) {
+        switch (seatIndex) {
+            case 0 -> addDisplay(DisplayManager.spawnBlock(seat.clone().add(0.35, 0.18, -0.4),
+                    Material.DARK_OAK_PLANKS, new Vector3f(0.16f, 0.9f, 0.8f)));
+            case 1 -> addDisplay(DisplayManager.spawnBlock(seat.clone().add(-0.4, 0.18, 0.35),
+                    Material.DARK_OAK_PLANKS, new Vector3f(0.8f, 0.9f, 0.16f)));
+            case 2 -> addDisplay(DisplayManager.spawnBlock(seat.clone().add(-0.5, 0.18, -0.4),
+                    Material.DARK_OAK_PLANKS, new Vector3f(0.16f, 0.9f, 0.8f)));
+            case 3 -> addDisplay(DisplayManager.spawnBlock(seat.clone().add(-0.4, 0.18, -0.5),
+                    Material.DARK_OAK_PLANKS, new Vector3f(0.8f, 0.9f, 0.16f)));
+            default -> {
+            }
+        }
+    }
+
+    private void addDisplay(Entity entity) {
+        if (entity != null) {
+            displayEntities.add(entity);
         }
     }
 

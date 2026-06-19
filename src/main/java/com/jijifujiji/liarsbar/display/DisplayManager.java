@@ -101,6 +101,22 @@ public final class DisplayManager {
         return display;
     }
 
+    public static BlockDisplay spawnBlock(Location location, Material material, Vector3f scale) {
+        World world = location.getWorld();
+        if (world == null) return null;
+        BlockDisplay display = world.spawn(location, BlockDisplay.class);
+        display.setPersistent(false);
+        display.setViewRange(32f);
+        display.setBrightness(new Display.Brightness(15, 15));
+        display.setBlock(material.createBlockData());
+        display.setTransformation(new Transformation(
+                new Vector3f(),
+                new AxisAngle4f(),
+                scale,
+                new AxisAngle4f()));
+        return display;
+    }
+
     public static void applyCardTransform(ItemDisplay display, float yaw, float scale) {
         try {
             display.getClass().getMethod("setRotation", float.class, float.class).invoke(display, yaw, 0f);
