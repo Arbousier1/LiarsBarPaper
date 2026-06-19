@@ -1,13 +1,13 @@
 {
   "credit": "LiarsBarPaper Liar's Bar inspired round table",
   "textures": {
-    "navy": "minecraft:block/blue_concrete",
-    "red": "minecraft:block/red_concrete",
-    "white": "minecraft:block/white_concrete",
-    "gold": "minecraft:block/gold_block",
-    "wood": "minecraft:block/dark_oak_planks",
-    "dark": "minecraft:block/polished_blackstone",
-    "particle": "minecraft:block/dark_oak_planks"
+    "navy": "liarsbar:item/furniture/navy",
+    "red": "liarsbar:item/furniture/red_felt",
+    "white": "liarsbar:item/furniture/card_white",
+    "gold": "liarsbar:item/furniture/brass",
+    "wood": "liarsbar:item/furniture/dark_wood",
+    "dark": "liarsbar:item/furniture/dark_metal",
+    "particle": "liarsbar:item/furniture/dark_wood"
   },
   "elements": [
     {
