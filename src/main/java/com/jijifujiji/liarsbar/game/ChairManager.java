@@ -47,6 +47,7 @@ public class ChairManager implements Listener {
         if (center == null || center.getWorld() == null) return;
         List<Interaction> list = new ArrayList<>();
         for (int i = 0; i < OFFSETS.length; i++) {
+            final int seatNum = i;
             Location loc = center.clone().add(OFFSETS[i][0], OFFSETS[i][1], OFFSETS[i][2]);
             Interaction interaction = center.getWorld().spawn(loc, Interaction.class, e -> {
                 e.setInteractionWidth(1.0f);
@@ -58,7 +59,7 @@ public class ChairManager implements Listener {
                 e.setSilent(true);
                 PersistentDataContainer data = e.getPersistentDataContainer();
                 data.set(tableKey, PersistentDataType.STRING, table.getId().toLowerCase());
-                data.set(seatKey, PersistentDataType.INTEGER, i);
+                data.set(seatKey, PersistentDataType.INTEGER, seatNum);
             });
             list.add(interaction);
         }
