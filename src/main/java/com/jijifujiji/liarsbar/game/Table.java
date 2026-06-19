@@ -145,7 +145,7 @@ public class Table {
         }
 
         // Start button
-        Location btnLoc = location.clone().add(0, 1.0, 0);
+        Location btnLoc = location.clone().add(0, 1.28, 0);
         startButton = DisplayManager.spawnInteraction(btnLoc, 0.6f, 0.6f,
                 new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, id, -1, -1));
         if (startButton != null) displayEntities.add(startButton);
@@ -231,7 +231,7 @@ public class Table {
 
         for (int i = 0; i < centerCards.size(); i++) {
             Card card = centerCards.get(i);
-            Location cardLoc = location.clone().add((i - centerCards.size() / 2.0) * 0.5, 1.07, 0);
+            Location cardLoc = location.clone().add((i - centerCards.size() / 2.0) * 0.5, 1.29, 0);
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
                     card.getDisplay(), card.getItemModel(), card.getCustomModelData(), id, -1, -1);
             if (cardDisplay != null) {
