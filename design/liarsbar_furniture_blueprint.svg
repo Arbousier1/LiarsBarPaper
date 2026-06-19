@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#34302d" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b3219"/>
+      <stop offset="0.45" stop-color="#7a4823"/>
+      <stop offset="1" stop-color="#2c160b"/>
+    </linearGradient>
+    <linearGradient id="felt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9f1f25"/>
+      <stop offset="1" stop-color="#651115"/>
+    </linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e4ba53"/>
+      <stop offset="1" stop-color="#8d6424"/>
+    </linearGradient>
+    <style>
+      .bg { fill: #161412; }
+      .panel { fill: url(#grid); stroke: #66564a; stroke-width: 3; rx: 18; }
+      .title { font: 700 30px Arial, sans-serif; fill: #f2e8d6; letter-spacing: 1px; }
+      .note { font: 20px Arial, sans-serif; fill: #d8c6a7; }
+      .small { font: 16px Arial, sans-serif; fill: #bfae93; }
+      .wood { fill: url(#wood); stroke: #1c0d06; stroke-width: 4; }
+      .felt { fill: url(#felt); stroke: #2a0809; stroke-width: 3; }
+      .brass { fill: url(#brass); stroke: #4e3511; stroke-width: 2; }
+      .metal { fill: #25272b; stroke: #0e0f11; stroke-width: 3; }
+      .card { fill: #ece4d2; stroke: #5e5343; stroke-width: 2; }
+      .line { stroke: #d6b46a; stroke-width: 3; fill: none; stroke-dasharray: 9 9; }
+      .arrow { marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#d6b46a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1600" height="1000"/>
+  <text x="60" y="58" class="title">Liars Bar Furniture Blueprint - block model pass</text>
+  <text x="60" y="92" class="note">Goal: tavern card table + open-back chair, grounded silhouettes, no floating caps, no toilet-like side bumps, no z-fighting.</text>
+
+  <rect x="50" y="130" width="720" height="365" class="panel"/>
+  <text x="82" y="178" class="title">TABLE TOP</text>
+  <path class="wood" d="M193 314 L250 228 L570 228 L627 314 L570 400 L250 400 Z"/>
+  <path class="felt" d="M262 314 L304 259 L516 259 L558 314 L516 369 L304 369 Z"/>
+  <path class="brass" d="M260 314 L304 254 L516 254 L560 314 L516 374 L304 374 Z" fill="none" stroke-width="8"/>
+  <rect class="card" x="373" y="295" width="72" height="42" rx="4" transform="rotate(-8 409 316)"/>
+  <rect class="card" x="386" y="287" width="72" height="42" rx="4" transform="rotate(7 422 308)"/>
+  <circle class="brass" cx="420" cy="318" r="17"/>
+  <rect class="metal" x="540" y="302" width="112" height="14" rx="7" transform="rotate(-9 596 309)"/>
+  <circle class="metal" cx="545" cy="321" r="20"/>
+  <rect class="metal" x="505" y="334" width="60" height="18" rx="7" transform="rotate(34 535 343)"/>
+  <path class="metal" d="M205 355 L258 344 L271 394 L218 405 Z"/>
+  <ellipse cx="238" cy="342" rx="31" ry="9" fill="#34363a" stroke="#0e0f11" stroke-width="3"/>
+  <text x="92" y="456" class="small">Octagonal oval tabletop: connected slabs, red felt inset raised by a tiny step.</text>
+
+  <rect x="830" y="130" width="720" height="365" class="panel"/>
+  <text x="862" y="178" class="title">TABLE SIDE</text>
+  <rect class="wood" x="935" y="245" width="480" height="48" rx="8"/>
+  <rect class="felt" x="1018" y="232" width="314" height="18" rx="6"/>
+  <rect class="brass" x="1006" y="224" width="338" height="10" rx="5"/>
+  <rect class="wood" x="1110" y="294" width="128" height="160" rx="8"/>
+  <rect class="wood" x="970" y="448" width="408" height="30" rx="10"/>
+  <rect class="wood" x="1083" y="418" width="184" height="38" rx="8"/>
+  <rect class="card" x="1140" y="210" width="70" height="15" rx="3"/>
+  <rect class="metal" x="1295" y="206" width="104" height="18" rx="8"/>
+  <path class="line arrow" d="M1017 212 C1040 192 1085 190 1125 207"/>
+  <text x="862" y="456" class="small">Props touch the felt. Thin raised bands prevent coplanar z-fighting.</text>
+
+  <rect x="50" y="555" width="720" height="365" class="panel"/>
+  <text x="82" y="603" class="title">CHAIR FRONT</text>
+  <rect class="wood" x="220" y="784" width="52" height="100" rx="8"/>
+  <rect class="wood" x="548" y="784" width="52" height="100" rx="8"/>
+  <rect class="wood" x="196" y="738" width="428" height="42" rx="8"/>
+  <rect class="felt" x="226" y="704" width="368" height="44" rx="12"/>
+  <rect class="wood" x="210" y="604" width="55" height="192" rx="10"/>
+  <rect class="wood" x="555" y="604" width="55" height="192" rx="10"/>
+  <rect class="wood" x="268" y="632" width="54" height="146" rx="8"/>
+  <rect class="wood" x="383" y="632" width="54" height="146" rx="8"/>
+  <rect class="wood" x="498" y="632" width="54" height="146" rx="8"/>
+  <rect class="wood" x="236" y="610" width="348" height="36" rx="14"/>
+  <rect class="wood" x="255" y="676" width="310" height="28" rx="10"/>
+  <text x="92" y="882" class="small">Open back with slats. Cushion stays simple; no raised side ring.</text>
+
+  <rect x="830" y="555" width="720" height="365" class="panel"/>
+  <text x="862" y="603" class="title">CHAIR SIDE</text>
+  <rect class="wood" x="1018" y="780" width="48" height="104" rx="8"/>
+  <rect class="wood" x="1268" y="616" width="50" height="268" rx="10"/>
+  <rect class="wood" x="995" y="738" width="340" height="42" rx="8"/>
+  <rect class="felt" x="1018" y="704" width="286" height="44" rx="12"/>
+  <rect class="wood" x="1050" y="678" width="258" height="28" rx="10"/>
+  <rect class="wood" x="1198" y="635" width="54" height="152" rx="8"/>
+  <rect class="wood" x="1248" y="614" width="92" height="36" rx="13"/>
+  <path class="line arrow" d="M1370 653 C1410 685 1410 738 1340 754"/>
+  <text x="862" y="882" class="small">Back posts are tall and clear; front silhouette reads as a tavern chair.</text>
+</svg>
