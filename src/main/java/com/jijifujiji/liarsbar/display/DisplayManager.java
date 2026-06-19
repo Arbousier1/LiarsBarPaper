@@ -65,13 +65,23 @@ public final class DisplayManager {
     }
 
     private static void applyItemModel(ItemMeta meta, String itemModel) {
-        NamespacedKey key = NamespacedKey.fromString(itemModel);
+        NamespacedKey key = parseItemModelKey(itemModel);
         if (key == null) return;
         try {
             meta.getClass().getMethod("setItemModel", NamespacedKey.class).invoke(meta, key);
         } catch (Exception ignored) {
             // Item model components are available on 1.21.2+ APIs.
         }
+    }
+
+    private static NamespacedKey parseItemModelKey(String itemModel) {
+        if (itemModel == null || itemModel.isBlank()) return null;
+        String[] parts = itemModel.split(":", 2);
+        if (parts.length == 1) {
+            return new NamespacedKey("minecraft", parts[0]);
+        }
+        if (parts[0].isBlank() || parts[1].isBlank()) return null;
+        return new NamespacedKey(parts[0], parts[1]);
     }
 
     public static Interaction spawnInteraction(Location location, float width, float height,
