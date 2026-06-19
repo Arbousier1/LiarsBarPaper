@@ -16,10 +16,12 @@ java {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 }
 
 tasks {

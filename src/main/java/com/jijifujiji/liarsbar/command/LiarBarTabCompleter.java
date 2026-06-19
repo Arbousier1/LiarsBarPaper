@@ -13,11 +13,13 @@ import java.util.List;
 
 public class LiarBarTabCompleter implements TabCompleter {
 
-    private final LiarsBarPlugin plugin;
     private static final List<String> SUBS = Arrays.asList(
-            "set", "build", "create", "delete", "gambling", "join", "leave", "start", "stop", "mode", "select", "play", "challenge", "info", "help");
+            "set", "build", "create", "delete", "gambling", "join", "leave",
+            "start", "stop", "mode", "select", "play", "challenge", "info", "help");
     private static final List<String> MODES = Arrays.asList("life", "fantuan", "kunkun");
     private static final List<String> GAMBLING = Arrays.asList("on", "off");
+
+    private final LiarsBarPlugin plugin;
 
     public LiarBarTabCompleter(LiarsBarPlugin plugin) {
         this.plugin = plugin;
@@ -27,6 +29,7 @@ public class LiarBarTabCompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) return List.of();
         List<String> result = new ArrayList<>();
+
         if (args.length == 1) {
             for (String s : SUBS) {
                 if (s.startsWith(args[0].toLowerCase())) result.add(s);
@@ -40,11 +43,10 @@ public class LiarBarTabCompleter implements TabCompleter {
                 }
                 return result;
             }
-            if (sub.equals("delete") || sub.equals("join") || sub.equals("start") || sub.equals("stop") || sub.equals("mode") || sub.equals("select") || sub.equals("play") || sub.equals("challenge")) {
+            if (sub.equals("delete") || sub.equals("join") || sub.equals("start") || sub.equals("stop")
+                    || sub.equals("mode")) {
                 for (Table table : plugin.getTableManager().getTables()) {
-                    if (table.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
-                        result.add(table.getId());
-                    }
+                    if (table.getId().toLowerCase().startsWith(args[1].toLowerCase())) result.add(table.getId());
                 }
             }
         } else if (args.length == 3) {

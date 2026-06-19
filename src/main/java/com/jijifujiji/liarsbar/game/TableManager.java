@@ -5,30 +5,28 @@ import com.jijifujiji.liarsbar.config.ConfigManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TableManager {
 
     private final LiarsBarPlugin plugin;
-    private final ConfigManager configManager;
-    private final Map<String, Table> tables = new HashMap<>();
+    private final Map<String, Table> tables = new LinkedHashMap<>();
 
     public TableManager(LiarsBarPlugin plugin, ConfigManager configManager) {
         this.plugin = plugin;
-        this.configManager = configManager;
         for (Map.Entry<String, Location> entry : configManager.getTableLocations().entrySet()) {
-            createTable(entry.getKey(), entry.getValue());
+            Table table = new Table(plugin, entry.getKey(), entry.getValue());
+            tables.put(entry.getKey().toLowerCase(), table);
+            table.buildDisplay();
         }
     }
 
     public Table createTable(String id, Location location) {
-        if (tables.containsKey(id.toLowerCase())) {
-            return tables.get(id.toLowerCase());
-        }
-        Table table = new Table(plugin, id, location);
-        tables.put(id.toLowerCase(), table);
+        String key = id.toLowerCase();
+        if (tables.containsKey(key)) return tables.get(key);
+        Table table = new Table(plugin, key, location);
+        tables.put(key, table);
+        table.buildDisplay();
         return table;
     }
 
@@ -39,7 +37,6 @@ public class TableManager {
     public boolean deleteTable(String id) {
         Table table = tables.remove(id.toLowerCase());
         if (table != null) {
-            plugin.getChairManager().removeChairs(table);
             table.destroy();
             return true;
         }
@@ -52,22 +49,13 @@ public class TableManager {
 
     public Table findTableByPlayer(Player player) {
         for (Table table : tables.values()) {
-            if (table.isInGame(player)) {
-                return table;
-            }
+            if (table.isInGame(player)) return table;
         }
         return null;
     }
 
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
     public void shutdownAll() {
-        for (Table table : tables.values()) {
-            plugin.getChairManager().removeChairs(table);
-            table.destroy();
-        }
+        for (Table table : tables.values()) table.destroy();
         tables.clear();
     }
 }
