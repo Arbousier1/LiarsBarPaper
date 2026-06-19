@@ -3,7 +3,8 @@ version: '${version}'
 main: com.jijifujiji.liarsbar.LiarsBarPlugin
 api-version: '1.20'
 authors: [hunterkyou, Paper-Port]
-description: MC 版骗子酒馆 Paper 插件 — Display Entity 交互 + Vault 经济
+description: MC 版骗子酒馆 Paper 插件。原数据包 by hunterkyou，Paper 移植 by Paper-Port。支持 Display Entity 交互与 Vault 经济。
+website: https://github.com/Arbousier1/LiarsBarPaper
 softdepend: [CraftEngine, Vault]
 commands:
   liarbar:
