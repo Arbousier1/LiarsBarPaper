@@ -1,0 +1,81 @@
+items:
+  liarsbar:card_a:
+    material: paper
+    item_model: liarsbar:card_a
+    model:
+      type: minecraft:model
+      path: liarsbar:item/game/jijifujiji_a
+    data:
+      item_name: "<!i><red>A</red>"
+
+  liarsbar:card_q:
+    material: paper
+    item_model: liarsbar:card_q
+    model:
+      type: minecraft:model
+      path: liarsbar:item/game/jijifujiji_q
+    data:
+      item_name: "<!i><blue>Q</blue>"
+
+  liarsbar:card_k:
+    material: paper
+    item_model: liarsbar:card_k
+    model:
+      type: minecraft:model
+      path: liarsbar:item/game/jijifujiji_k
+    data:
+      item_name: "<!i><gold>K</gold>"
+
+  liarsbar:card_kun:
+    material: paper
+    item_model: liarsbar:card_kun
+    model:
+      type: minecraft:model
+      path: liarsbar:item/game/jijifujiji_kun
+    data:
+      item_name: "<!i><light_purple>KUN</light_purple>"
+
+  liarsbar:card_demon:
+    material: paper
+    item_model: liarsbar:card_demon
+    model:
+      type: minecraft:model
+      path: liarsbar:item/game/jijifujiji_tnt
+    data:
+      item_name: "<!i><dark_purple>DEMON</dark_purple>"
+
+  liarsbar:card_back:
+    material: paper
+    item_model: liarsbar:card_back
+    model:
+      type: minecraft:model
+      path: liarsbar:item/game/jijifujiji_back
+    data:
+      item_name: "<!i><gray>Card Back</gray>"
+
+  liarsbar:gun_police:
+    material: carrot_on_a_stick
+    item_model: liarsbar:gun_police
+    model:
+      type: minecraft:model
+      path: liarsbar:item/gun/jijifujiji_gun_police
+    data:
+      item_name: "<!i><gray>Gun</gray>"
+
+  liarsbar:liar_bar_gun:
+    material: carrot_on_a_stick
+    item_model: liarsbar:liar_bar_gun
+    model:
+      type: minecraft:model
+      path: liarsbar:item/gun/jijifujiji_liar_bar_gun
+    data:
+      item_name: "<!i><red>Liar's Bar Gun</red>"
+
+  liarsbar:fantuan:
+    material: paper
+    item_model: liarsbar:fantuan
+    model:
+      type: minecraft:model
+      path: liarsbar:item/jijifujiji_fantuan
+    data:
+      item_name: "<!i><white>Fantuan</white>"

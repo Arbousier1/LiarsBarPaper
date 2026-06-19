@@ -214,10 +214,10 @@ public class Table {
 
         List<Card> hand = ps.getHand();
         for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
             Location cardLoc = seatLoc.clone().add(cardOff[0] * (i + 1), 0.2, cardOff[2] * (i + 1));
-            int modelData = getCardModelData(hand.get(i));
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    hand.get(i).getDisplay(), modelData, id, ps.getSeatIndex(), i);
+                    card.getDisplay(), card.getItemModel(), id, ps.getSeatIndex(), i);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, yaw, 0.8f);
                 cardDisplays.add(cardDisplay);
@@ -241,10 +241,10 @@ public class Table {
         if (location == null || location.getWorld() == null) return;
 
         for (int i = 0; i < centerCards.size(); i++) {
+            Card card = centerCards.get(i);
             Location cardLoc = location.clone().add((i - centerCards.size() / 2.0) * 0.5, 0.8, 0);
-            int modelData = getCardModelData(centerCards.get(i));
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    centerCards.get(i).getDisplay(), modelData, id, -1, -1);
+                    card.getDisplay(), card.getItemModel(), id, -1, -1);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, 0f, 0.6f);
                 centerCardDisplays.add(cardDisplay);
@@ -339,16 +339,6 @@ public class Table {
         playButton = null;
         challengeButton = null;
         startButton = null;
-    }
-
-    private int getCardModelData(Card card) {
-        return switch (card) {
-            case A -> 9999450;
-            case Q -> 9999451;
-            case K -> 9999452;
-            case KUN -> 9999453;
-            case DEMON -> 9999454;
-        };
     }
 
     // ========== Game Flow ==========

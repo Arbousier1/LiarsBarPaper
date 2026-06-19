@@ -1,7 +1,7 @@
 {
-    "parent": "item/handheld_rod",
+    "parent": "minecraft:item/handheld_rod",
     "textures": {
-        "layer0": "item/gun/jijifujiji_gun_police"
+        "layer0": "liarsbar:item/gun/jijifujiji_gun_police"
     },
 	"display": {
 		"thirdperson_righthand": {

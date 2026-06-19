@@ -39,7 +39,7 @@ public final class DisplayManager {
         }
     }
 
-    public static ItemDisplay spawnCard(Location location, String cardName, int modelData,
+    public static ItemDisplay spawnCard(Location location, String cardName, String itemModel,
                                          String tableId, int seatIndex, int cardIndex) {
         World world = location.getWorld();
         if (world == null) return null;
@@ -51,21 +51,27 @@ public final class DisplayManager {
         display.setDisplayWidth(0.4f);
         display.setDisplayHeight(0.6f);
 
-        Material cardMaterial = Material.matchMaterial("MUSIC_DISC_RELIC");
+        Material cardMaterial = Material.matchMaterial("PAPER");
         if (cardMaterial == null) cardMaterial = Material.PAPER;
         ItemStack item = new ItemStack(cardMaterial);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            try {
-                meta.getClass().getMethod("setCustomModelData", int.class).invoke(meta, modelData);
-            } catch (Exception ignored) {
-                // Fallback: model data not available on this API surface.
-            }
+            applyItemModel(meta, itemModel);
             meta.setDisplayName(cardName);
             item.setItemMeta(meta);
         }
         display.setItemStack(item);
         return display;
+    }
+
+    private static void applyItemModel(ItemMeta meta, String itemModel) {
+        NamespacedKey key = NamespacedKey.fromString(itemModel);
+        if (key == null) return;
+        try {
+            meta.getClass().getMethod("setItemModel", NamespacedKey.class).invoke(meta, key);
+        } catch (Exception ignored) {
+            // Item model components are available on 1.21.2+ APIs.
+        }
     }
 
     public static Interaction spawnInteraction(Location location, float width, float height,

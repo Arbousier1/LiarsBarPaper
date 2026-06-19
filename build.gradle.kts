@@ -54,10 +54,10 @@ val generateCraftEngineBundle by tasks.registering {
             configSrc.copyRecursively(outputRoot.resolve("configuration"), overwrite = true)
         }
 
-        // Copy resourcepack assets
-        val rpAssets = resourcepackSourceDir.dir("assets").asFile
-        if (rpAssets.exists()) {
-            rpAssets.copyRecursively(outputRoot.resolve("resourcepack").resolve("assets"), overwrite = true)
+        // Copy the full resource pack, including pack.mcmeta/pack.png and assets.
+        val resourcepackSrc = resourcepackSourceDir.asFile
+        if (resourcepackSrc.exists()) {
+            resourcepackSrc.copyRecursively(outputRoot.resolve("resourcepack"), overwrite = true)
         }
 
         // Generate bundle index

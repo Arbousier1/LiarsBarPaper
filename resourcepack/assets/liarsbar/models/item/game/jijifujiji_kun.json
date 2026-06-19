@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:item/template_music_disc",
     "textures": {
-        "layer0": "item/game/jijifujiji_tnt"
+        "layer0": "liarsbar:item/game/jijifujiji_kun"
     }
 }
