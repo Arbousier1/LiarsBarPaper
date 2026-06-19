@@ -45,24 +45,24 @@ Paper 插件移植：**Paper-Port**
 
 1. **管理员创建桌子**
    ```
-   /liarbar set a
-   /liarbar build a
+   /liarbar set lobby_1
+   /liarbar build lobby_1
    ```
    或者一步创建：
    ```
-   /liarbar create a
+   /liarbar create lobby_1
    ```
 
 2. **玩家入座**  
-   走到 `A` 桌附近，右键或左键点击座位实体即可入座；也可使用：
+   走到 `lobby_1` 桌附近，右键或左键点击座位实体即可入座；也可使用：
    ```
-   /liarbar join a
+   /liarbar join lobby_1
    ```
 
 3. **开始游戏**  
    满 4 人自动开始，或手动：
    ```
-   /liarbar start a
+   /liarbar start lobby_1
    ```
 
 ---
@@ -140,6 +140,8 @@ Paper 插件移植：**Paper-Port**
 | `/liarbar info` | 所有玩家 | 查看所有桌子状态 |
 | `/liarbar help` | 所有玩家 | 显示帮助 |
 
+桌子 ID 不限制为 A-E，可使用 `lobby_1`、`vip_2`、`table_10` 等任意 ID 创建多张桌子。每张桌最多 4 人，同时开局的桌数没有代码层上限，实际承载量取决于服务器性能与 Display Entity 数量。
+
 ---
 
 ## 权限
@@ -159,13 +161,15 @@ Paper 插件移植：**Paper-Port**
 # 是否允许玩家赌饭团币/坤坤币
 gambling-mode: true
 
-# 五张桌子的中心坐标，管理员也可在游戏内用 /liarbar set <a-e> 设置
-tables:
-  a:
-    world: world
-    x: 0
-    y: 64
-    z: 0
+# 桌子的中心坐标，管理员也可在游戏内用 /liarbar set <ID> 设置
+tables: {}
+# 示例：
+# tables:
+#   lobby_1:
+#     world: world
+#     x: 0
+#     y: 64
+#     z: 0
 ```
 
 ---

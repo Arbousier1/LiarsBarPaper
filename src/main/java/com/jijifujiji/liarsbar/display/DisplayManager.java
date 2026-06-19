@@ -4,6 +4,9 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Transformation;
+import org.joml.AxisAngle4f;
+import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +39,6 @@ public final class DisplayManager {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static ItemDisplay spawnCard(Location location, String cardName, int modelData,
                                          String tableId, int seatIndex, int cardIndex) {
         World world = location.getWorld();
@@ -54,18 +56,11 @@ public final class DisplayManager {
         ItemStack item = new ItemStack(cardMaterial);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            try {
-                meta.getClass().getMethod("setCustomModelData", int.class).invoke(meta, modelData);
-            } catch (Exception ignored) {
-                // Fallback: model data not available
-            }
+            meta.setCustomModelData(modelData);
             meta.setDisplayName(cardName);
             item.setItemMeta(meta);
         }
         display.setItemStack(item);
-
-        registerClickAction(display.getEntityId(),
-                new ClickAction(ClickAction.ActionType.PLAY_CARD, tableId, seatIndex, cardIndex));
         return display;
     }
 
@@ -103,26 +98,22 @@ public final class DisplayManager {
     }
 
     public static void applyCardTransform(ItemDisplay display, float yaw, float scale) {
-        try {
-            display.getClass().getMethod("setRotation", float.class, float.class).invoke(display, yaw, 0f);
-        } catch (Exception ignored) {
-        }
-        try {
-            Object tf = org.bukkit.util.Transformation.class.getConstructor(
-                    org.joml.Vector3f.class, org.joml.AxisAngle4f.class,
-                    org.joml.Vector3f.class, org.joml.AxisAngle4f.class)
-                    .newInstance(new org.joml.Vector3f(), new org.joml.AxisAngle4f(),
-                            new org.joml.Vector3f(scale, scale, scale), new org.joml.AxisAngle4f());
-            display.getClass().getMethod("setTransformation", org.bukkit.util.Transformation.class).invoke(display, tf);
-        } catch (Exception ignored) {
-        }
+        display.setRotation(yaw, 0f);
+        display.setTransformation(new Transformation(
+                new Vector3f(),
+                new AxisAngle4f(),
+                new Vector3f(scale, scale, scale),
+                new AxisAngle4f()));
     }
 
     public static void removeManagedEntities(Collection<Entity> entities) {
         for (Entity entity : entities) {
-            if (entity != null && entity.isValid()) {
-                unregisterClickAction(entity.getEntityId());
-                entity.remove();
+            if (entity != null) {
+                int entityId = entity.getEntityId();
+                unregisterClickAction(entityId);
+                if (entity.isValid()) {
+                    entity.remove();
+                }
             }
         }
     }

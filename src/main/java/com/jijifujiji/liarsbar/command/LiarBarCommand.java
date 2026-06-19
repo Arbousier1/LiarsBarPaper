@@ -95,13 +95,13 @@ public class LiarBarCommand implements CommandExecutor {
             return;
         }
         String id = args[1].toLowerCase();
-        Location loc = player.getLocation();
-        plugin.getConfigManager().setTableLocation(id, loc);
-        Table table = plugin.getTableManager().createTable(id, loc);
-        if (table == null) {
+        if (plugin.getTableManager().getTable(id) != null) {
             player.sendMessage(ChatColor.RED + "桌子 " + id + " 已存在。");
             return;
         }
+        Location loc = player.getLocation();
+        plugin.getConfigManager().setTableLocation(id, loc);
+        plugin.getTableManager().createTable(id, loc);
         player.sendMessage(ChatColor.GREEN + "成功创建桌子 " + ChatColor.GOLD + id);
     }
 
@@ -115,6 +115,7 @@ public class LiarBarCommand implements CommandExecutor {
             return;
         }
         if (plugin.getTableManager().deleteTable(args[1])) {
+            plugin.getConfigManager().removeTableLocation(args[1]);
             player.sendMessage(ChatColor.GREEN + "已删除桌子 " + args[1]);
         } else {
             player.sendMessage(ChatColor.RED + "桌子不存在。");
@@ -202,6 +203,10 @@ public class LiarBarCommand implements CommandExecutor {
     }
 
     private void handleMode(Player player, String[] args) {
+        if (!player.hasPermission("liarsbar.admin")) {
+            player.sendMessage(ChatColor.RED + "无权限。");
+            return;
+        }
         if (args.length < 3) {
             player.sendMessage(ChatColor.RED + "用法：/liarbar mode <桌子ID> <life|fantuan|kunkun>");
             return;
@@ -216,7 +221,10 @@ public class LiarBarCommand implements CommandExecutor {
             case "kunkun", "k", "坤坤" -> BetMode.KUNKUN;
             default -> BetMode.LIFE;
         };
-        table.setBetMode(mode);
+        if (!table.setBetMode(mode)) {
+            player.sendMessage(ChatColor.RED + "游戏进行中，不能切换模式。");
+            return;
+        }
         player.sendMessage(ChatColor.GREEN + "已将桌子模式设为：" + ChatColor.GOLD + mode.getDisplay());
     }
 
@@ -274,6 +282,7 @@ public class LiarBarCommand implements CommandExecutor {
         player.sendMessage(ChatColor.YELLOW + "/liarbar build <ID>" + ChatColor.WHITE + "  生成 Display Entity 座位");
         player.sendMessage(ChatColor.YELLOW + "/liarbar create <ID>" + ChatColor.WHITE + "  快速创建并保存");
         player.sendMessage(ChatColor.YELLOW + "/liarbar delete <ID>" + ChatColor.WHITE + "  删除桌子");
+        player.sendMessage(ChatColor.GRAY + "桌子 ID 不限 A-E，例如 lobby_1、vip_2、table_10。");
         player.sendMessage(ChatColor.YELLOW + "/liarbar gambling [on|off]" + ChatColor.WHITE + "  开关赌博");
         player.sendMessage(ChatColor.YELLOW + "/liarbar join <ID>" + ChatColor.WHITE + "  加入桌子");
         player.sendMessage(ChatColor.YELLOW + "/liarbar leave" + ChatColor.WHITE + "  离开游戏");

@@ -65,6 +65,13 @@ public class ConfigManager {
         save();
     }
 
+    public void removeTableLocation(String id) {
+        String key = id.toLowerCase();
+        tableLocations.remove(key);
+        plugin.getConfig().set("tables." + key, null);
+        save();
+    }
+
     public Map<String, Location> getTableLocations() {
         return new HashMap<>(tableLocations);
     }

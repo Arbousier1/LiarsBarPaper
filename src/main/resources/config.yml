@@ -5,30 +5,12 @@ gambling-mode: true
 # 资源包由 CraftEngine 自动分发，无需手动配置 URL
 # 如果你没有安装 CraftEngine，请自行配置资源包托管
 
-# 五张桌子的中心坐标，管理员也可在游戏内用 /liarbar set <a-e> 设置
-tables:
-  a:
-    world: world
-    x: 0
-    y: 64
-    z: 0
-  b:
-    world: world
-    x: 0
-    y: 64
-    z: 0
-  c:
-    world: world
-    x: 0
-    y: 64
-    z: 0
-  d:
-    world: world
-    x: 0
-    y: 64
-    z: 0
-  e:
-    world: world
-    x: 0
-    y: 64
-    z: 0
+# 桌子的中心坐标，管理员也可在游戏内用 /liarbar set <ID> 设置
+tables: {}
+# 示例：
+# tables:
+#   a:
+#     world: world
+#     x: 0
+#     y: 64
+#     z: 0

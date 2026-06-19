@@ -37,6 +37,9 @@ public class LiarBarTabCompleter implements TabCompleter {
         } else if (args.length == 2) {
             String sub = args[0].toLowerCase();
             if (sub.equals("create") || sub.equals("set") || sub.equals("build")) return List.of("<桌子ID>");
+            if (sub.equals("select")) {
+                return Arrays.asList("1", "2", "3", "4", "5");
+            }
             if (sub.equals("gambling")) {
                 for (String g : GAMBLING) {
                     if (g.startsWith(args[1].toLowerCase())) result.add(g);
@@ -54,8 +57,6 @@ public class LiarBarTabCompleter implements TabCompleter {
                 for (String m : MODES) {
                     if (m.startsWith(args[2].toLowerCase())) result.add(m);
                 }
-            } else if (args[0].equalsIgnoreCase("select")) {
-                return Arrays.asList("1", "2", "3", "4", "5");
             }
         }
         return result;

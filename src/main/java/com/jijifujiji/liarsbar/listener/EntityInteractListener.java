@@ -26,6 +26,7 @@ public class EntityInteractListener implements Listener {
 
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
         Entity entity = event.getRightClicked();
         DisplayManager.ClickAction action = DisplayManager.getClickAction(entity.getEntityId());
         if (action == null) return;

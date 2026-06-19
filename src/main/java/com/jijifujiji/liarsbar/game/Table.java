@@ -3,6 +3,9 @@ package com.jijifujiji.liarsbar.game;
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import com.jijifujiji.liarsbar.display.DisplayManager;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -42,6 +45,7 @@ public class Table {
     private PlayerState lastPlayer;
     private List<Card> centerCards = new ArrayList<>();
     private BukkitTask turnTimer;
+    private BossBar turnBossBar;
     private int turnSecondsLeft;
     private int pendingShots;
     private int joinedCount;
@@ -77,14 +81,37 @@ public class Table {
                 || seatMap.containsValue(player);
     }
 
-    public void setBetMode(BetMode mode) {
+    public boolean setBetMode(BetMode mode) {
+        if (state != GameState.IDLE && state != GameState.WAITING) {
+            return false;
+        }
         this.betMode = mode;
         buildDisplay();
+        return true;
     }
 
     public boolean isSeatOccupied(int seatIndex) {
         Player occupant = seatMap.get(seatIndex);
         return occupant != null && occupant.isOnline();
+    }
+
+    private Location getSeatLocation(int seatIndex) {
+        Location seatLoc = location.clone().add(SEAT_OFFSETS[seatIndex][0], SEAT_OFFSETS[seatIndex][1], SEAT_OFFSETS[seatIndex][2]);
+        seatLoc.setYaw(SEAT_YAWS[seatIndex]);
+        seatLoc.setPitch(0f);
+        return seatLoc;
+    }
+
+    private void movePlayerToSeat(Player player, int seatIndex) {
+        if (location == null || location.getWorld() == null) return;
+        player.leaveVehicle();
+        player.teleport(getSeatLocation(seatIndex));
+        if (seatIndex >= 0 && seatIndex < seatInteractions.size()) {
+            Entity seat = seatInteractions.get(seatIndex);
+            if (seat != null && seat.isValid()) {
+                seat.addPassenger(player);
+            }
+        }
     }
 
     // ========== Seat & Display ==========
@@ -120,6 +147,13 @@ public class Table {
 
         if (modeLabel != null) displayEntities.add(modeLabel);
         if (statusLabel != null) displayEntities.add(statusLabel);
+
+        for (Map.Entry<Integer, Player> entry : seatMap.entrySet()) {
+            Player player = entry.getValue();
+            if (player != null && player.isOnline()) {
+                movePlayerToSeat(player, entry.getKey());
+            }
+        }
     }
 
     public void renderPlayerCards(PlayerState ps) {
@@ -200,15 +234,52 @@ public class Table {
         }
     }
 
+    private void showTurnBossBar(PlayerState current) {
+        hideTurnBossBar();
+        turnBossBar = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
+        for (Player player : getAllParticipants()) {
+            turnBossBar.addPlayer(player);
+        }
+        updateTurnBossBar(current);
+        turnBossBar.setVisible(true);
+    }
+
+    private void updateTurnBossBar(PlayerState current) {
+        if (turnBossBar == null) return;
+        double progress = Math.max(0.0, Math.min(1.0, turnSecondsLeft / 30.0));
+        turnBossBar.setProgress(progress);
+        turnBossBar.setTitle(ChatColor.GOLD + current.getPlayer().getName()
+                + ChatColor.YELLOW + " 的回合  "
+                + ChatColor.RED + turnSecondsLeft + "s"
+                + ChatColor.GRAY + " | "
+                + ChatColor.YELLOW + "主牌 " + ChatColor.GOLD + mainCard.getDisplay()
+                + ChatColor.GRAY + " | "
+                + ChatColor.YELLOW + "子弹 " + ChatColor.GOLD + current.getBullets() + "/6");
+    }
+
+    private void hideTurnBossBar() {
+        if (turnBossBar != null) {
+            turnBossBar.removeAll();
+            turnBossBar = null;
+        }
+    }
+
     private void clearPlayerDisplay(int seatIndex) {
         List<ItemDisplay> cards = playerCardDisplays.remove(seatIndex);
-        if (cards != null) DisplayManager.removeManagedEntities(new ArrayList<>(cards));
+        if (cards != null) {
+            DisplayManager.removeManagedEntities(new ArrayList<>(cards));
+            displayEntities.removeAll(cards);
+        }
         List<Interaction> intersects = playerCardInteractions.remove(seatIndex);
-        if (intersects != null) DisplayManager.removeManagedEntities(new ArrayList<>(intersects));
+        if (intersects != null) {
+            DisplayManager.removeManagedEntities(new ArrayList<>(intersects));
+            displayEntities.removeAll(intersects);
+        }
     }
 
     private void clearCenterDisplay() {
         DisplayManager.removeManagedEntities(new ArrayList<>(centerCardDisplays));
+        displayEntities.removeAll(centerCardDisplays);
         centerCardDisplays.clear();
     }
 
@@ -278,6 +349,7 @@ public class Table {
 
         seatMap.put(seatIndex, player);
         waitingPlayers.add(player);
+        movePlayerToSeat(player, seatIndex);
         joinedCount = getAllParticipants().size();
         setStatus("玩家: " + joinedCount + "/4");
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1f, 1.34f);
@@ -290,13 +362,33 @@ public class Table {
     }
 
     public void removePlayer(Player player) {
+        player.leaveVehicle();
+        boolean wasActiveGame = state == GameState.PLAYING || state == GameState.RESOLVING || state == GameState.DEALING;
+        boolean wasCurrent = currentPlayerIndex >= 0 && currentPlayerIndex < players.size()
+                && players.get(currentPlayerIndex).getPlayer().equals(player);
+        PlayerState removedState = findState(player);
+        if (removedState != null) {
+            clearPlayerDisplay(removedState.getSeatIndex());
+        }
+
         waitingPlayers.remove(player);
+        if (turnBossBar != null) {
+            turnBossBar.removePlayer(player);
+        }
         players.removeIf(p -> p.getPlayer().equals(player));
         seatMap.values().removeIf(p -> p.equals(player));
+        if (currentPlayerIndex >= players.size()) {
+            currentPlayerIndex = players.isEmpty() ? -1 : 0;
+        }
         if (players.isEmpty() && waitingPlayers.isEmpty()) {
+            cancelTurnTimer();
             state = GameState.IDLE;
             clearDisplay();
             buildDisplay();
+        } else if (wasActiveGame && state == GameState.PLAYING) {
+            if (!checkWin() && wasCurrent) {
+                startTurn(true);
+            }
         }
         broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 离开了游戏。");
         joinedCount = getAllParticipants().size();
@@ -316,16 +408,27 @@ public class Table {
             if (starter != null) starter.sendMessage(ChatColor.RED + "游戏不处于可开始状态。");
             return;
         }
-        if (waitingPlayers.size() < 2) {
+        if (starter != null && !seatMap.containsValue(starter) && !starter.hasPermission("liarsbar.admin")) {
+            starter.sendMessage(ChatColor.RED + "只有本桌玩家可以开始游戏。");
+            return;
+        }
+        List<Map.Entry<Integer, Player>> seatedPlayers = seatMap.entrySet().stream()
+                .filter(entry -> entry.getValue() != null && entry.getValue().isOnline())
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toList());
+        if (seatedPlayers.size() < 2) {
             if (starter != null) starter.sendMessage(ChatColor.RED + "至少需要 2 名玩家。");
             return;
         }
 
         players.clear();
-        for (int i = 0; i < waitingPlayers.size(); i++) {
-            players.add(new PlayerState(waitingPlayers.get(i), i));
-        }
         waitingPlayers.clear();
+        seatMap.clear();
+        for (Map.Entry<Integer, Player> entry : seatedPlayers) {
+            seatMap.put(entry.getKey(), entry.getValue());
+            movePlayerToSeat(entry.getValue(), entry.getKey());
+            players.add(new PlayerState(entry.getValue(), entry.getKey()));
+        }
         joinedCount = players.size();
         state = GameState.DEALING;
         broadcast(ChatColor.YELLOW + "游戏开始！模式：" + ChatColor.GOLD + ChatColor.BOLD + betMode.getDisplay());
@@ -378,6 +481,14 @@ public class Table {
 
     private void startTurn(boolean standard) {
         if (checkWin()) return;
+        if (players.isEmpty()) {
+            state = GameState.IDLE;
+            buildDisplay();
+            return;
+        }
+        if (currentPlayerIndex < 0 || currentPlayerIndex >= players.size()) {
+            currentPlayerIndex = 0;
+        }
 
         PlayerState current = players.get(currentPlayerIndex);
         while (!current.isAlive() || !current.hasCards()) {
@@ -387,6 +498,7 @@ public class Table {
 
         cancelTurnTimer();
         turnSecondsLeft = 30;
+        showTurnBossBar(current);
 
         current.getPlayer().sendTitle(ChatColor.GREEN + ">>>你的回合<<<", "", 10, 70, 20);
         current.getPlayer().playSound(current.getPlayer().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1f, 1f);
@@ -411,6 +523,7 @@ public class Table {
             @Override
             public void run() {
                 turnSecondsLeft--;
+                updateTurnBossBar(finalCurrent);
                 if (turnSecondsLeft <= 0) {
                     cancel();
                     handleTimeout(finalCurrent);
@@ -421,8 +534,13 @@ public class Table {
 
     public void selectCard(Player player, int cardIndex) {
         PlayerState ps = findState(player);
-        if (ps == null || ps != players.get(currentPlayerIndex)) {
+        if (currentPlayerIndex < 0 || currentPlayerIndex >= players.size()
+                || ps == null || ps != players.get(currentPlayerIndex)) {
             player.sendMessage(ChatColor.RED + "现在不是你的回合。");
+            return;
+        }
+        if (cardIndex < 0 || cardIndex >= ps.getHand().size()) {
+            player.sendMessage(ChatColor.RED + "无效的手牌序号。");
             return;
         }
         ps.toggleSelection(cardIndex);
@@ -436,7 +554,8 @@ public class Table {
 
     public void playCards(Player player) {
         PlayerState ps = findState(player);
-        if (ps == null || ps != players.get(currentPlayerIndex)) {
+        if (state != GameState.PLAYING || currentPlayerIndex < 0 || currentPlayerIndex >= players.size()
+                || ps == null || ps != players.get(currentPlayerIndex)) {
             player.sendMessage(ChatColor.RED + "现在不是你的回合。");
             return;
         }
@@ -447,6 +566,11 @@ public class Table {
         }
         if (sel.size() > 3) {
             player.sendMessage(ChatColor.RED + "一次最多出 3 张牌。");
+            return;
+        }
+        if (sel.stream().anyMatch(i -> i < 0 || i >= ps.getHand().size())) {
+            ps.clearSelection();
+            player.sendMessage(ChatColor.RED + "选择已过期，请重新选择手牌。");
             return;
         }
 
@@ -474,7 +598,8 @@ public class Table {
 
     public void challenge(Player player) {
         PlayerState ps = findState(player);
-        if (ps == null || ps != players.get(currentPlayerIndex)) {
+        if (state != GameState.PLAYING || currentPlayerIndex < 0 || currentPlayerIndex >= players.size()
+                || ps == null || ps != players.get(currentPlayerIndex)) {
             player.sendMessage(ChatColor.RED + "现在不是你的回合。");
             return;
         }
@@ -587,6 +712,9 @@ public class Table {
         if (aliveWithCards.size() <= 1) {
             state = GameState.ENDED;
             cancelTurnTimer();
+            for (Player player : getAllParticipants()) {
+                player.leaveVehicle();
+            }
             clearDisplay();
 
             PlayerState winner = aliveWithCards.isEmpty() ? null : aliveWithCards.get(0);
@@ -625,6 +753,9 @@ public class Table {
     public void endGame(Player sender) {
         cancelTurnTimer();
         state = GameState.ENDED;
+        for (Player player : getAllParticipants()) {
+            player.leaveVehicle();
+        }
         clearDisplay();
         broadcast(ChatColor.YELLOW + "游戏被 " + sender.getName() + " 强制结束。");
 
@@ -663,6 +794,7 @@ public class Table {
 
     private void cancelTurnTimer() {
         if (turnTimer != null) { turnTimer.cancel(); turnTimer = null; }
+        hideTurnBossBar();
     }
 
     private void broadcast(String message) {
@@ -671,6 +803,7 @@ public class Table {
 
     public void destroy() {
         cancelTurnTimer();
+        for (Player p : getAllParticipants()) p.leaveVehicle();
         clearDisplay();
         for (Player p : getAllParticipants()) p.sendMessage(ChatColor.YELLOW + "本桌已被删除。");
         players.clear();
