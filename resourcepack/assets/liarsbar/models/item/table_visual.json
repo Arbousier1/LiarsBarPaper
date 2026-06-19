@@ -1,9 +1,5 @@
 {
-  "credit": "Blockbench model generated for LiarsBar: table_visual",
-  "texture_size": [
-    16,
-    16
-  ],
+  "credit": "LiarsBarPaper refined table model",
   "textures": {
     "navy": "minecraft:block/blue_concrete",
     "red": "minecraft:block/red_concrete",
@@ -15,1782 +11,281 @@
   },
   "elements": [
     {
-      "name": "navy lower plinth",
-      "from": [
-        -2.0,
-        0.0,
-        -2.0
-      ],
-      "to": [
-        18.0,
-        2.0,
-        18.0
-      ],
+      "name": "north west leg",
+      "from": [-12, 0, -12],
+      "to": [-8, 13, -8],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
+        "north": {"texture": "#wood"},
+        "east": {"texture": "#wood"},
+        "south": {"texture": "#wood"},
+        "west": {"texture": "#wood"},
+        "up": {"texture": "#wood"},
+        "down": {"texture": "#wood"}
       }
     },
     {
-      "name": "gold plinth trim",
-      "from": [
-        -4.0,
-        2.0,
-        -4.0
-      ],
-      "to": [
-        20.0,
-        3.0,
-        20.0
-      ],
+      "name": "north east leg",
+      "from": [24, 0, -12],
+      "to": [28, 13, -8],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#wood"},
+        "east": {"texture": "#wood"},
+        "south": {"texture": "#wood"},
+        "west": {"texture": "#wood"},
+        "up": {"texture": "#wood"},
+        "down": {"texture": "#wood"}
       }
     },
     {
-      "name": "white central pedestal",
-      "from": [
-        4.0,
-        3.0,
-        4.0
-      ],
-      "to": [
-        12.0,
-        11.0,
-        12.0
-      ],
+      "name": "south west leg",
+      "from": [-12, 0, 24],
+      "to": [-8, 13, 28],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        }
+        "north": {"texture": "#wood"},
+        "east": {"texture": "#wood"},
+        "south": {"texture": "#wood"},
+        "west": {"texture": "#wood"},
+        "up": {"texture": "#wood"},
+        "down": {"texture": "#wood"}
       }
     },
     {
-      "name": "navy pedestal inset",
-      "from": [
-        5.0,
-        4.0,
-        5.0
-      ],
-      "to": [
-        11.0,
-        10.0,
-        11.0
-      ],
+      "name": "south east leg",
+      "from": [24, 0, 24],
+      "to": [28, 13, 28],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
+        "north": {"texture": "#wood"},
+        "east": {"texture": "#wood"},
+        "south": {"texture": "#wood"},
+        "west": {"texture": "#wood"},
+        "up": {"texture": "#wood"},
+        "down": {"texture": "#wood"}
       }
     },
     {
-      "name": "blue under table slab",
-      "from": [
-        -13.0,
-        10.0,
-        -13.0
-      ],
-      "to": [
-        29.0,
-        13.0,
-        29.0
-      ],
+      "name": "lower apron north",
+      "from": [-14, 10, -14],
+      "to": [30, 13, -10],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
+        "north": {"texture": "#navy"},
+        "east": {"texture": "#navy"},
+        "south": {"texture": "#navy"},
+        "west": {"texture": "#navy"},
+        "up": {"texture": "#navy"},
+        "down": {"texture": "#navy"}
       }
     },
     {
-      "name": "white main tabletop",
-      "from": [
-        -16.0,
-        13.0,
-        -16.0
-      ],
-      "to": [
-        32.0,
-        16.0,
-        32.0
-      ],
+      "name": "lower apron south",
+      "from": [-14, 10, 26],
+      "to": [30, 13, 30],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#white"
-        }
+        "north": {"texture": "#navy"},
+        "east": {"texture": "#navy"},
+        "south": {"texture": "#navy"},
+        "west": {"texture": "#navy"},
+        "up": {"texture": "#navy"},
+        "down": {"texture": "#navy"}
+      }
+    },
+    {
+      "name": "lower apron west",
+      "from": [-14, 10, -10],
+      "to": [-10, 13, 26],
+      "faces": {
+        "north": {"texture": "#navy"},
+        "east": {"texture": "#navy"},
+        "south": {"texture": "#navy"},
+        "west": {"texture": "#navy"},
+        "up": {"texture": "#navy"},
+        "down": {"texture": "#navy"}
+      }
+    },
+    {
+      "name": "lower apron east",
+      "from": [26, 10, -10],
+      "to": [30, 13, 26],
+      "faces": {
+        "north": {"texture": "#navy"},
+        "east": {"texture": "#navy"},
+        "south": {"texture": "#navy"},
+        "west": {"texture": "#navy"},
+        "up": {"texture": "#navy"},
+        "down": {"texture": "#navy"}
+      }
+    },
+    {
+      "name": "wood tabletop",
+      "from": [-16, 13, -16],
+      "to": [32, 16, 32],
+      "faces": {
+        "north": {"texture": "#wood"},
+        "east": {"texture": "#wood"},
+        "south": {"texture": "#wood"},
+        "west": {"texture": "#wood"},
+        "up": {"texture": "#wood"},
+        "down": {"texture": "#wood"}
       }
     },
     {
       "name": "red felt inset",
-      "from": [
-        -9.0,
-        16.0,
-        -9.0
-      ],
-      "to": [
-        25.0,
-        17.0,
-        25.0
-      ],
+      "from": [-10, 16, -10],
+      "to": [26, 16.8, 26],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        }
+        "north": {"texture": "#red"},
+        "east": {"texture": "#red"},
+        "south": {"texture": "#red"},
+        "west": {"texture": "#red"},
+        "up": {"texture": "#red"},
+        "down": {"texture": "#red"}
       }
     },
     {
-      "name": "gold north outer rail",
-      "from": [
-        -16.0,
-        16.0,
-        -16.0
-      ],
-      "to": [
-        32.0,
-        18.0,
-        -14.0
-      ],
+      "name": "gold north rail",
+      "from": [-16, 16, -16],
+      "to": [32, 18, -13],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "gold south outer rail",
-      "from": [
-        -16.0,
-        16.0,
-        30.0
-      ],
-      "to": [
-        32.0,
-        18.0,
-        32.0
-      ],
+      "name": "gold south rail",
+      "from": [-16, 16, 29],
+      "to": [32, 18, 32],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "gold west outer rail",
-      "from": [
-        -16.0,
-        16.0,
-        -14.0
-      ],
-      "to": [
-        -14.0,
-        18.0,
-        30.0
-      ],
+      "name": "gold west rail",
+      "from": [-16, 16, -13],
+      "to": [-13, 18, 29],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "gold east outer rail",
-      "from": [
-        30.0,
-        16.0,
-        -14.0
-      ],
-      "to": [
-        32.0,
-        18.0,
-        30.0
-      ],
+      "name": "gold east rail",
+      "from": [29, 16, -13],
+      "to": [32, 18, 29],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "navy center well",
-      "from": [
-        2.0,
-        17.0,
-        2.0
-      ],
-      "to": [
-        14.0,
-        18.0,
-        14.0
-      ],
+      "name": "center tray base",
+      "from": [2, 16.8, 2],
+      "to": [14, 17.8, 14],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
+        "north": {"texture": "#navy"},
+        "east": {"texture": "#navy"},
+        "south": {"texture": "#navy"},
+        "west": {"texture": "#navy"},
+        "up": {"texture": "#navy"},
+        "down": {"texture": "#navy"}
       }
     },
     {
-      "name": "dark center recess",
-      "from": [
-        4.0,
-        18.0,
-        4.0
-      ],
-      "to": [
-        12.0,
-        19.0,
-        12.0
-      ],
+      "name": "center dark card pile",
+      "from": [4, 17.8, 4],
+      "to": [12, 18.5, 12],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#dark"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#dark"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#dark"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#dark"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#dark"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#dark"
-        }
+        "north": {"texture": "#dark"},
+        "east": {"texture": "#dark"},
+        "south": {"texture": "#dark"},
+        "west": {"texture": "#dark"},
+        "up": {"texture": "#dark"},
+        "down": {"texture": "#dark"}
       }
     },
     {
-      "name": "gold center north trim",
-      "from": [
-        2.0,
-        18.0,
-        2.0
-      ],
-      "to": [
-        14.0,
-        19.0,
-        3.0
-      ],
+      "name": "center gold north lip",
+      "from": [2, 17.8, 2],
+      "to": [14, 18.6, 3],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "gold center south trim",
-      "from": [
-        2.0,
-        18.0,
-        13.0
-      ],
-      "to": [
-        14.0,
-        19.0,
-        14.0
-      ],
+      "name": "center gold south lip",
+      "from": [2, 17.8, 13],
+      "to": [14, 18.6, 14],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "gold center west trim",
-      "from": [
-        2.0,
-        18.0,
-        3.0
-      ],
-      "to": [
-        3.0,
-        19.0,
-        13.0
-      ],
+      "name": "center gold west lip",
+      "from": [2, 17.8, 3],
+      "to": [3, 18.6, 13],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     },
     {
-      "name": "gold center east trim",
-      "from": [
-        13.0,
-        18.0,
-        3.0
-      ],
-      "to": [
-        14.0,
-        19.0,
-        13.0
-      ],
+      "name": "center gold east lip",
+      "from": [13, 17.8, 3],
+      "to": [14, 18.6, 13],
       "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "east red player panel",
-      "from": [
-        25.0,
-        17.1,
-        5.0
-      ],
-      "to": [
-        29.0,
-        18.1,
-        11.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        }
-      }
-    },
-    {
-      "name": "west red player panel",
-      "from": [
-        -13.0,
-        17.1,
-        5.0
-      ],
-      "to": [
-        -9.0,
-        18.1,
-        11.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        }
-      }
-    },
-    {
-      "name": "south red player panel",
-      "from": [
-        5.0,
-        17.1,
-        25.0
-      ],
-      "to": [
-        11.0,
-        18.1,
-        29.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        }
-      }
-    },
-    {
-      "name": "north red player panel",
-      "from": [
-        5.0,
-        17.1,
-        -13.0
-      ],
-      "to": [
-        11.0,
-        18.1,
-        -9.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#red"
-        }
-      }
-    },
-    {
-      "name": "east navy card slot",
-      "from": [
-        26.0,
-        18.2,
-        6.0
-      ],
-      "to": [
-        28.0,
-        19.0,
-        10.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
-      }
-    },
-    {
-      "name": "west navy card slot",
-      "from": [
-        -12.0,
-        18.2,
-        6.0
-      ],
-      "to": [
-        -10.0,
-        19.0,
-        10.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
-      }
-    },
-    {
-      "name": "south navy card slot",
-      "from": [
-        6.0,
-        18.2,
-        26.0
-      ],
-      "to": [
-        10.0,
-        19.0,
-        28.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
-      }
-    },
-    {
-      "name": "north navy card slot",
-      "from": [
-        6.0,
-        18.2,
-        -12.0
-      ],
-      "to": [
-        10.0,
-        19.0,
-        -10.0
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#navy"
-        }
+        "north": {"texture": "#gold"},
+        "east": {"texture": "#gold"},
+        "south": {"texture": "#gold"},
+        "west": {"texture": "#gold"},
+        "up": {"texture": "#gold"},
+        "down": {"texture": "#gold"}
       }
     }
   ],
   "display": {
     "gui": {
-      "rotation": [
-        30,
-        225,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        0.55,
-        0.55,
-        0.55
-      ]
+      "rotation": [30, 225, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.55, 0.55, 0.55]
     },
     "fixed": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ]
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [1, 1, 1]
     },
     "head": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ]
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [1, 1, 1]
     }
   }
 }
