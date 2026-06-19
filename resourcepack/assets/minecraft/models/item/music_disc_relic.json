@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/music_disc_relic"
+  },
+  "overrides": [
+    { "predicate": { "custom_model_data": 9999450 }, "model": "minecraft:item/game/jijifujiji_a" },
+    { "predicate": { "custom_model_data": 9999451 }, "model": "minecraft:item/game/jijifujiji_q" },
+    { "predicate": { "custom_model_data": 9999452 }, "model": "minecraft:item/game/jijifujiji_k" },
+    { "predicate": { "custom_model_data": 9999453 }, "model": "minecraft:item/game/jijifujiji_kun" },
+    { "predicate": { "custom_model_data": 9999454 }, "model": "minecraft:item/game/jijifujiji_tnt" },
+    { "predicate": { "custom_model_data": 9999456 }, "model": "minecraft:item/gun/jijifujiji_liar_bar_gun" },
+    { "predicate": { "custom_model_data": 9999455 }, "model": "minecraft:item/game/jijifujiji_back" }
+  ]
+}

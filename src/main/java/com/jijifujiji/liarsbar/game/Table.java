@@ -2,7 +2,6 @@ package com.jijifujiji.liarsbar.game;
 
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import com.jijifujiji.liarsbar.display.DisplayManager;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -83,6 +82,11 @@ public class Table {
         buildDisplay();
     }
 
+    public boolean isSeatOccupied(int seatIndex) {
+        Player occupant = seatMap.get(seatIndex);
+        return occupant != null && occupant.isOnline();
+    }
+
     // ========== Seat & Display ==========
 
     public void buildDisplay() {
@@ -90,17 +94,17 @@ public class Table {
         if (location == null || location.getWorld() == null) return;
 
         // Mode label above table
-        modeLabel = DisplayManager.spawnLabel(plugin, location.clone().add(0, 2.2, 0),
+        modeLabel = DisplayManager.spawnLabel(location.clone().add(0, 2.2, 0),
                 betMode.getDisplay(), Color.fromRGB(0x402020), false);
 
         // Status label
-        statusLabel = DisplayManager.spawnLabel(plugin, location.clone().add(0, 1.6, 0),
+        statusLabel = DisplayManager.spawnLabel(location.clone().add(0, 1.6, 0),
                 "等待玩家加入...", Color.fromRGB(0x004400), false);
 
         // Seat interactions
         for (int i = 0; i < 4; i++) {
             Location seatLoc = location.clone().add(SEAT_OFFSETS[i][0], SEAT_OFFSETS[i][1], SEAT_OFFSETS[i][2]);
-            Interaction seat = DisplayManager.spawnInteraction(plugin, seatLoc, 0.8f, 1.6f,
+            Interaction seat = DisplayManager.spawnInteraction(seatLoc, 0.8f, 1.6f,
                     new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.JOIN_SEAT, id, i, -1));
             if (seat != null) {
                 seatInteractions.add(seat);
@@ -110,7 +114,7 @@ public class Table {
 
         // Start button
         Location btnLoc = location.clone().add(0, 1.0, 0);
-        startButton = DisplayManager.spawnInteraction(plugin, btnLoc, 0.6f, 0.6f,
+        startButton = DisplayManager.spawnInteraction(btnLoc, 0.6f, 0.6f,
                 new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, id, -1, -1));
         if (startButton != null) displayEntities.add(startButton);
 
@@ -134,7 +138,7 @@ public class Table {
         for (int i = 0; i < hand.size(); i++) {
             Location cardLoc = seatLoc.clone().add(cardOff[0] * (i + 1), 0.2, cardOff[2] * (i + 1));
             int modelData = getCardModelData(hand.get(i));
-            ItemDisplay cardDisplay = DisplayManager.spawnCard(plugin, cardLoc,
+            ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
                     hand.get(i).getDisplay(), modelData, id, ps.getSeatIndex(), i);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, yaw, 0.8f);
@@ -142,7 +146,7 @@ public class Table {
                 displayEntities.add(cardDisplay);
             }
 
-            Interaction cardInteract = DisplayManager.spawnInteraction(plugin, cardLoc, 0.5f, 0.7f,
+            Interaction cardInteract = DisplayManager.spawnInteraction(cardLoc, 0.5f, 0.7f,
                     new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.PLAY_CARD,
                             id, ps.getSeatIndex(), i));
             if (cardInteract != null) {
@@ -161,7 +165,7 @@ public class Table {
         for (int i = 0; i < centerCards.size(); i++) {
             Location cardLoc = location.clone().add((i - centerCards.size() / 2.0) * 0.5, 0.8, 0);
             int modelData = getCardModelData(centerCards.get(i));
-            ItemDisplay cardDisplay = DisplayManager.spawnCard(plugin, cardLoc,
+            ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
                     centerCards.get(i).getDisplay(), modelData, id, -1, -1);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, 0f, 0.6f);
@@ -179,12 +183,12 @@ public class Table {
         if (playButton != null) { playButton.remove(); displayEntities.remove(playButton); }
         if (challengeButton != null) { challengeButton.remove(); displayEntities.remove(challengeButton); }
 
-        playButton = DisplayManager.spawnInteraction(plugin, seatLoc.clone().add(0, -0.3, 0), 0.5f, 0.5f,
+        playButton = DisplayManager.spawnInteraction(seatLoc.clone().add(0, -0.3, 0), 0.5f, 0.5f,
                 new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.PLAY_BUTTON, id, -1, -1));
         if (playButton != null) displayEntities.add(playButton);
 
         if (canChallenge && lastPlayer != null && lastPlayer != current) {
-            challengeButton = DisplayManager.spawnInteraction(plugin, seatLoc.clone().add(0, -0.3, 0.5), 0.5f, 0.5f,
+            challengeButton = DisplayManager.spawnInteraction(seatLoc.clone().add(0, -0.3, 0.5), 0.5f, 0.5f,
                     new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.CHALLENGE_BUTTON, id, -1, -1));
             if (challengeButton != null) displayEntities.add(challengeButton);
         }
@@ -198,20 +202,20 @@ public class Table {
 
     private void clearPlayerDisplay(int seatIndex) {
         List<ItemDisplay> cards = playerCardDisplays.remove(seatIndex);
-        if (cards != null) DisplayManager.removeManagedEntities(plugin, new ArrayList<>(cards));
+        if (cards != null) DisplayManager.removeManagedEntities(new ArrayList<>(cards));
         List<Interaction> intersects = playerCardInteractions.remove(seatIndex);
-        if (intersects != null) DisplayManager.removeManagedEntities(plugin, new ArrayList<>(intersects));
+        if (intersects != null) DisplayManager.removeManagedEntities(new ArrayList<>(intersects));
     }
 
     private void clearCenterDisplay() {
-        DisplayManager.removeManagedEntities(plugin, new ArrayList<>(centerCardDisplays));
+        DisplayManager.removeManagedEntities(new ArrayList<>(centerCardDisplays));
         centerCardDisplays.clear();
     }
 
     public void clearDisplay() {
         clearCenterDisplay();
         for (int i = 0; i < 4; i++) clearPlayerDisplay(i);
-        DisplayManager.removeManagedEntities(plugin, new ArrayList<>(displayEntities));
+        DisplayManager.removeManagedEntities(new ArrayList<>(displayEntities));
         displayEntities.clear();
         seatInteractions.clear();
         modeLabel = null;
@@ -224,11 +228,11 @@ public class Table {
 
     private int getCardModelData(Card card) {
         return switch (card) {
-            case A -> 1;
-            case Q -> 2;
-            case K -> 3;
-            case KUN -> 4;
-            case DEMON -> 5;
+            case A -> 9999450;
+            case Q -> 9999451;
+            case K -> 9999452;
+            case KUN -> 9999453;
+            case DEMON -> 9999454;
         };
     }
 
@@ -424,9 +428,9 @@ public class Table {
         ps.toggleSelection(cardIndex);
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1.2f);
         if (ps.getSelected().contains(cardIndex)) {
-            player.sendActionBar(Component.text(ChatColor.GREEN + "已选择第 " + (cardIndex + 1) + " 张牌 [" + ps.getHand().get(cardIndex).getDisplay() + "]"));
+            player.sendMessage(ChatColor.GREEN + "已选择第 " + (cardIndex + 1) + " 张牌 [" + ps.getHand().get(cardIndex).getDisplay() + "]");
         } else {
-            player.sendActionBar(Component.text(ChatColor.RED + "已取消第 " + (cardIndex + 1) + " 张牌"));
+            player.sendMessage(ChatColor.RED + "已取消第 " + (cardIndex + 1) + " 张牌");
         }
     }
 
@@ -555,14 +559,25 @@ public class Table {
             if (checkWin()) return;
             state = GameState.PLAYING;
             currentPlayerIndex = nextAliveIndex(currentPlayerIndex);
+            centerCards.clear();
+            lastPlayer = null;
             clearCenterDisplay();
             startTurn(true);
         });
     }
 
     private void handleTimeout(PlayerState ps) {
-        broadcast(ChatColor.GOLD + ps.getPlayer().getName() + ChatColor.YELLOW + " 回合超时，自动质疑。");
-        challenge(ps.getPlayer());
+        if (lastPlayer != null && lastPlayer != ps) {
+            broadcast(ChatColor.GOLD + ps.getPlayer().getName() + ChatColor.YELLOW + " 回合超时，自动质疑。");
+            challenge(ps.getPlayer());
+        } else {
+            broadcast(ChatColor.GOLD + ps.getPlayer().getName() + ChatColor.YELLOW + " 回合超时，自动出牌。");
+            if (!ps.getHand().isEmpty()) {
+                ps.clearSelection();
+                ps.toggleSelection(0);
+                playCards(ps.getPlayer());
+            }
+        }
     }
 
     private boolean checkWin() {

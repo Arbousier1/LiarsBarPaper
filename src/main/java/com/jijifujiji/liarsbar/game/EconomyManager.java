@@ -46,7 +46,7 @@ public class EconomyManager {
         if (economy == null) return false;
         EconomyResponse resp = economy.withdrawPlayer(player, amount);
         if (!resp.transactionSuccess()) {
-            logger.log(Level.WARNING, "Vault 扣费失败: {0} 从 {1} 扣 {2}: {3}",
+            logger.log(Level.WARNING, "Vault 扣费失败: {0} 扣 {1}: {2}",
                     new Object[]{player.getName(), amount, resp.errorMessage});
             return false;
         }
@@ -57,8 +57,8 @@ public class EconomyManager {
         if (economy == null) return false;
         EconomyResponse resp = economy.depositPlayer(player, amount);
         if (!resp.transactionSuccess()) {
-            logger.log(Level.WARNING, "Vault 存款失败: {0} 存 {1} 给 {2}: {3}",
-                    new Object[]{amount, player.getName(), resp.errorMessage});
+            logger.log(Level.WARNING, "Vault 存款失败: {0} 存 {1}: {2}",
+                    new Object[]{player.getName(), amount, resp.errorMessage});
             return false;
         }
         return true;

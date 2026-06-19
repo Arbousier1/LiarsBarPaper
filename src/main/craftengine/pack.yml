@@ -1,0 +1,4 @@
+author: JIJIFUJIJI
+version: ${projectVersion}
+description: Liar's Bar card items for CraftEngine
+namespace: liarsbar

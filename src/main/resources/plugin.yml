@@ -4,7 +4,7 @@ main: com.jijifujiji.liarsbar.LiarsBarPlugin
 api-version: '1.20'
 authors: [hunterkyou, Paper-Port]
 description: MC 版骗子酒馆 Paper 插件 — Display Entity 交互 + Vault 经济
-softdepend: [Vault]
+softdepend: [CraftEngine, Vault]
 commands:
   liarbar:
     description: 骗子酒馆主命令

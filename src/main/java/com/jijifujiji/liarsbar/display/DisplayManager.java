@@ -4,7 +4,6 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +37,7 @@ public final class DisplayManager {
     }
 
     @SuppressWarnings("deprecation")
-    public static ItemDisplay spawnCard(JavaPlugin plugin, Location location, String cardName, int modelData,
+    public static ItemDisplay spawnCard(Location location, String cardName, int modelData,
                                          String tableId, int seatIndex, int cardIndex) {
         World world = location.getWorld();
         if (world == null) return null;
@@ -50,7 +49,9 @@ public final class DisplayManager {
         display.setDisplayWidth(0.4f);
         display.setDisplayHeight(0.6f);
 
-        ItemStack item = new ItemStack(Material.PAPER);
+        Material cardMaterial = Material.matchMaterial("MUSIC_DISC_RELIC");
+        if (cardMaterial == null) cardMaterial = Material.PAPER;
+        ItemStack item = new ItemStack(cardMaterial);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             try {
@@ -68,7 +69,7 @@ public final class DisplayManager {
         return display;
     }
 
-    public static Interaction spawnInteraction(JavaPlugin plugin, Location location, float width, float height,
+    public static Interaction spawnInteraction(Location location, float width, float height,
                                                 ClickAction action) {
         World world = location.getWorld();
         if (world == null) return null;
@@ -83,7 +84,7 @@ public final class DisplayManager {
         return interaction;
     }
 
-    public static TextDisplay spawnLabel(JavaPlugin plugin, Location location, String text,
+    public static TextDisplay spawnLabel(Location location, String text,
                                           Color bgColor, boolean seeThrough) {
         World world = location.getWorld();
         if (world == null) return null;

@@ -2,6 +2,9 @@
 # gambling-mode: 是否允许玩家赌饭团币/坤坤币（true=开启，false=仅赌命）
 gambling-mode: true
 
+# 资源包由 CraftEngine 自动分发，无需手动配置 URL
+# 如果你没有安装 CraftEngine，请自行配置资源包托管
+
 # 五张桌子的中心坐标，管理员也可在游戏内用 /liarbar set <a-e> 设置
 tables:
   a:

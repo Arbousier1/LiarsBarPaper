@@ -1,0 +1,35 @@
+items:
+  liarsbar:card_a:
+    material: PAPER
+    item-model: liarsbar:item/card_a
+    data:
+      custom-model-data: 1
+      item-name: "<!i><red>A</red>"
+
+  liarsbar:card_q:
+    material: PAPER
+    item-model: liarsbar:item/card_q
+    data:
+      custom-model-data: 2
+      item-name: "<!i><blue>Q</blue>"
+
+  liarsbar:card_k:
+    material: PAPER
+    item-model: liarsbar:item/card_k
+    data:
+      custom-model-data: 3
+      item-name: "<!i><gold>K</gold>"
+
+  liarsbar:card_kun:
+    material: PAPER
+    item-model: liarsbar:item/card_kun
+    data:
+      custom-model-data: 4
+      item-name: "<!i><light_purple>KUN</light_purple>"
+
+  liarsbar:card_demon:
+    material: PAPER
+    item-model: liarsbar:item/card_demon
+    data:
+      custom-model-data: 5
+      item-name: "<!i><dark_purple>DEMON</dark_purple>"

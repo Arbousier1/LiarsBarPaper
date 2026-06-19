@@ -151,10 +151,12 @@ public class LiarBarCommand implements CommandExecutor {
         }
         // 自动分配一个空座位
         for (int i = 0; i < 4; i++) {
-            table.joinSeat(player, i);
-            return;
+            if (!table.isSeatOccupied(i)) {
+                table.joinSeat(player, i);
+                return;
+            }
         }
-        player.sendMessage(ChatColor.RED + "无法加入，请点击座位实体。");
+        player.sendMessage(ChatColor.RED + "无法加入，座位已满。");
     }
 
     private void handleLeave(Player player) {
