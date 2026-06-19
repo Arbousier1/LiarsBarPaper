@@ -39,7 +39,7 @@ public final class DisplayManager {
         }
     }
 
-    public static ItemDisplay spawnCard(Location location, String cardName, String itemModel,
+    public static ItemDisplay spawnCard(Location location, String cardName, String itemModel, int customModelData,
                                          String tableId, int seatIndex, int cardIndex) {
         World world = location.getWorld();
         if (world == null) return null;
@@ -51,17 +51,26 @@ public final class DisplayManager {
         display.setDisplayWidth(0.4f);
         display.setDisplayHeight(0.6f);
 
-        Material cardMaterial = Material.matchMaterial("PAPER");
+        Material cardMaterial = Material.matchMaterial("MUSIC_DISC_RELIC");
         if (cardMaterial == null) cardMaterial = Material.PAPER;
         ItemStack item = new ItemStack(cardMaterial);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
+            applyCustomModelData(meta, customModelData);
             applyItemModel(meta, itemModel);
             meta.setDisplayName(cardName);
             item.setItemMeta(meta);
         }
         display.setItemStack(item);
         return display;
+    }
+
+    private static void applyCustomModelData(ItemMeta meta, int customModelData) {
+        try {
+            meta.getClass().getMethod("setCustomModelData", int.class).invoke(meta, customModelData);
+        } catch (Exception ignored) {
+            // Custom model data is a legacy fallback; item_model handles newer clients.
+        }
     }
 
     private static void applyItemModel(ItemMeta meta, String itemModel) {

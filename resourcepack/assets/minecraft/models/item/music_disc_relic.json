@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/template_music_disc",
+  "textures": {
+    "layer0": "minecraft:item/music_disc_relic"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 9999450
+      },
+      "model": "liarsbar:item/game/jijifujiji_a"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999451
+      },
+      "model": "liarsbar:item/game/jijifujiji_q"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999452
+      },
+      "model": "liarsbar:item/game/jijifujiji_k"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999453
+      },
+      "model": "liarsbar:item/game/jijifujiji_kun"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999454
+      },
+      "model": "liarsbar:item/game/jijifujiji_tnt"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999455
+      },
+      "model": "liarsbar:item/game/jijifujiji_back"
+    }
+  ]
+}

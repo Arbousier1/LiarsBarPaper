@@ -217,7 +217,7 @@ public class Table {
             Card card = hand.get(i);
             Location cardLoc = seatLoc.clone().add(cardOff[0] * (i + 1), 0.2, cardOff[2] * (i + 1));
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    card.getDisplay(), card.getItemModel(), id, ps.getSeatIndex(), i);
+                    card.getDisplay(), card.getItemModel(), card.getCustomModelData(), id, ps.getSeatIndex(), i);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, yaw, 0.8f);
                 cardDisplays.add(cardDisplay);
@@ -244,7 +244,7 @@ public class Table {
             Card card = centerCards.get(i);
             Location cardLoc = location.clone().add((i - centerCards.size() / 2.0) * 0.5, 0.8, 0);
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    card.getDisplay(), card.getItemModel(), id, -1, -1);
+                    card.getDisplay(), card.getItemModel(), card.getCustomModelData(), id, -1, -1);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, 0f, 0.6f);
                 centerCardDisplays.add(cardDisplay);

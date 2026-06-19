@@ -1,0 +1,22 @@
+{
+  "model": {
+    "type": "range_dispatch",
+    "property": "custom_model_data",
+    "entries": [
+      {
+        "threshold": 9999420,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/gun/jijifujiji_gun_police"
+        }
+      },
+      {
+        "threshold": 9999456,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/gun/jijifujiji_liar_bar_gun"
+        }
+      }
+    ]
+  }
+}

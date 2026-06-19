@@ -1,0 +1,50 @@
+{
+  "model": {
+    "type": "range_dispatch",
+    "property": "custom_model_data",
+    "entries": [
+      {
+        "threshold": 9999450,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/game/jijifujiji_a"
+        }
+      },
+      {
+        "threshold": 9999451,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/game/jijifujiji_q"
+        }
+      },
+      {
+        "threshold": 9999452,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/game/jijifujiji_k"
+        }
+      },
+      {
+        "threshold": 9999453,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/game/jijifujiji_kun"
+        }
+      },
+      {
+        "threshold": 9999454,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/game/jijifujiji_tnt"
+        }
+      },
+      {
+        "threshold": 9999455,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/game/jijifujiji_back"
+        }
+      }
+    ]
+  }
+}
