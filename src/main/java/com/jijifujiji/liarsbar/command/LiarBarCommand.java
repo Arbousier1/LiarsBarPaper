@@ -40,7 +40,7 @@ public class LiarBarCommand implements CommandExecutor {
             case "stop" -> handleStop(player, args);
             case "mode" -> handleMode(player, args);
             case "select" -> handleSelect(player, args);
-            case "play" -> handlePlay(player, args);
+            case "play" -> handlePlay(player);
             case "challenge" -> handleChallenge(player);
             case "info" -> handleInfo(player);
             case "help" -> sendHelp(player);

@@ -2,8 +2,7 @@ package com.jijifujiji.liarsbar.game;
 
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import com.jijifujiji.liarsbar.display.DisplayManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -425,11 +424,9 @@ public class Table {
         ps.toggleSelection(cardIndex);
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1.2f);
         if (ps.getSelected().contains(cardIndex)) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-                    ChatColor.GREEN + "已选择第 " + (cardIndex + 1) + " 张牌 [" + ps.getHand().get(cardIndex).getDisplay() + "]"));
+            player.sendActionBar(Component.text(ChatColor.GREEN + "已选择第 " + (cardIndex + 1) + " 张牌 [" + ps.getHand().get(cardIndex).getDisplay() + "]"));
         } else {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-                    ChatColor.RED + "已取消第 " + (cardIndex + 1) + " 张牌"));
+            player.sendActionBar(Component.text(ChatColor.RED + "已取消第 " + (cardIndex + 1) + " 张牌"));
         }
     }
 
@@ -579,7 +576,7 @@ public class Table {
 
             PlayerState winner = aliveWithCards.isEmpty() ? null : aliveWithCards.get(0);
             if (winner != null) {
-                broadcast(ChatColor.GOLD + ChatColor.BOLD + "=== 游戏结束 ===");
+                broadcast(ChatColor.GOLD + "" + ChatColor.BOLD + "=== 游戏结束 ===");
                 broadcast(ChatColor.YELLOW + "恭喜 " + ChatColor.GOLD + ChatColor.BOLD + winner.getPlayer().getName() +
                         ChatColor.YELLOW + " 获得了胜利！");
 
