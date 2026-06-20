@@ -1,5 +1,5 @@
 {
-  "credit": "LiarsBarPaper blueprint pass - lower round tavern table",
+  "credit": "LiarsBarPaper clean rectangular tavern card table",
   "textures": {
     "navy": "liarsbar:item/furniture/navy",
     "red": "liarsbar:item/furniture/red_felt",
@@ -11,49 +11,16 @@
   },
   "elements": [
     {
-      "name": "low pedestal base center",
+      "name": "west foot",
       "from": [
-        3,
+        -5,
         0,
-        3
+        5.8
       ],
       "to": [
-        13,
-        1.1,
-        13
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "west curved foot",
-      "from": [
-        -3,
-        0,
-        5.5
-      ],
-      "to": [
-        3,
+        3.2,
         1,
-        10.5
+        10.2
       ],
       "faces": {
         "north": {
@@ -77,16 +44,16 @@
       }
     },
     {
-      "name": "east curved foot",
+      "name": "east foot",
       "from": [
-        13,
+        12.8,
         0,
-        5.5
+        5.8
       ],
       "to": [
-        19,
+        21,
         1,
-        10.5
+        10.2
       ],
       "faces": {
         "north": {
@@ -110,148 +77,16 @@
       }
     },
     {
-      "name": "north curved foot",
+      "name": "north foot",
       "from": [
-        5.5,
-        0,
-        -3
-      ],
-      "to": [
-        10.5,
-        1,
-        3
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "south curved foot",
-      "from": [
-        5.5,
-        0,
-        13
-      ],
-      "to": [
-        10.5,
-        1,
-        19
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "lower round collar",
-      "from": [
-        2,
-        1.05,
-        2
-      ],
-      "to": [
-        14,
-        1.9,
-        14
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "pedestal lower post",
-      "from": [
-        4.3,
-        1.8,
-        4.3
-      ],
-      "to": [
-        11.7,
-        6.2,
-        11.7
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "pedestal waist collar",
-      "from": [
-        3.1,
         5.8,
-        3.1
+        0,
+        -5
       ],
       "to": [
-        12.9,
-        6.7,
-        12.9
+        10.2,
+        1,
+        3.2
       ],
       "faces": {
         "north": {
@@ -275,15 +110,81 @@
       }
     },
     {
-      "name": "pedestal upper post",
+      "name": "south foot",
+      "from": [
+        5.8,
+        0,
+        12.8
+      ],
+      "to": [
+        10.2,
+        1,
+        21
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "square pedestal base",
+      "from": [
+        2.2,
+        0.8,
+        2.2
+      ],
+      "to": [
+        13.8,
+        1.8,
+        13.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "pedestal post",
       "from": [
         5,
-        6.4,
+        1.7,
         5
       ],
       "to": [
         11,
-        11.7,
+        11.25,
         11
       ],
       "faces": {
@@ -308,16 +209,16 @@
       }
     },
     {
-      "name": "top support collar",
+      "name": "upper support block",
       "from": [
-        2.8,
-        11.45,
-        2.8
+        2.5,
+        11.15,
+        2.5
       ],
       "to": [
-        13.2,
-        12.15,
-        13.2
+        13.5,
+        12,
+        13.5
       ],
       "faces": {
         "north": {
@@ -341,16 +242,16 @@
       }
     },
     {
-      "name": "dark underside center",
+      "name": "dark underside slab",
       "from": [
         -10.5,
-        12.05,
-        -3
+        12,
+        -5.5
       ],
       "to": [
         26.5,
-        12.45,
-        19
+        12.42,
+        21.5
       ],
       "faces": {
         "north": {
@@ -374,148 +275,16 @@
       }
     },
     {
-      "name": "dark underside north step",
-      "from": [
-        -5.5,
-        12.05,
-        -8.5
-      ],
-      "to": [
-        21.5,
-        12.45,
-        -3
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "dark underside south step",
-      "from": [
-        -5.5,
-        12.05,
-        19
-      ],
-      "to": [
-        21.5,
-        12.45,
-        24.5
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "dark underside north cap",
-      "from": [
-        2,
-        12.05,
-        -12
-      ],
-      "to": [
-        14,
-        12.45,
-        -8.5
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "dark underside south cap",
-      "from": [
-        2,
-        12.05,
-        24.5
-      ],
-      "to": [
-        14,
-        12.45,
-        28
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "wood tabletop center",
+      "name": "single clean tabletop slab",
       "from": [
         -12,
-        12.45,
-        -3.5
+        12.42,
+        -7
       ],
       "to": [
         28,
-        14,
-        19.5
+        13.85,
+        23
       ],
       "faces": {
         "north": {
@@ -539,149 +308,17 @@
       }
     },
     {
-      "name": "wood tabletop north shoulder",
+      "name": "single red felt inset",
       "from": [
-        -6.5,
-        12.45,
-        -9
-      ],
-      "to": [
-        22.5,
-        14,
+        -8.5,
+        14.02,
         -3.5
       ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "wood tabletop south shoulder",
-      "from": [
-        -6.5,
-        12.45,
+      "to": [
+        24.5,
+        14.22,
         19.5
       ],
-      "to": [
-        22.5,
-        14,
-        25
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "wood tabletop north cap",
-      "from": [
-        2,
-        12.45,
-        -12.5
-      ],
-      "to": [
-        14,
-        14,
-        -9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "wood tabletop south cap",
-      "from": [
-        2,
-        12.45,
-        25
-      ],
-      "to": [
-        14,
-        14,
-        28.5
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "felt center clear play area",
-      "from": [
-        -7.5,
-        14.16,
-        1
-      ],
-      "to": [
-        23.5,
-        14.34,
-        15
-      ],
       "faces": {
         "north": {
           "texture": "#red"
@@ -704,346 +341,214 @@
       }
     },
     {
-      "name": "felt north shoulder",
+      "name": "brass front rail",
       "from": [
-        -3,
-        14.16,
-        -3.7
+        -8.8,
+        14.28,
+        -3.9
       ],
       "to": [
-        19,
-        14.34,
-        1
+        24.8,
+        14.44,
+        -3.25
       ],
       "faces": {
         "north": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "east": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "south": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "west": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "up": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "down": {
-          "texture": "#red"
+          "texture": "#gold"
         }
       }
     },
     {
-      "name": "felt south shoulder",
+      "name": "brass back rail",
       "from": [
-        -3,
-        14.16,
-        15
+        -8.8,
+        14.28,
+        19.25
       ],
       "to": [
-        19,
-        14.34,
-        19.7
+        24.8,
+        14.44,
+        19.9
       ],
       "faces": {
         "north": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "east": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "south": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "west": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "up": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "down": {
-          "texture": "#red"
+          "texture": "#gold"
         }
       }
     },
     {
-      "name": "felt north cap",
+      "name": "brass left rail",
       "from": [
-        3,
-        14.16,
-        -6
+        -9.15,
+        14.28,
+        -3.25
       ],
       "to": [
-        13,
-        14.34,
-        -3.7
+        -8.5,
+        14.44,
+        19.25
       ],
       "faces": {
         "north": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "east": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "south": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "west": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "up": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "down": {
-          "texture": "#red"
+          "texture": "#gold"
         }
       }
     },
     {
-      "name": "felt south cap",
+      "name": "brass right rail",
       "from": [
-        3,
-        14.16,
-        19.7
+        24.5,
+        14.28,
+        -3.25
       ],
       "to": [
-        13,
-        14.34,
-        22
+        25.15,
+        14.44,
+        19.25
       ],
       "faces": {
         "north": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "east": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "south": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "west": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "up": {
-          "texture": "#red"
+          "texture": "#gold"
         },
         "down": {
-          "texture": "#red"
+          "texture": "#gold"
         }
       }
     },
     {
-      "name": "brass north center rail",
+      "name": "revolver cylinder",
       "from": [
-        -7.5,
+        17.8,
         14.42,
-        0.2
+        4
       ],
       "to": [
-        23.5,
-        14.56,
-        0.8
+        20.4,
+        15.15,
+        6.6
       ],
       "faces": {
         "north": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "east": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "south": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "west": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "up": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "down": {
-          "texture": "#gold"
+          "texture": "#dark"
         }
       }
     },
     {
-      "name": "brass south center rail",
+      "name": "revolver barrel",
       "from": [
-        -7.5,
-        14.42,
-        15.2
+        20.2,
+        14.55,
+        4.85
       ],
       "to": [
-        23.5,
-        14.56,
-        15.8
+        25.2,
+        14.94,
+        5.75
       ],
       "faces": {
         "north": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "east": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "south": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "west": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "up": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "down": {
-          "texture": "#gold"
+          "texture": "#dark"
         }
       }
     },
     {
-      "name": "brass west center rail",
+      "name": "revolver grip",
       "from": [
-        -8.2,
-        14.42,
-        1
-      ],
-      "to": [
-        -7.6,
-        14.56,
-        15
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "brass east center rail",
-      "from": [
-        23.6,
-        14.42,
-        1
-      ],
-      "to": [
-        24.2,
-        14.56,
-        15
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "brass north cap rail",
-      "from": [
-        3,
-        14.42,
-        -6.7
-      ],
-      "to": [
-        13,
-        14.56,
-        -6.1
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "brass south cap rail",
-      "from": [
-        3,
-        14.42,
-        22.1
-      ],
-      "to": [
-        13,
-        14.56,
-        22.7
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "revolver cylinder at table edge",
-      "from": [
-        18.6,
+        16.9,
         14.48,
-        5.5
+        6.75
       ],
       "to": [
-        21.2,
-        15.28,
-        8.1
+        19.3,
+        14.95,
+        9.25
       ],
       "faces": {
         "north": {
@@ -1067,115 +572,16 @@
       }
     },
     {
-      "name": "revolver short barrel",
+      "name": "small brass dealer marker",
       "from": [
-        21,
+        -6.8,
+        14.3,
+        16.4
+      ],
+      "to": [
+        -4.2,
         14.62,
-        6.35
-      ],
-      "to": [
-        26.8,
-        15.02,
-        7.25
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "revolver angled grip block",
-      "from": [
-        17.7,
-        14.54,
-        8.3
-      ],
-      "to": [
-        20.1,
-        15,
-        11
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "dice cup body grounded",
-      "from": [
-        -9.4,
-        14.48,
-        16.1
-      ],
-      "to": [
-        -5.8,
-        17.25,
-        19.7
-      ],
-      "faces": {
-        "north": {
-          "texture": "#dark"
-        },
-        "east": {
-          "texture": "#dark"
-        },
-        "south": {
-          "texture": "#dark"
-        },
-        "west": {
-          "texture": "#dark"
-        },
-        "up": {
-          "texture": "#dark"
-        },
-        "down": {
-          "texture": "#dark"
-        }
-      }
-    },
-    {
-      "name": "dice cup rim west",
-      "from": [
-        -9.85,
-        17.22,
-        15.75
-      ],
-      "to": [
-        -9.35,
-        17.55,
-        20.05
+        19
       ],
       "faces": {
         "north": {
@@ -1199,101 +605,35 @@
       }
     },
     {
-      "name": "dice cup rim east",
+      "name": "dealer marker dark inset",
       "from": [
-        -5.85,
-        17.22,
-        15.75
+        -6.35,
+        14.66,
+        16.85
       ],
       "to": [
-        -5.35,
-        17.55,
-        20.05
+        -4.65,
+        14.92,
+        18.55
       ],
       "faces": {
         "north": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "east": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "south": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "west": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "up": {
-          "texture": "#gold"
+          "texture": "#dark"
         },
         "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "dice cup rim north",
-      "from": [
-        -9.35,
-        17.22,
-        15.75
-      ],
-      "to": [
-        -5.85,
-        17.55,
-        16.25
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "dice cup rim south",
-      "from": [
-        -9.35,
-        17.22,
-        19.55
-      ],
-      "to": [
-        -5.85,
-        17.55,
-        20.05
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
+          "texture": "#dark"
         }
       }
     }
