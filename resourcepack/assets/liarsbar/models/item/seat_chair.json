@@ -1,5 +1,5 @@
 {
-  "credit": "LiarsBarPaper clean tavern chair - single cushion and separate back frame",
+  "credit": "LiarsBarPaper slim tavern chair - thin cushion low back",
   "textures": {
     "navy": "liarsbar:item/furniture/navy",
     "red": "liarsbar:item/furniture/red_felt",
@@ -11,16 +11,16 @@
   },
   "elements": [
     {
-      "name": "front left leg",
+      "name": "front left slim leg",
       "from": [
-        2.6,
+        2.8,
         0,
-        2.5
+        2.7
       ],
       "to": [
-        4,
-        6.7,
-        4
+        3.9,
+        5.35,
+        3.8
       ],
       "faces": {
         "north": {
@@ -44,16 +44,16 @@
       }
     },
     {
-      "name": "front right leg",
+      "name": "front right slim leg",
       "from": [
-        12,
+        12.1,
         0,
-        2.5
+        2.7
       ],
       "to": [
-        13.4,
-        6.7,
-        4
+        13.2,
+        5.35,
+        3.8
       ],
       "faces": {
         "north": {
@@ -77,16 +77,16 @@
       }
     },
     {
-      "name": "back left post",
+      "name": "back left slim post",
       "from": [
-        2.6,
+        2.8,
         0,
-        11.3
+        10.75
       ],
       "to": [
-        4,
-        15.8,
-        12.8
+        3.9,
+        13.75,
+        11.95
       ],
       "faces": {
         "north": {
@@ -110,16 +110,16 @@
       }
     },
     {
-      "name": "back right post",
+      "name": "back right slim post",
       "from": [
-        12,
+        12.1,
         0,
-        11.3
+        10.75
       ],
       "to": [
-        13.4,
-        15.8,
-        12.8
+        13.2,
+        13.75,
+        11.95
       ],
       "faces": {
         "north": {
@@ -143,16 +143,16 @@
       }
     },
     {
-      "name": "front seat apron",
+      "name": "front thin apron",
       "from": [
-        4,
-        5.4,
+        3.9,
+        4.7,
         2.4
       ],
       "to": [
-        12,
-        6.5,
-        3.6
+        12.1,
+        5.35,
+        3.2
       ],
       "faces": {
         "north": {
@@ -176,16 +176,16 @@
       }
     },
     {
-      "name": "back seat apron",
+      "name": "back thin apron",
       "from": [
-        4,
-        5.4,
-        11.2
+        3.9,
+        4.7,
+        10.45
       ],
       "to": [
-        12,
-        6.5,
-        12.4
+        12.1,
+        5.35,
+        11.25
       ],
       "faces": {
         "north": {
@@ -209,16 +209,16 @@
       }
     },
     {
-      "name": "left side apron",
+      "name": "left thin side apron",
       "from": [
-        2.6,
-        5.4,
-        4
+        2.8,
+        4.7,
+        3.8
       ],
       "to": [
-        3.8,
-        6.5,
-        11.2
+        3.55,
+        5.35,
+        10.45
       ],
       "faces": {
         "north": {
@@ -242,16 +242,16 @@
       }
     },
     {
-      "name": "right side apron",
+      "name": "right thin side apron",
       "from": [
-        12.2,
-        5.4,
-        4
+        12.45,
+        4.7,
+        3.8
       ],
       "to": [
-        13.4,
-        6.5,
-        11.2
+        13.2,
+        5.35,
+        10.45
       ],
       "faces": {
         "north": {
@@ -275,16 +275,16 @@
       }
     },
     {
-      "name": "flat wooden seat board",
+      "name": "thin wooden seat board",
       "from": [
-        3.2,
-        6.7,
-        3
+        2.7,
+        5.35,
+        2.7
       ],
       "to": [
-        12.8,
-        7.55,
-        11
+        13.3,
+        5.95,
+        10.35
       ],
       "faces": {
         "north": {
@@ -308,16 +308,16 @@
       }
     },
     {
-      "name": "single red cushion",
+      "name": "single low red cushion",
       "from": [
-        3.6,
-        7.62,
-        3.3
+        3.25,
+        6.03,
+        3.05
       ],
       "to": [
-        12.4,
-        8.28,
-        10.65
+        12.75,
+        6.58,
+        9.65
       ],
       "faces": {
         "north": {
@@ -341,16 +341,16 @@
       }
     },
     {
-      "name": "back lower rail",
+      "name": "low back rail",
       "from": [
-        4,
-        9.7,
-        11.45
+        3.9,
+        8.65,
+        10.85
       ],
       "to": [
-        12,
-        10.85,
-        12.75
+        12.1,
+        9.45,
+        11.85
       ],
       "faces": {
         "north": {
@@ -374,16 +374,16 @@
       }
     },
     {
-      "name": "left back slat",
+      "name": "left narrow back slat",
       "from": [
-        5.15,
-        10.85,
-        11.58
+        5.2,
+        9.45,
+        10.95
       ],
       "to": [
-        6,
-        14.15,
-        12.62
+        5.95,
+        12.75,
+        11.75
       ],
       "faces": {
         "north": {
@@ -407,16 +407,16 @@
       }
     },
     {
-      "name": "middle back slat",
+      "name": "middle narrow back slat",
       "from": [
-        7.55,
-        10.85,
-        11.58
+        7.65,
+        9.45,
+        10.95
       ],
       "to": [
-        8.45,
-        14.15,
-        12.62
+        8.35,
+        12.75,
+        11.75
       ],
       "faces": {
         "north": {
@@ -440,16 +440,16 @@
       }
     },
     {
-      "name": "right back slat",
+      "name": "right narrow back slat",
       "from": [
-        10,
-        10.85,
-        11.58
+        10.05,
+        9.45,
+        10.95
       ],
       "to": [
-        10.85,
-        14.15,
-        12.62
+        10.8,
+        12.75,
+        11.75
       ],
       "faces": {
         "north": {
@@ -473,16 +473,82 @@
       }
     },
     {
-      "name": "back top rail",
+      "name": "top rounded back rail",
       "from": [
-        4,
-        14.15,
-        11.45
+        3.9,
+        12.75,
+        10.75
       ],
       "to": [
-        12,
-        15.45,
-        12.75
+        12.1,
+        13.75,
+        11.95
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "left low stretcher",
+      "from": [
+        3,
+        2.25,
+        4.2
+      ],
+      "to": [
+        3.75,
+        2.85,
+        10.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "right low stretcher",
+      "from": [
+        12.25,
+        2.25,
+        4.2
+      ],
+      "to": [
+        13,
+        2.85,
+        10.05
       ],
       "faces": {
         "north": {
