@@ -41,7 +41,6 @@ public final class TableDisplay {
         clear(location);
         if (location == null || location.getWorld() == null) return;
 
-        renderFurniture(location);
         modeLabel = DisplayManager.spawnLabel(location.clone().add(0, 2.2, 0),
                 betMode.getDisplay(), Color.fromRGB(0x0B2A66), false);
         statusLabel = DisplayManager.spawnLabel(location.clone().add(0, 1.6, 0),
@@ -203,26 +202,6 @@ public final class TableDisplay {
 
         if (location != null && location.getWorld() != null) {
             clearPersistedDisplayEntities(location);
-        }
-    }
-
-    private void renderFurniture(Location location) {
-        addManaged(DisplayManager.spawnFurniture(location.clone().add(0, 0.35, 0),
-                "Liars Bar Table", TableLayout.TABLE_FURNITURE_MODEL, TableLayout.TABLE_FURNITURE_MODEL_DATA,
-                0f, 1.0f, 3.4f, 1.6f, true));
-        addTableCollision(location);
-
-        for (int i = 0; i < TableLayout.SEAT_COUNT; i++) {
-            addManaged(DisplayManager.spawnFurniture(TableLayout.chairLocation(location, i),
-                    "Liars Bar Chair", TableLayout.CHAIR_FURNITURE_MODEL, TableLayout.CHAIR_FURNITURE_MODEL_DATA,
-                    TableLayout.chairYaw(i), 1.0f, 1.1f, 1.5f, true));
-        }
-    }
-
-    private void addTableCollision(Location location) {
-        double[] xOffsets = {-0.9, 0.0, 0.9};
-        for (double xOffset : xOffsets) {
-            addManaged(DisplayManager.spawnCollisionBox(location.clone().add(xOffset, TableLayout.TABLE_COLLISION_Y, 0)));
         }
     }
 

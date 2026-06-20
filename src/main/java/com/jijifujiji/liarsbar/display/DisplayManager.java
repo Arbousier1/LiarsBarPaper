@@ -138,40 +138,6 @@ public final class DisplayManager {
         return display;
     }
 
-    public static ItemDisplay spawnFurniture(Location location, String displayName, String itemModel,
-                                             int customModelData, float yaw, float scale,
-                                             float displayWidth, float displayHeight) {
-        return spawnFurniture(location, displayName, itemModel, customModelData, yaw, scale,
-                displayWidth, displayHeight, false);
-    }
-
-    public static ItemDisplay spawnFurniture(Location location, String displayName, String itemModel,
-                                             int customModelData, float yaw, float scale,
-                                             float displayWidth, float displayHeight,
-                                             boolean persistent) {
-        World world = location.getWorld();
-        if (world == null) return null;
-        ItemDisplay display = world.spawn(location, ItemDisplay.class);
-        display.setPersistent(persistent);
-        display.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.NONE);
-        display.setViewRange(64f);
-        display.setBrightness(new Display.Brightness(15, 15));
-        display.setDisplayWidth(displayWidth);
-        display.setDisplayHeight(displayHeight);
-
-        ItemStack item = new ItemStack(Material.CARROT_ON_A_STICK);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            applyCustomModelData(meta, customModelData);
-            applyItemModel(meta, itemModel);
-            meta.setDisplayName(displayName);
-            item.setItemMeta(meta);
-        }
-        display.setItemStack(item);
-        applyFurnitureTransform(display, yaw, scale);
-        return display;
-    }
-
     private static void applyCustomModelData(ItemMeta meta, int customModelData) {
         try {
             meta.getClass().getMethod("setCustomModelData", int.class).invoke(meta, customModelData);
@@ -228,36 +194,6 @@ public final class DisplayManager {
         return seat;
     }
 
-    public static Entity spawnCollisionBox(Location location) {
-        World world = location.getWorld();
-        if (world == null) return null;
-        Entity entity = world.spawnEntity(location, EntityType.SHULKER);
-        entity.setPersistent(true);
-        entity.setGravity(false);
-        entity.setSilent(true);
-        entity.setInvulnerable(true);
-        entity.addScoreboardTag("liarsbar_collision");
-
-        if (entity instanceof LivingEntity living) {
-            living.setRemoveWhenFarAway(false);
-            living.setCanPickupItems(false);
-            living.setCollidable(true);
-        }
-
-        invokeIfPresent(entity, "setAI", new Class<?>[] { boolean.class }, false);
-        invokeIfPresent(entity, "setInvisible", new Class<?>[] { boolean.class }, true);
-        invokeIfPresent(entity, "setPeek", new Class<?>[] { float.class }, 0.0f);
-        invokeIfPresent(entity, "setPeek", new Class<?>[] { int.class }, 0);
-        return entity;
-    }
-
-    private static void invokeIfPresent(Object target, String method, Class<?>[] parameterTypes, Object... args) {
-        try {
-            target.getClass().getMethod(method, parameterTypes).invoke(target, args);
-        } catch (Exception ignored) {
-        }
-    }
-
     public static TextDisplay spawnLabel(Location location, String text,
                                           Color bgColor, boolean seeThrough) {
         World world = location.getWorld();
@@ -293,18 +229,6 @@ public final class DisplayManager {
     }
 
     public static void applyCardTransform(ItemDisplay display, float yaw, float scale) {
-        try {
-            display.getClass().getMethod("setRotation", float.class, float.class).invoke(display, yaw, 0f);
-        } catch (Exception ignored) {
-        }
-        display.setTransformation(new Transformation(
-                new Vector3f(),
-                new AxisAngle4f(),
-                new Vector3f(scale, scale, scale),
-                new AxisAngle4f()));
-    }
-
-    private static void applyFurnitureTransform(ItemDisplay display, float yaw, float scale) {
         try {
             display.getClass().getMethod("setRotation", float.class, float.class).invoke(display, yaw, 0f);
         } catch (Exception ignored) {

@@ -22,19 +22,15 @@ public final class TableLayout {
 
     public static final float[] SEAT_YAWS = {90f, 180f, -90f, 0f};
 
-    public static final String TABLE_FURNITURE_MODEL = "liarsbar:table_visual";
-    public static final String CHAIR_FURNITURE_MODEL = "liarsbar:seat_chair";
-    public static final int TABLE_FURNITURE_MODEL_DATA = 9999460;
-    public static final int CHAIR_FURNITURE_MODEL_DATA = 9999461;
-
-    public static final double CHAIR_VISUAL_Y = 0.42;
-    private static final double CHAIR_MODEL_CENTER_Y = 8.0 / 16.0;
-    private static final double CHAIR_RED_CUSHION_TOP_Y = CHAIR_VISUAL_Y + ((7.65 / 16.0) - CHAIR_MODEL_CENTER_Y);
+    // Chair visual/collision is provided by CraftEngine furniture. This value only keeps
+    // gameplay seat anchors aligned with the top of the CE chair red cushion model.
+    private static final double CE_CHAIR_VISUAL_Y = 0.42;
+    private static final double CE_CHAIR_MODEL_CENTER_Y = 8.0 / 16.0;
+    private static final double CE_CHAIR_RED_CUSHION_TOP_Y = CE_CHAIR_VISUAL_Y + ((7.65 / 16.0) - CE_CHAIR_MODEL_CENTER_Y);
 
     public static final double SEAT_CLICK_Y = 0.10;
-    public static final double SEAT_RIDE_Y = CHAIR_RED_CUSHION_TOP_Y;
+    public static final double SEAT_RIDE_Y = CE_CHAIR_RED_CUSHION_TOP_Y;
     public static final double SEAT_CARD_BASE_Y = 0.44;
-    public static final double TABLE_COLLISION_Y = 0.08;
 
     public static final String MANAGED_ENTITY_TAG = "liarsbar_managed";
 
@@ -51,10 +47,6 @@ public final class TableLayout {
         return tableLocation.clone().add(seatX(seatIndex), SEAT_CLICK_Y, seatZ(seatIndex));
     }
 
-    public static Location chairLocation(Location tableLocation, int seatIndex) {
-        return tableLocation.clone().add(seatX(seatIndex), CHAIR_VISUAL_Y, seatZ(seatIndex));
-    }
-
     public static Location playerCardLocation(Location tableLocation, int seatIndex, int cardIndex) {
         return tableLocation.clone().add(
                 seatX(seatIndex) + CARD_OFFSETS[seatIndex][0] * (cardIndex + 1),
@@ -68,11 +60,6 @@ public final class TableLayout {
 
     public static Location actionButtonLocation(Location tableLocation, int seatIndex, double zOffset) {
         return tableLocation.clone().add(seatX(seatIndex), SEAT_CARD_BASE_Y - 0.3, seatZ(seatIndex) + zOffset);
-    }
-
-    public static float chairYaw(int seatIndex) {
-        float yaw = SEAT_YAWS[seatIndex] + 180f;
-        return yaw > 180f ? yaw - 360f : yaw;
     }
 
     public static String tableEntityTag(String tableId) {
