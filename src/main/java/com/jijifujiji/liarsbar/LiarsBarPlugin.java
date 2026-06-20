@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 public final class LiarsBarPlugin extends JavaPlugin {
 
@@ -82,7 +83,13 @@ public final class LiarsBarPlugin extends JavaPlugin {
                 return;
             }
 
-            Path targetRoot = pluginsDir.toPath().resolve("CraftEngine").resolve("resources").resolve("liarsbar");
+            Path resourcesRoot = pluginsDir.toPath().resolve("CraftEngine").resolve("resources").normalize();
+            Path targetRoot = resourcesRoot.resolve("liarsbar").normalize();
+            if (!targetRoot.startsWith(resourcesRoot) || targetRoot.equals(resourcesRoot)) {
+                getLogger().warning("Refusing to install CraftEngine bundle outside the expected resource directory: " + targetRoot);
+                return;
+            }
+            deleteRecursively(targetRoot);
             Files.createDirectories(targetRoot);
 
             String index = new String(indexStream.readAllBytes(), StandardCharsets.UTF_8);
@@ -113,6 +120,17 @@ public final class LiarsBarPlugin extends JavaPlugin {
             getLogger().info("Installed CraftEngine resource pack bundle to " + targetRoot + " (" + copied + " files).");
         } catch (IOException e) {
             getLogger().warning("Failed to install CraftEngine resource pack bundle: " + e.getMessage());
+        }
+    }
+
+    private void deleteRecursively(Path root) throws IOException {
+        if (!Files.exists(root)) {
+            return;
+        }
+        try (var paths = Files.walk(root)) {
+            for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) {
+                Files.deleteIfExists(path);
+            }
         }
     }
 }
