@@ -2,8 +2,10 @@ package com.jijifujiji.liarsbar.display;
 
 import com.jijifujiji.liarsbar.game.TableLayout;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
@@ -15,6 +17,7 @@ public final class CraftEngineFurnitureBridge {
     private static final String AUTO_FURNITURE_TAG = "liarsbar_ce_furniture";
     private static final String TABLE_FURNITURE_ID = "liarsbar:table_visual";
     private static final String CHAIR_FURNITURE_ID = "liarsbar:seat_chair";
+    private static final NamespacedKey CE_FURNITURE_ID_KEY = new NamespacedKey("craftengine", "furniture_id");
 
     private final Logger logger;
 
@@ -42,8 +45,10 @@ public final class CraftEngineFurnitureBridge {
         if (tableLocation == null || tableLocation.getWorld() == null) return;
         String tableTag = TableLayout.tableEntityTag(tableId);
         for (Entity entity : tableLocation.getWorld().getNearbyEntities(tableLocation, 4.0, 3.0, 4.0)) {
-            if (!entity.getScoreboardTags().contains(AUTO_FURNITURE_TAG)
-                    || !entity.getScoreboardTags().contains(tableTag)) {
+            boolean taggedForTable = entity.getScoreboardTags().contains(AUTO_FURNITURE_TAG)
+                    && entity.getScoreboardTags().contains(tableTag);
+            boolean legacyLiarsBarFurniture = isLegacyTableSetFurniture(entity, tableLocation);
+            if (!taggedForTable && !legacyLiarsBarFurniture) {
                 continue;
             }
             destroyCraftEngineFurniture(entity);
@@ -116,6 +121,53 @@ public final class CraftEngineFurnitureBridge {
         }
     }
 
+    private boolean isLegacyTableSetFurniture(Entity entity, Location tableLocation) {
+        try {
+            Object manager = craftEngineFurnitureManager();
+            Object furniture = loadedFurniture(manager, entity.getEntityId());
+            if (furniture == null) {
+                String persistentId = entity.getPersistentDataContainer().get(CE_FURNITURE_ID_KEY, PersistentDataType.STRING);
+                return isLiarsBarFurnitureId(persistentId)
+                        && isExpectedTableSetLocation(persistentId, tableLocation, entity.getLocation());
+            }
+
+            String id = furnitureId(furniture);
+            if (!isLiarsBarFurnitureId(id)) {
+                return false;
+            }
+
+            Entity baseEntity = placedFurnitureEntity(furniture);
+            Location location = baseEntity != null ? baseEntity.getLocation() : entity.getLocation();
+            return isExpectedTableSetLocation(id, tableLocation, location);
+        } catch (ReflectiveOperationException | RuntimeException ignored) {
+            return false;
+        }
+    }
+
+    private boolean isLiarsBarFurnitureId(String id) {
+        return TABLE_FURNITURE_ID.equals(id) || CHAIR_FURNITURE_ID.equals(id);
+    }
+
+    private boolean isExpectedTableSetLocation(String furnitureId, Location tableLocation, Location furnitureLocation) {
+        if (furnitureLocation == null || furnitureLocation.getWorld() == null) return false;
+        if (!furnitureLocation.getWorld().equals(tableLocation.getWorld())) return false;
+        if (TABLE_FURNITURE_ID.equals(furnitureId)) {
+            return furnitureLocation.distanceSquared(TableLayout.tableFurnitureLocation(tableLocation)) <= 0.36;
+        }
+        for (int i = 0; i < TableLayout.SEAT_COUNT; i++) {
+            if (furnitureLocation.distanceSquared(TableLayout.chairFurnitureLocation(tableLocation, i)) <= 0.36) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String furnitureId(Object furniture) throws ReflectiveOperationException {
+        Object config = furniture.getClass().getField("config").get(furniture);
+        Object id = config.getClass().getMethod("id").invoke(config);
+        return id == null ? "" : id.toString();
+    }
+
     private Object craftEngineFurnitureManager() throws ReflectiveOperationException {
         Class<?> managerClass = Class.forName("net.momirealms.craftengine.bukkit.entity.furniture.BukkitFurnitureManager");
         return managerClass.getMethod("instance").invoke(null);
@@ -170,6 +222,8 @@ public final class CraftEngineFurnitureBridge {
     private Object loadedFurniture(Object manager, int entityId) throws ReflectiveOperationException {
         String[] methodNames = {
                 "loadedFurnitureByMetaEntityId",
+                "loadedFurnitureByInteractableEntityId",
+                "loadedFurnitureByColliderEntityId",
                 "loadedFurnitureByRealEntityId",
                 "loadedFurnitureByEntityId"
         };
@@ -210,6 +264,16 @@ public final class CraftEngineFurnitureBridge {
 
     private Entity placedFurnitureEntity(Object placed) {
         if (placed == null) return null;
+        try {
+            Method method = placed.getClass().getMethod("metaDataEntity");
+            Object wrappedEntity = method.invoke(placed);
+            Entity entity = platformEntity(wrappedEntity);
+            if (entity != null) {
+                return entity;
+            }
+        } catch (ReflectiveOperationException ignored) {
+        }
+
         String[] entityMethods = { "baseEntity", "bukkitEntity", "getBukkitEntity" };
         for (String methodName : entityMethods) {
             try {
@@ -225,6 +289,18 @@ public final class CraftEngineFurnitureBridge {
             return display;
         }
         return null;
+    }
+
+    private Entity platformEntity(Object wrappedEntity) {
+        if (wrappedEntity == null) return null;
+        if (wrappedEntity instanceof Entity entity) return entity;
+        try {
+            Method method = wrappedEntity.getClass().getMethod("platformEntity");
+            Object entity = method.invoke(wrappedEntity);
+            return entity instanceof Entity bukkitEntity ? bukkitEntity : null;
+        } catch (ReflectiveOperationException ignored) {
+            return null;
+        }
     }
 
     private Method findMethod(Class<?> type, String name, int parameterCount) {
