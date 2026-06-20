@@ -3,6 +3,7 @@ package com.jijifujiji.liarsbar.listener;
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import com.jijifujiji.liarsbar.game.TableManager;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -24,19 +25,38 @@ public final class CraftEngineFurnitureInteractListener implements Listener {
 
     @SuppressWarnings("unchecked")
     public static void register(LiarsBarPlugin plugin) {
+        CraftEngineFurnitureInteractListener listener = new CraftEngineFurnitureInteractListener(plugin);
+        listener.registerFurnitureInteract();
+        listener.registerSeatVehicleEvent("org.bukkit.event.entity.EntityMountEvent", EventPriority.NORMAL, listener::handleSeatMount);
+        listener.registerSeatVehicleEvent("org.spigotmc.event.entity.EntityMountEvent", EventPriority.NORMAL, listener::handleSeatMount);
+        listener.registerSeatVehicleEvent("org.bukkit.event.entity.EntityDismountEvent", EventPriority.LOWEST, listener::handleSeatDismount);
+        listener.registerSeatVehicleEvent("org.spigotmc.event.entity.EntityDismountEvent", EventPriority.LOWEST, listener::handleSeatDismount);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerFurnitureInteract() {
         try {
             Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName(EVENT_CLASS).asSubclass(Event.class);
-            CraftEngineFurnitureInteractListener listener = new CraftEngineFurnitureInteractListener(plugin);
-            EventExecutor executor = (ignored, event) -> listener.handle(event);
+            EventExecutor executor = (ignored, event) -> handleFurnitureInteract(event);
             plugin.getServer().getPluginManager().registerEvent(
-                    eventClass, listener, EventPriority.NORMAL, executor, plugin, true);
+                    eventClass, this, EventPriority.NORMAL, executor, plugin, true);
             plugin.getLogger().info("CraftEngine furniture seat listener registered.");
         } catch (ClassNotFoundException e) {
             plugin.getLogger().warning("CraftEngine furniture event API was not found; chair clicks cannot join tables.");
         }
     }
 
-    private void handle(Event event) {
+    @SuppressWarnings("unchecked")
+    private void registerSeatVehicleEvent(String className, EventPriority priority, EventExecutor executor) {
+        try {
+            Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName(className).asSubclass(Event.class);
+            plugin.getServer().getPluginManager().registerEvent(eventClass, this, priority, executor, plugin, true);
+        } catch (ClassNotFoundException ignored) {
+            // Paper/Spigot have used different packages for mount events across versions.
+        }
+    }
+
+    private void handleFurnitureInteract(Event event) {
         try {
             Player player = (Player) event.getClass().getMethod("getPlayer").invoke(event);
             Location furnitureLocation = (Location) event.getClass().getMethod("location").invoke(event);
@@ -45,12 +65,60 @@ public final class CraftEngineFurnitureInteractListener implements Listener {
             TableManager.ChairSeat chairSeat = plugin.getTableManager().findChairSeat(furnitureLocation);
             if (chairSeat == null) return;
 
-            boolean joined = chairSeat.table().joinCraftEngineSeat(player, chairSeat.seatIndex());
-            if (!joined && event instanceof Cancellable cancellable) {
+            if (!chairSeat.table().canJoinCraftEngineSeat(player, chairSeat.seatIndex()) && event instanceof Cancellable cancellable) {
                 cancellable.setCancelled(true);
             }
         } catch (ReflectiveOperationException | ClassCastException e) {
             plugin.getLogger().warning("Failed to handle CraftEngine furniture interaction: " + e.getMessage());
+        }
+    }
+
+    private void handleSeatMount(Listener ignored, Event event) {
+        Entity entity = eventEntity(event, "getEntity");
+        if (!(entity instanceof Player player)) return;
+
+        TableManager.ChairSeat chairSeat = chairSeatForSeatEntity(eventEntity(event, "getMount"));
+        if (chairSeat == null) return;
+
+        boolean joined = chairSeat.table().joinCraftEngineSeat(player, chairSeat.seatIndex());
+        if (!joined) {
+            cancel(event);
+            plugin.getServer().getScheduler().runTask(plugin, player::leaveVehicle);
+        }
+    }
+
+    private void handleSeatDismount(Listener ignored, Event event) {
+        Entity entity = eventEntity(event, "getEntity");
+        if (!(entity instanceof Player player)) return;
+
+        TableManager.ChairSeat chairSeat = chairSeatForSeatEntity(eventEntity(event, "getDismounted"));
+        if (chairSeat == null) return;
+
+        boolean allowed = chairSeat.table().handleCraftEngineSeatDismount(player);
+        if (!allowed) {
+            cancel(event);
+        }
+    }
+
+    private TableManager.ChairSeat chairSeatForSeatEntity(Entity seatEntity) {
+        Entity furnitureEntity = plugin.getCraftEngineFurnitureBridge().furnitureEntityForSeat(seatEntity);
+        if (furnitureEntity == null) return null;
+        return plugin.getTableManager().findChairSeat(furnitureEntity.getLocation());
+    }
+
+    private Entity eventEntity(Event event, String methodName) {
+        if (event == null) return null;
+        try {
+            Object value = event.getClass().getMethod(methodName).invoke(event);
+            return value instanceof Entity entity ? entity : null;
+        } catch (ReflectiveOperationException ignored) {
+            return null;
+        }
+    }
+
+    private void cancel(Event event) {
+        if (event instanceof Cancellable cancellable) {
+            cancellable.setCancelled(true);
         }
     }
 

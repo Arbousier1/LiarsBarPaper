@@ -84,6 +84,12 @@ public class Table {
         return occupant != null && occupant.isOnline();
     }
 
+    private boolean isPlayerInSeat(Player player, int seatIndex) {
+        if (player == null) return false;
+        Player occupant = seatMap.get(seatIndex);
+        return occupant != null && occupant.getUniqueId().equals(player.getUniqueId());
+    }
+
     public void buildDisplay() {
         display.build(location, betMode);
     }
@@ -109,7 +115,18 @@ public class Table {
         return false;
     }
 
-    public boolean joinCraftEngineSeat(Player player, int seatIndex) {
+    public boolean canJoinCraftEngineSeat(Player player, int seatIndex) {
+        if (player == null || seatIndex < 0 || seatIndex >= TableLayout.SEAT_COUNT) {
+            return false;
+        }
+        if (isPlayerInSeat(player, seatIndex)) {
+            return true;
+        }
+        Table currentTable = plugin.getTableManager().findTableByPlayer(player);
+        if (currentTable != null && currentTable != this) {
+            player.sendMessage(ChatColor.RED + "\u4f60\u5df2\u7ecf\u5728\u5176\u4ed6\u684c\u4e86\uff0c\u8bf7\u5148\u79bb\u5f00\u5f53\u524d\u684c\u3002");
+            return false;
+        }
         if (state != GameState.IDLE && state != GameState.WAITING) {
             player.sendMessage(ChatColor.RED + "\u6e38\u620f\u8fdb\u884c\u4e2d\uff0c\u8bf7\u7b49\u5f85\u4e0b\u4e00\u5c40\u3002");
             return false;
@@ -123,6 +140,16 @@ public class Table {
         }
         if (isInGame(player)) {
             player.sendMessage(ChatColor.RED + "\u4f60\u5df2\u7ecf\u5728\u672c\u684c\u4e86\u3002");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean joinCraftEngineSeat(Player player, int seatIndex) {
+        if (isPlayerInSeat(player, seatIndex)) {
+            return true;
+        }
+        if (!canJoinCraftEngineSeat(player, seatIndex)) {
             return false;
         }
 
@@ -142,12 +169,34 @@ public class Table {
         return true;
     }
 
+    public boolean handleCraftEngineSeatDismount(Player player) {
+        if (player == null || !isInGame(player)) {
+            return true;
+        }
+        if (state == GameState.IDLE || state == GameState.WAITING) {
+            removePlayer(player, false);
+            return true;
+        }
+        if (state == GameState.DEALING || state == GameState.PLAYING || state == GameState.RESOLVING) {
+            player.sendMessage(ChatColor.RED + "\u5bf9\u5c40\u8fdb\u884c\u4e2d\uff0c\u6682\u65f6\u4e0d\u80fd\u79bb\u5f00\u5ea7\u4f4d\u3002");
+            return false;
+        }
+        return true;
+    }
+
     public int findSeatByCraftEngineChair(Location furnitureLocation) {
         return TableLayout.chairSeatIndex(location, furnitureLocation);
     }
 
     public void removePlayer(Player player) {
-        player.leaveVehicle();
+        removePlayer(player, true);
+    }
+
+    public void removePlayer(Player player, boolean leaveVehicle) {
+        if (player == null) return;
+        if (leaveVehicle) {
+            player.leaveVehicle();
+        }
         boolean wasActiveGame = state == GameState.PLAYING || state == GameState.RESOLVING || state == GameState.DEALING;
         int removedIndex = indexOfState(player);
         boolean wasCurrent = currentPlayerIndex >= 0 && removedIndex == currentPlayerIndex;

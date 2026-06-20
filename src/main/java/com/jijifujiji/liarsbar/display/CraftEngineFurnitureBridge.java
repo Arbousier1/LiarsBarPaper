@@ -50,6 +50,27 @@ public final class CraftEngineFurnitureBridge {
         }
     }
 
+    public Entity furnitureEntityForSeat(Entity seatEntity) {
+        if (seatEntity == null) return null;
+        try {
+            Class<?> api = Class.forName("net.momirealms.craftengine.bukkit.api.CraftEngineFurniture");
+            Method getLoadedFurnitureBySeat = api.getMethod("getLoadedFurnitureBySeat", Entity.class);
+            Object furniture = getLoadedFurnitureBySeat.invoke(null, seatEntity);
+            if (furniture == null) return null;
+
+            Method metaDataEntity = furniture.getClass().getMethod("metaDataEntity");
+            Object wrappedEntity = metaDataEntity.invoke(furniture);
+            if (wrappedEntity == null) return null;
+
+            Method platformEntity = wrappedEntity.getClass().getMethod("platformEntity");
+            Object entity = platformEntity.invoke(wrappedEntity);
+            return entity instanceof Entity bukkitEntity ? bukkitEntity : null;
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            logger.fine("Failed to resolve CraftEngine furniture from seat: " + e.getMessage());
+            return null;
+        }
+    }
+
     private boolean placeFurniture(String furnitureId, String tableId, Location location) {
         try {
             Object manager = craftEngineFurnitureManager();
