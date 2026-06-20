@@ -22,30 +22,11 @@ public final class TableLayout {
 
     public static final float[] SEAT_YAWS = {90f, 180f, -90f, 0f};
 
-    // Chair visual/collision is provided by CraftEngine furniture. This value only keeps
-    // gameplay seat anchors aligned with the top of the CE chair red cushion model.
-    private static final double CE_CHAIR_VISUAL_Y = 0.42;
-    private static final double CE_CHAIR_MODEL_CENTER_Y = 8.0 / 16.0;
-    private static final double CE_CHAIR_RED_CUSHION_TOP_Y = CE_CHAIR_VISUAL_Y + ((7.65 / 16.0) - CE_CHAIR_MODEL_CENTER_Y);
-
-    public static final double SEAT_CLICK_Y = 0.10;
-    public static final double SEAT_RIDE_Y = CE_CHAIR_RED_CUSHION_TOP_Y;
     public static final double SEAT_CARD_BASE_Y = 0.44;
 
     public static final String MANAGED_ENTITY_TAG = "liarsbar_managed";
 
     private TableLayout() {}
-
-    public static Location seatLocation(Location tableLocation, int seatIndex) {
-        Location seatLoc = tableLocation.clone().add(seatX(seatIndex), SEAT_RIDE_Y, seatZ(seatIndex));
-        seatLoc.setYaw(SEAT_YAWS[seatIndex]);
-        seatLoc.setPitch(0f);
-        return seatLoc;
-    }
-
-    public static Location seatClickLocation(Location tableLocation, int seatIndex) {
-        return tableLocation.clone().add(seatX(seatIndex), SEAT_CLICK_Y, seatZ(seatIndex));
-    }
 
     public static Location playerCardLocation(Location tableLocation, int seatIndex, int cardIndex) {
         return tableLocation.clone().add(
@@ -80,8 +61,18 @@ public final class TableLayout {
         return "liarsbar_table_" + normalizeTableId(tableId);
     }
 
-    public static String seatVehicleTag(int seatIndex) {
-        return "liarsbar_seat_vehicle_" + seatIndex;
+    public static int chairSeatIndex(Location tableLocation, Location furnitureLocation) {
+        if (tableLocation == null || furnitureLocation == null) return -1;
+        if (tableLocation.getWorld() == null || !tableLocation.getWorld().equals(furnitureLocation.getWorld())) return -1;
+        for (int i = 0; i < SEAT_COUNT; i++) {
+            Location chair = chairFurnitureLocation(tableLocation, i);
+            if (Math.abs(chair.getX() - furnitureLocation.getX()) <= 0.25
+                    && Math.abs(chair.getY() - furnitureLocation.getY()) <= 0.75
+                    && Math.abs(chair.getZ() - furnitureLocation.getZ()) <= 0.25) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static float chairYaw(int seatIndex) {

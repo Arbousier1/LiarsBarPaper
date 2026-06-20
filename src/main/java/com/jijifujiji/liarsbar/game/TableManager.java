@@ -22,6 +22,7 @@ public class TableManager {
         for (Map.Entry<String, Location> entry : configManager.getTableLocations().entrySet()) {
             Table table = new Table(plugin, entry.getKey(), entry.getValue());
             tables.put(entry.getKey().toLowerCase(), table);
+            table.syncCraftEngineFurniture();
             table.buildDisplay();
         }
     }
@@ -50,6 +51,16 @@ public class TableManager {
 
     public Collection<Table> getTables() {
         return tables.values();
+    }
+
+    public ChairSeat findChairSeat(Location furnitureLocation) {
+        for (Table table : tables.values()) {
+            int seatIndex = table.findSeatByCraftEngineChair(furnitureLocation);
+            if (seatIndex >= 0) {
+                return new ChairSeat(table, seatIndex);
+            }
+        }
+        return null;
     }
 
     public void registerPlayer(Player player, Table table) {
@@ -88,4 +99,6 @@ public class TableManager {
         tables.clear();
         playerTableIndex.clear();
     }
+
+    public record ChairSeat(Table table, int seatIndex) {}
 }

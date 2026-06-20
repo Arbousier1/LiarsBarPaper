@@ -186,14 +186,6 @@ public final class DisplayManager {
         return interaction;
     }
 
-    public static Interaction spawnSeatVehicle(Location location, boolean persistent) {
-        Interaction seat = spawnInteraction(location, 0.05f, 0.05f, null, persistent, false);
-        if (seat != null) {
-            seat.addScoreboardTag("liarsbar_seat_vehicle");
-        }
-        return seat;
-    }
-
     public static TextDisplay spawnLabel(Location location, String text,
                                           Color bgColor, boolean seeThrough) {
         World world = location.getWorld();

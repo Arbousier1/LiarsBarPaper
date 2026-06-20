@@ -21,7 +21,6 @@ public final class TableDisplay {
     private final String tableId;
     private final String tableEntityTag;
     private final List<Entity> managedEntities = new ArrayList<>();
-    private final List<Entity> seatVehicles = new ArrayList<>(TableLayout.SEAT_COUNT);
     private final Map<Integer, List<ItemDisplay>> playerCardDisplays = new HashMap<>();
     private final Map<Integer, List<Interaction>> playerCardInteractions = new HashMap<>();
     private final List<ItemDisplay> centerCardDisplays = new ArrayList<>();
@@ -45,20 +44,6 @@ public final class TableDisplay {
                 betMode.getDisplay(), Color.fromRGB(0x0B2A66), false);
         statusLabel = DisplayManager.spawnLabel(location.clone().add(0, 1.6, 0),
                 "等待玩家加入...", Color.fromRGB(0xB22234), false);
-
-        for (int i = 0; i < TableLayout.SEAT_COUNT; i++) {
-            Interaction seat = DisplayManager.spawnInteraction(TableLayout.seatClickLocation(location, i), 0.9f, 1.1f,
-                    new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.JOIN_SEAT, tableId, i, -1),
-                    true, true);
-            addManaged(seat);
-
-            Interaction vehicle = DisplayManager.spawnSeatVehicle(TableLayout.seatLocation(location, i), true);
-            if (vehicle != null) {
-                vehicle.addScoreboardTag(TableLayout.seatVehicleTag(i));
-            }
-            seatVehicles.add(vehicle);
-            addManaged(vehicle);
-        }
 
         startButton = DisplayManager.spawnInteraction(location.clone().add(0, 1.28, 0), 0.6f, 0.6f,
                 new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, tableId, -1, -1),
@@ -162,30 +147,6 @@ public final class TableDisplay {
         }
     }
 
-    public Entity findSeatVehicle(Location location, int seatIndex) {
-        if (seatIndex >= 0 && seatIndex < seatVehicles.size()) {
-            Entity cached = seatVehicles.get(seatIndex);
-            if (cached != null && cached.isValid()) return cached;
-        }
-        if (location == null || location.getWorld() == null) return null;
-
-        String seatTag = TableLayout.seatVehicleTag(seatIndex);
-        Location seatLoc = TableLayout.seatLocation(location, seatIndex);
-        for (Entity entity : location.getWorld().getNearbyEntities(seatLoc, 0.6, 0.6, 0.6)) {
-            if (entity.getScoreboardTags().contains(TableLayout.MANAGED_ENTITY_TAG)
-                    && entity.getScoreboardTags().contains(tableEntityTag)
-                    && entity.getScoreboardTags().contains(seatTag)) {
-                while (seatVehicles.size() <= seatIndex) seatVehicles.add(null);
-                seatVehicles.set(seatIndex, entity);
-                if (!managedEntities.contains(entity)) {
-                    managedEntities.add(entity);
-                }
-                return entity;
-            }
-        }
-        return null;
-    }
-
     public void clear(Location location) {
         clearCenterDisplay();
         for (int i = 0; i < TableLayout.SEAT_COUNT; i++) {
@@ -193,7 +154,6 @@ public final class TableDisplay {
         }
         DisplayManager.removeManagedEntities(new ArrayList<>(managedEntities));
         managedEntities.clear();
-        seatVehicles.clear();
         playButton = null;
         challengeButton = null;
         startButton = null;

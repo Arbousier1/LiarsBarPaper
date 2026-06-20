@@ -7,6 +7,7 @@ import com.jijifujiji.liarsbar.display.CraftEngineFurnitureBridge;
 import com.jijifujiji.liarsbar.display.DisplayManager;
 import com.jijifujiji.liarsbar.game.EconomyManager;
 import com.jijifujiji.liarsbar.game.TableManager;
+import com.jijifujiji.liarsbar.listener.CraftEngineFurnitureInteractListener;
 import com.jijifujiji.liarsbar.listener.EntityInteractListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,6 +44,7 @@ public final class LiarsBarPlugin extends JavaPlugin {
 
         getCommand("liarbar").setExecutor(new LiarBarCommand(this));
         getCommand("liarbar").setTabCompleter(new LiarBarTabCompleter(this));
+        CraftEngineFurnitureInteractListener.register(this);
         getServer().getPluginManager().registerEvents(new EntityInteractListener(this), this);
 
         getLogger().info("骗子酒馆 Paper 插件已加载！");

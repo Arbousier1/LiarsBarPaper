@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -85,25 +84,8 @@ public class Table {
         return occupant != null && occupant.isOnline();
     }
 
-    private void movePlayerToSeat(Player player, int seatIndex) {
-        if (location == null || location.getWorld() == null) return;
-        player.leaveVehicle();
-        player.teleport(TableLayout.seatLocation(location, seatIndex));
-        Entity seat = display.findSeatVehicle(location, seatIndex);
-        if (seat != null && seat.isValid()) {
-            seat.addPassenger(player);
-        }
-    }
-
     public void buildDisplay() {
         display.build(location, betMode);
-        if (location == null || location.getWorld() == null) return;
-        for (Map.Entry<Integer, Player> entry : seatMap.entrySet()) {
-            Player player = entry.getValue();
-            if (player != null && player.isOnline()) {
-                movePlayerToSeat(player, entry.getKey());
-            }
-        }
     }
 
     public void clearDisplay() {
@@ -122,37 +104,46 @@ public class Table {
         display.setStatus(text);
     }
 
-    public void joinSeat(Player player, int seatIndex) {
+    public boolean joinSeat(Player player, int seatIndex) {
+        player.sendMessage(ChatColor.YELLOW + "\u8bf7\u76f4\u63a5\u70b9\u51fb CraftEngine \u6905\u5b50\u7684\u7ea2\u8272\u5750\u57ab\u5165\u5ea7\u3002");
+        return false;
+    }
+
+    public boolean joinCraftEngineSeat(Player player, int seatIndex) {
         if (state != GameState.IDLE && state != GameState.WAITING) {
-            player.sendMessage(ChatColor.RED + "游戏进行中，请等待下一局。");
-            return;
+            player.sendMessage(ChatColor.RED + "\u6e38\u620f\u8fdb\u884c\u4e2d\uff0c\u8bf7\u7b49\u5f85\u4e0b\u4e00\u5c40\u3002");
+            return false;
         }
         if (seatMap.containsKey(seatIndex)) {
             Player occupant = seatMap.get(seatIndex);
             if (occupant != null && occupant.isOnline() && !occupant.equals(player)) {
-                player.sendMessage(ChatColor.RED + "这个座位已经有人了。");
-                return;
+                player.sendMessage(ChatColor.RED + "\u8fd9\u4e2a\u5ea7\u4f4d\u5df2\u7ecf\u6709\u4eba\u4e86\u3002");
+                return false;
             }
         }
         if (isInGame(player)) {
-            player.sendMessage(ChatColor.RED + "你已经在本桌了！");
-            return;
+            player.sendMessage(ChatColor.RED + "\u4f60\u5df2\u7ecf\u5728\u672c\u684c\u4e86\u3002");
+            return false;
         }
 
-        if (!chargeEntryCost(player)) return;
+        if (!chargeEntryCost(player)) return false;
 
         seatMap.put(seatIndex, player);
         waitingPlayers.add(player);
         registerPlayer(player);
-        movePlayerToSeat(player, seatIndex);
         joinedCount = participantCount();
-        setStatus("玩家: " + joinedCount + "/4");
+        setStatus("\u73a9\u5bb6: " + joinedCount + "/4");
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1f, 1.34f);
 
         if (state == GameState.IDLE) state = GameState.WAITING;
         if (joinedCount >= TableLayout.SEAT_COUNT) {
             startGame(player);
         }
+        return true;
+    }
+
+    public int findSeatByCraftEngineChair(Location furnitureLocation) {
+        return TableLayout.chairSeatIndex(location, furnitureLocation);
     }
 
     public void removePlayer(Player player) {
@@ -221,7 +212,6 @@ public class Table {
             Player player = entry.getValue();
             seatMap.put(entry.getKey(), player);
             registerPlayer(player);
-            movePlayerToSeat(player, entry.getKey());
             players.add(new PlayerState(player, entry.getKey()));
         }
         joinedCount = players.size();
