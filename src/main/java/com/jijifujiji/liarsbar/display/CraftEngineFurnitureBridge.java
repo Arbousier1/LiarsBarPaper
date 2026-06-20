@@ -126,7 +126,7 @@ public final class CraftEngineFurnitureBridge {
             Object manager = craftEngineFurnitureManager();
             Object furniture = loadedFurniture(manager, entity.getEntityId());
             if (furniture == null) {
-                String persistentId = entity.getPersistentDataContainer().get(CE_FURNITURE_ID_KEY, PersistentDataType.STRING);
+                String persistentId = persistentFurnitureId(entity);
                 return isLiarsBarFurnitureId(persistentId)
                         && isExpectedTableSetLocation(persistentId, tableLocation, entity.getLocation());
             }
@@ -146,6 +146,18 @@ public final class CraftEngineFurnitureBridge {
 
     private boolean isLiarsBarFurnitureId(String id) {
         return TABLE_FURNITURE_ID.equals(id) || CHAIR_FURNITURE_ID.equals(id);
+    }
+
+    private String persistentFurnitureId(Entity entity) {
+        try {
+            Object container = entity.getClass().getMethod("getPersistentDataContainer").invoke(entity);
+            Object id = container.getClass()
+                    .getMethod("get", NamespacedKey.class, PersistentDataType.class)
+                    .invoke(container, CE_FURNITURE_ID_KEY, PersistentDataType.STRING);
+            return id instanceof String value ? value : null;
+        } catch (ReflectiveOperationException | RuntimeException ignored) {
+            return null;
+        }
     }
 
     private boolean isExpectedTableSetLocation(String furnitureId, Location tableLocation, Location furnitureLocation) {
