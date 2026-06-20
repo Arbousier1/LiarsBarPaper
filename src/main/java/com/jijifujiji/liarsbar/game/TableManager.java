@@ -5,12 +5,17 @@ import com.jijifujiji.liarsbar.config.ConfigManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class TableManager {
 
     private final LiarsBarPlugin plugin;
     private final Map<String, Table> tables = new LinkedHashMap<>();
+    private final Map<UUID, Table> playerTableIndex = new HashMap<>();
 
     public TableManager(LiarsBarPlugin plugin, ConfigManager configManager) {
         this.plugin = plugin;
@@ -47,9 +52,33 @@ public class TableManager {
         return tables.values();
     }
 
+    public void registerPlayer(Player player, Table table) {
+        if (player != null && table != null) {
+            playerTableIndex.put(player.getUniqueId(), table);
+        }
+    }
+
+    public void unregisterPlayer(Player player) {
+        if (player != null) {
+            playerTableIndex.remove(player.getUniqueId());
+        }
+    }
+
     public Table findTableByPlayer(Player player) {
+        Table indexed = playerTableIndex.get(player.getUniqueId());
+        if (indexed != null && indexed.isInGame(player)) {
+            return indexed;
+        }
+        if (indexed != null) {
+            playerTableIndex.remove(player.getUniqueId());
+        }
+
+        // Fallback for players already seated before an index was populated.
         for (Table table : tables.values()) {
-            if (table.isInGame(player)) return table;
+            if (table.isInGame(player)) {
+                registerPlayer(player, table);
+                return table;
+            }
         }
         return null;
     }
@@ -57,5 +86,6 @@ public class TableManager {
     public void shutdownAll() {
         for (Table table : tables.values()) table.destroy();
         tables.clear();
+        playerTableIndex.clear();
     }
 }

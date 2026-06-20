@@ -27,14 +27,7 @@ public class EntityInteractListener implements Listener {
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
-        Entity entity = event.getRightClicked();
-        DisplayManager.ClickAction action = DisplayManager.getClickAction(entity);
-        if (action == null && entity.getScoreboardTags().contains("liarsbar_collision")) {
-            Interaction target = findTargetedInteraction(event.getPlayer());
-            if (target != null) {
-                action = DisplayManager.getClickAction(target);
-            }
-        }
+        DisplayManager.ClickAction action = resolveAction(event.getPlayer(), event.getRightClicked());
         if (action == null) return;
         event.setCancelled(true);
         handleAction(event.getPlayer(), action);
@@ -56,6 +49,15 @@ public class EntityInteractListener implements Listener {
         handleAction(event.getPlayer(), clickAction);
     }
 
+    private DisplayManager.ClickAction resolveAction(Player player, Entity entity) {
+        DisplayManager.ClickAction action = DisplayManager.getClickAction(entity);
+        if (action != null) return action;
+
+        if (!entity.getScoreboardTags().contains("liarsbar_collision")) return null;
+        Interaction target = findTargetedInteraction(player);
+        return target == null ? null : DisplayManager.getClickAction(target);
+    }
+
     private Interaction findTargetedInteraction(Player player) {
         Location eye = player.getEyeLocation();
         Vector dir = eye.getDirection();
@@ -65,7 +67,7 @@ public class EntityInteractListener implements Listener {
 
         for (Entity entity : player.getNearbyEntities(maxDist, maxDist, maxDist)) {
             if (!(entity instanceof Interaction interaction)) continue;
-            if (DisplayManager.getClickAction(interaction) == null) continue;
+            if (!DisplayManager.hasClickActionMarker(interaction)) continue;
 
             Location center = interaction.getLocation().clone()
                     .add(0, interaction.getInteractionHeight() / 2.0, 0);
@@ -98,11 +100,9 @@ public class EntityInteractListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        for (Table table : plugin.getTableManager().getTables()) {
-            if (table.isInGame(player)) {
-                table.removePlayer(player);
-            }
+        Table table = plugin.getTableManager().findTableByPlayer(event.getPlayer());
+        if (table != null) {
+            table.removePlayer(event.getPlayer());
         }
     }
 }

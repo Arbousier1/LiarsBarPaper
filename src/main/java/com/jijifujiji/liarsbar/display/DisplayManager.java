@@ -16,6 +16,7 @@ public final class DisplayManager {
 
     private static final Map<Integer, ClickAction> CLICK_ACTIONS = new ConcurrentHashMap<>();
     private static final String CLICK_ACTION_TAG_PREFIX = "liarsbar_action_";
+    private static final String CLICKABLE_TAG = "liarsbar_clickable";
 
     private DisplayManager() {}
 
@@ -27,6 +28,7 @@ public final class DisplayManager {
         if (entity == null || action == null) return;
         registerClickAction(entity.getEntityId(), action);
         clearActionTags(entity);
+        entity.addScoreboardTag(CLICKABLE_TAG);
         entity.addScoreboardTag(CLICK_ACTION_TAG_PREFIX + encodeActionTag(serializeClickAction(action)));
     }
 
@@ -48,6 +50,11 @@ public final class DisplayManager {
 
     public static void unregisterClickAction(int entityId) {
         CLICK_ACTIONS.remove(entityId);
+    }
+
+    public static boolean hasClickActionMarker(Entity entity) {
+        return entity != null && (CLICK_ACTIONS.containsKey(entity.getEntityId())
+                || entity.getScoreboardTags().contains(CLICKABLE_TAG));
     }
 
     public static void clearAll() {

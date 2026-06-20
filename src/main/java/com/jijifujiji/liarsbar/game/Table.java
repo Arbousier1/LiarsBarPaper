@@ -1,85 +1,54 @@
 package com.jijifujiji.liarsbar.game;
 
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
-import com.jijifujiji.liarsbar.display.DisplayManager;
-import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.*;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.jijifujiji.liarsbar.display.TableDisplay;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 
 public class Table {
 
-    private static final double[][] SEAT_OFFSETS = {
-            {2.0, 0, 0},     // 0: east
-            {0, 0, 1.75},    // 1: south
-            {-2.0, 0, 0},    // 2: west
-            {0, 0, -1.75}    // 3: north
-    };
-    private static final double CHAIR_VISUAL_Y = 0.42;
-    private static final double CHAIR_MODEL_CENTER_Y = 8.0 / 16.0;
-    private static final double CHAIR_RED_CUSHION_TOP_Y = CHAIR_VISUAL_Y + ((7.65 / 16.0) - CHAIR_MODEL_CENTER_Y);
-    private static final double SEAT_CLICK_Y = 0.10;
-    private static final double SEAT_RIDE_Y = CHAIR_RED_CUSHION_TOP_Y;
-    private static final double SEAT_CARD_BASE_Y = 0.44;
-
-    private static final double[][] CARD_OFFSETS = {
-            {0.5, 0, 0},      // east: cards go north of seat
-            {0, 0, -0.5},     // south: cards go west of seat
-            {-0.5, 0, 0},     // west: cards go south of seat
-            {0, 0, 0.5}       // north: cards go east of seat
-    };
-
-    private static final float[] SEAT_YAWS = {90f, 180f, -90f, 0f};
-    private static final String TABLE_FURNITURE_MODEL = "liarsbar:table_visual";
-    private static final String CHAIR_FURNITURE_MODEL = "liarsbar:seat_chair";
-    private static final int TABLE_FURNITURE_MODEL_DATA = 9999460;
-    private static final int CHAIR_FURNITURE_MODEL_DATA = 9999461;
-    private static final double TABLE_COLLISION_Y = 0.08;
-    private static final String MANAGED_ENTITY_TAG = "liarsbar_managed";
+    private static final List<Card> BASE_DECK = createBaseDeck();
 
     private final LiarsBarPlugin plugin;
     private final String id;
+    private final TableDisplay display;
+    private final TurnTimer turnTimer;
     private Location location;
+
     private final List<PlayerState> players = new ArrayList<>();
     private final List<Player> waitingPlayers = new ArrayList<>();
-    private final Map<Integer, Player> seatMap = new HashMap<>();
+    private final Map<Integer, Player> seatMap = new java.util.HashMap<>();
+    private final List<Card> centerCards = new ArrayList<>();
 
     private GameState state = GameState.IDLE;
     private BetMode betMode = BetMode.LIFE;
     private CardType mainCard;
     private int currentPlayerIndex = -1;
     private PlayerState lastPlayer;
-    private List<Card> centerCards = new ArrayList<>();
-    private BukkitTask turnTimer;
-    private BossBar turnBossBar;
-    private int turnSecondsLeft;
     private int pendingShots;
     private int joinedCount;
     private boolean isFirstRound = true;
-
-    // Display entities
-    private final List<Entity> displayEntities = new ArrayList<>();
-    private final List<Entity> seatInteractions = new ArrayList<>();
-    private final List<Entity> seatVehicles = new ArrayList<>();
-    private TextDisplay modeLabel;
-    private TextDisplay statusLabel;
-    private TextDisplay turnLabel;
-    private final Map<Integer, List<ItemDisplay>> playerCardDisplays = new HashMap<>();
-    private final Map<Integer, List<Interaction>> playerCardInteractions = new HashMap<>();
-    private final List<ItemDisplay> centerCardDisplays = new ArrayList<>();
-    private Interaction playButton;
-    private Interaction challengeButton;
-    private Interaction startButton;
 
     public Table(LiarsBarPlugin plugin, String id, Location location) {
         this.plugin = plugin;
         this.id = id;
         this.location = location == null ? null : location.clone();
+        this.display = new TableDisplay(id);
+        this.turnTimer = new TurnTimer(plugin);
     }
 
     public String getId() { return id; }
@@ -87,10 +56,19 @@ public class Table {
     public void setLocation(Location location) { this.location = location.clone(); }
     public GameState getState() { return state; }
     public BetMode getBetMode() { return betMode; }
+
     public boolean isInGame(Player player) {
-        return players.stream().anyMatch(p -> p.getPlayer().equals(player))
-                || waitingPlayers.contains(player)
-                || seatMap.containsValue(player);
+        UUID uuid = player.getUniqueId();
+        for (PlayerState ps : players) {
+            if (ps.getPlayer().getUniqueId().equals(uuid)) return true;
+        }
+        for (Player waiting : waitingPlayers) {
+            if (waiting.getUniqueId().equals(uuid)) return true;
+        }
+        for (Player seated : seatMap.values()) {
+            if (seated != null && seated.getUniqueId().equals(uuid)) return true;
+        }
+        return false;
     }
 
     public boolean setBetMode(BetMode mode) {
@@ -107,67 +85,19 @@ public class Table {
         return occupant != null && occupant.isOnline();
     }
 
-    private Location getSeatLocation(int seatIndex) {
-        Location seatLoc = location.clone().add(SEAT_OFFSETS[seatIndex][0], SEAT_RIDE_Y, SEAT_OFFSETS[seatIndex][2]);
-        seatLoc.setYaw(SEAT_YAWS[seatIndex]);
-        seatLoc.setPitch(0f);
-        return seatLoc;
-    }
-
     private void movePlayerToSeat(Player player, int seatIndex) {
         if (location == null || location.getWorld() == null) return;
         player.leaveVehicle();
-        player.teleport(getSeatLocation(seatIndex));
-        Entity seat = findSeatVehicle(seatIndex);
+        player.teleport(TableLayout.seatLocation(location, seatIndex));
+        Entity seat = display.findSeatVehicle(location, seatIndex);
         if (seat != null && seat.isValid()) {
             seat.addPassenger(player);
         }
     }
 
-    // ========== Seat & Display ==========
-
     public void buildDisplay() {
-        clearDisplay();
+        display.build(location, betMode);
         if (location == null || location.getWorld() == null) return;
-
-        renderFurniture();
-
-        // Mode label above table
-        modeLabel = DisplayManager.spawnLabel(location.clone().add(0, 2.2, 0),
-                betMode.getDisplay(), Color.fromRGB(0x0B2A66), false);
-
-        // Status label
-        statusLabel = DisplayManager.spawnLabel(location.clone().add(0, 1.6, 0),
-                "等待玩家加入...", Color.fromRGB(0xB22234), false);
-
-        // Seat click hitboxes and low ride anchors are separate so players do not sit too high.
-        for (int i = 0; i < 4; i++) {
-            Location clickLoc = location.clone().add(SEAT_OFFSETS[i][0], SEAT_CLICK_Y, SEAT_OFFSETS[i][2]);
-            Interaction seat = DisplayManager.spawnInteraction(clickLoc, 0.9f, 1.1f,
-                    new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.JOIN_SEAT, id, i, -1),
-                    true, true);
-            seatInteractions.add(seat);
-            addDisplay(seat);
-
-            Location rideLoc = getSeatLocation(i);
-            Interaction vehicle = DisplayManager.spawnSeatVehicle(rideLoc, true);
-            if (vehicle != null) {
-                vehicle.addScoreboardTag(seatVehicleTag(i));
-            }
-            seatVehicles.add(vehicle);
-            addDisplay(vehicle);
-        }
-
-        // Start button
-        Location btnLoc = location.clone().add(0, 1.28, 0);
-        startButton = DisplayManager.spawnInteraction(btnLoc, 0.6f, 0.6f,
-                new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, id, -1, -1),
-                true, true);
-        addDisplay(startButton);
-
-        addDisplay(modeLabel);
-        addDisplay(statusLabel);
-
         for (Map.Entry<Integer, Player> entry : seatMap.entrySet()) {
             Player player = entry.getValue();
             if (player != null && player.isOnline()) {
@@ -176,248 +106,13 @@ public class Table {
         }
     }
 
-    private void renderFurniture() {
-        addDisplay(DisplayManager.spawnFurniture(location.clone().add(0, 0.35, 0),
-                "Liars Bar Table", TABLE_FURNITURE_MODEL, TABLE_FURNITURE_MODEL_DATA,
-                0f, 1.0f, 3.4f, 1.6f, true));
-        addTableCollision();
-
-        for (int i = 0; i < 4; i++) {
-            addChairVisual(i);
-        }
-    }
-
-    private void addTableCollision() {
-        double[] xOffsets = {-0.9, 0.0, 0.9};
-        for (double xOffset : xOffsets) {
-            addDisplay(DisplayManager.spawnCollisionBox(location.clone().add(xOffset, TABLE_COLLISION_Y, 0)));
-        }
-    }
-
-    private void addChairVisual(int seatIndex) {
-        Location chair = location.clone().add(SEAT_OFFSETS[seatIndex][0], CHAIR_VISUAL_Y, SEAT_OFFSETS[seatIndex][2]);
-        addDisplay(DisplayManager.spawnFurniture(chair,
-                "Liars Bar Chair", CHAIR_FURNITURE_MODEL, CHAIR_FURNITURE_MODEL_DATA,
-                chairYaw(seatIndex), 1.0f, 1.1f, 1.5f, true));
-    }
-
-    private float chairYaw(int seatIndex) {
-        float yaw = SEAT_YAWS[seatIndex] + 180f;
-        return yaw > 180f ? yaw - 360f : yaw;
-    }
-
-    private String tableEntityTag() {
-        return "liarsbar_table_" + id.replaceAll("[^A-Za-z0-9_-]", "_");
-    }
-
-    private String seatVehicleTag(int seatIndex) {
-        return "liarsbar_seat_vehicle_" + seatIndex;
-    }
-
-    private Entity findSeatVehicle(int seatIndex) {
-        if (seatIndex >= 0 && seatIndex < seatVehicles.size()) {
-            Entity cached = seatVehicles.get(seatIndex);
-            if (cached != null && cached.isValid()) return cached;
-        }
-        if (location == null || location.getWorld() == null) return null;
-
-        String tableTag = tableEntityTag();
-        String seatTag = seatVehicleTag(seatIndex);
-        Location seatLoc = getSeatLocation(seatIndex);
-        for (Entity entity : location.getWorld().getNearbyEntities(seatLoc, 0.6, 0.6, 0.6)) {
-            if (entity.getScoreboardTags().contains(MANAGED_ENTITY_TAG)
-                    && entity.getScoreboardTags().contains(tableTag)
-                    && entity.getScoreboardTags().contains(seatTag)) {
-                while (seatVehicles.size() <= seatIndex) seatVehicles.add(null);
-                seatVehicles.set(seatIndex, entity);
-                if (!displayEntities.contains(entity)) {
-                    displayEntities.add(entity);
-                }
-                return entity;
-            }
-        }
-        return null;
-    }
-
-    private void clearPersistedDisplayEntities() {
-        String tableTag = tableEntityTag();
-        for (Entity entity : location.getWorld().getNearbyEntities(location, 8.0, 4.0, 8.0)) {
-            boolean managedForTable = entity.getScoreboardTags().contains(MANAGED_ENTITY_TAG)
-                    && entity.getScoreboardTags().contains(tableTag);
-            boolean legacyCollision = entity.getScoreboardTags().contains("liarsbar_collision")
-                    && entity.getLocation().distanceSquared(location) <= 4.0;
-            if (managedForTable || legacyCollision) {
-                DisplayManager.unregisterClickAction(entity.getEntityId());
-                entity.remove();
-            }
-        }
-    }
-
-    private void addDisplay(Entity entity) {
-        if (entity != null) {
-            entity.addScoreboardTag(MANAGED_ENTITY_TAG);
-            entity.addScoreboardTag(tableEntityTag());
-            displayEntities.add(entity);
-        }
-    }
-
-    private void removeDisplay(Entity entity) {
-        if (entity == null) return;
-        DisplayManager.unregisterClickAction(entity.getEntityId());
-        if (entity.isValid()) {
-            entity.remove();
-        }
-        displayEntities.remove(entity);
-    }
-
-    public void renderPlayerCards(PlayerState ps) {
-        clearPlayerDisplay(ps.getSeatIndex());
-        if (location == null || location.getWorld() == null) return;
-
-        Location seatLoc = location.clone().add(SEAT_OFFSETS[ps.getSeatIndex()][0],
-                SEAT_CARD_BASE_Y, SEAT_OFFSETS[ps.getSeatIndex()][2]);
-        double[] cardOff = CARD_OFFSETS[ps.getSeatIndex()];
-        float yaw = SEAT_YAWS[ps.getSeatIndex()];
-
-        List<ItemDisplay> cardDisplays = new ArrayList<>();
-        List<Interaction> cardInteractions = new ArrayList<>();
-
-        List<Card> hand = ps.getHand();
-        for (int i = 0; i < hand.size(); i++) {
-            Card card = hand.get(i);
-            Location cardLoc = seatLoc.clone().add(cardOff[0] * (i + 1), 0.2, cardOff[2] * (i + 1));
-            ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    card.getDisplay(), card.getItemModel(), card.getCustomModelData(), id, ps.getSeatIndex(), i);
-            if (cardDisplay != null) {
-                DisplayManager.applyCardTransform(cardDisplay, yaw, 0.8f);
-                cardDisplays.add(cardDisplay);
-                addDisplay(cardDisplay);
-            }
-
-            Interaction cardInteract = DisplayManager.spawnInteraction(cardLoc, 0.5f, 0.7f,
-                    new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.PLAY_CARD,
-                            id, ps.getSeatIndex(), i));
-            if (cardInteract != null) {
-                cardInteractions.add(cardInteract);
-                addDisplay(cardInteract);
-            }
-        }
-        playerCardDisplays.put(ps.getSeatIndex(), cardDisplays);
-        playerCardInteractions.put(ps.getSeatIndex(), cardInteractions);
-    }
-
-    public void renderCenterCards() {
-        clearCenterDisplay();
-        if (location == null || location.getWorld() == null) return;
-
-        for (int i = 0; i < centerCards.size(); i++) {
-            Card card = centerCards.get(i);
-            Location cardLoc = location.clone().add((i - centerCards.size() / 2.0) * 0.5, 1.29, 0);
-            ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    card.getDisplay(), card.getItemModel(), card.getCustomModelData(), id, -1, -1);
-            if (cardDisplay != null) {
-                DisplayManager.applyCardTransform(cardDisplay, 0f, 0.6f);
-                centerCardDisplays.add(cardDisplay);
-                addDisplay(cardDisplay);
-            }
-        }
-    }
-
-    public void renderActionButtons(PlayerState current, boolean canChallenge) {
-        if (location == null || location.getWorld() == null) return;
-        Location seatLoc = location.clone().add(SEAT_OFFSETS[current.getSeatIndex()][0],
-                SEAT_CARD_BASE_Y, SEAT_OFFSETS[current.getSeatIndex()][2]);
-
-        removeDisplay(playButton);
-        removeDisplay(challengeButton);
-        playButton = null;
-        challengeButton = null;
-
-        playButton = DisplayManager.spawnInteraction(seatLoc.clone().add(0, -0.3, 0), 0.5f, 0.5f,
-                new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.PLAY_BUTTON, id, -1, -1));
-        addDisplay(playButton);
-
-        if (canChallenge && lastPlayer != null && lastPlayer != current) {
-            challengeButton = DisplayManager.spawnInteraction(seatLoc.clone().add(0, -0.3, 0.5), 0.5f, 0.5f,
-                    new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.CHALLENGE_BUTTON, id, -1, -1));
-            addDisplay(challengeButton);
-        }
+    public void clearDisplay() {
+        display.clear(location);
     }
 
     private void setStatus(String text) {
-        if (statusLabel != null && statusLabel.isValid()) {
-            statusLabel.setText(text);
-        }
+        display.setStatus(text);
     }
-
-    private void showTurnBossBar(PlayerState current) {
-        hideTurnBossBar();
-        turnBossBar = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
-        for (Player player : getAllParticipants()) {
-            turnBossBar.addPlayer(player);
-        }
-        updateTurnBossBar(current);
-        turnBossBar.setVisible(true);
-    }
-
-    private void updateTurnBossBar(PlayerState current) {
-        if (turnBossBar == null) return;
-        double progress = Math.max(0.0, Math.min(1.0, turnSecondsLeft / 30.0));
-        turnBossBar.setProgress(progress);
-        turnBossBar.setTitle(ChatColor.GOLD + current.getPlayer().getName()
-                + ChatColor.YELLOW + " 的回合  "
-                + ChatColor.RED + turnSecondsLeft + "s"
-                + ChatColor.GRAY + " | "
-                + ChatColor.YELLOW + "主牌 " + ChatColor.GOLD + mainCard.getDisplay()
-                + ChatColor.GRAY + " | "
-                + ChatColor.YELLOW + "子弹 " + ChatColor.GOLD + current.getBullets() + "/6");
-    }
-
-    private void hideTurnBossBar() {
-        if (turnBossBar != null) {
-            turnBossBar.removeAll();
-            turnBossBar = null;
-        }
-    }
-
-    private void clearPlayerDisplay(int seatIndex) {
-        List<ItemDisplay> cards = playerCardDisplays.remove(seatIndex);
-        if (cards != null) {
-            DisplayManager.removeManagedEntities(new ArrayList<>(cards));
-            displayEntities.removeAll(cards);
-        }
-        List<Interaction> intersects = playerCardInteractions.remove(seatIndex);
-        if (intersects != null) {
-            DisplayManager.removeManagedEntities(new ArrayList<>(intersects));
-            displayEntities.removeAll(intersects);
-        }
-    }
-
-    private void clearCenterDisplay() {
-        DisplayManager.removeManagedEntities(new ArrayList<>(centerCardDisplays));
-        displayEntities.removeAll(centerCardDisplays);
-        centerCardDisplays.clear();
-    }
-
-    public void clearDisplay() {
-        clearCenterDisplay();
-        for (int i = 0; i < 4; i++) clearPlayerDisplay(i);
-        DisplayManager.removeManagedEntities(new ArrayList<>(displayEntities));
-        displayEntities.clear();
-        seatInteractions.clear();
-        seatVehicles.clear();
-        if (location != null && location.getWorld() != null) {
-            clearPersistedDisplayEntities();
-        }
-        modeLabel = null;
-        statusLabel = null;
-        turnLabel = null;
-        playButton = null;
-        challengeButton = null;
-        startButton = null;
-    }
-
-    // ========== Game Flow ==========
 
     public void joinSeat(Player player, int seatIndex) {
         if (state != GameState.IDLE && state != GameState.WAITING) {
@@ -436,37 +131,18 @@ public class Table {
             return;
         }
 
-        // 赌博模式扣费
-        if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE) {
-            double cost = betMode == BetMode.FANTUAN ? 1.0 : 1.0;
-            EconomyManager eco = plugin.getEconomyManager();
-            if (!eco.isEnabled()) {
-                player.sendMessage(ChatColor.RED + "经济系统未启用，无法加入赌局。");
-                return;
-            }
-            if (!eco.has(player, cost)) {
-                player.sendMessage(ChatColor.RED + "你的余额不足，需要 " + eco.format(cost) + "。");
-                return;
-            }
-            if (!eco.withdraw(player, cost)) {
-                player.sendMessage(ChatColor.RED + "扣费失败。");
-                return;
-            }
-            broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 支付了 " + eco.format(cost) + "，加入赌局！");
-        } else {
-            broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 加入对局！");
-        }
+        if (!chargeEntryCost(player)) return;
 
         seatMap.put(seatIndex, player);
         waitingPlayers.add(player);
+        registerPlayer(player);
         movePlayerToSeat(player, seatIndex);
-        joinedCount = getAllParticipants().size();
+        joinedCount = participantCount();
         setStatus("玩家: " + joinedCount + "/4");
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1f, 1.34f);
 
         if (state == GameState.IDLE) state = GameState.WAITING;
-
-        if (getAllParticipants().size() >= 4) {
+        if (joinedCount >= TableLayout.SEAT_COUNT) {
             startGame(player);
         }
     }
@@ -474,24 +150,27 @@ public class Table {
     public void removePlayer(Player player) {
         player.leaveVehicle();
         boolean wasActiveGame = state == GameState.PLAYING || state == GameState.RESOLVING || state == GameState.DEALING;
-        boolean wasCurrent = currentPlayerIndex >= 0 && currentPlayerIndex < players.size()
-                && players.get(currentPlayerIndex).getPlayer().equals(player);
-        PlayerState removedState = findState(player);
+        int removedIndex = indexOfState(player);
+        boolean wasCurrent = currentPlayerIndex >= 0 && removedIndex == currentPlayerIndex;
+        PlayerState removedState = removedIndex >= 0 ? players.get(removedIndex) : null;
         if (removedState != null) {
-            clearPlayerDisplay(removedState.getSeatIndex());
+            display.clearPlayerDisplay(removedState.getSeatIndex());
         }
 
-        waitingPlayers.remove(player);
-        if (turnBossBar != null) {
-            turnBossBar.removePlayer(player);
+        waitingPlayers.removeIf(p -> p.getUniqueId().equals(player.getUniqueId()));
+        turnTimer.removePlayer(player);
+        players.removeIf(p -> p.getPlayer().getUniqueId().equals(player.getUniqueId()));
+        seatMap.values().removeIf(p -> p != null && p.getUniqueId().equals(player.getUniqueId()));
+        unregisterPlayer(player);
+
+        if (removedIndex >= 0 && removedIndex < currentPlayerIndex) {
+            currentPlayerIndex--;
         }
-        players.removeIf(p -> p.getPlayer().equals(player));
-        seatMap.values().removeIf(p -> p.equals(player));
         if (currentPlayerIndex >= players.size()) {
             currentPlayerIndex = players.isEmpty() ? -1 : 0;
         }
         if (players.isEmpty() && waitingPlayers.isEmpty()) {
-            cancelTurnTimer();
+            turnTimer.cancel();
             state = GameState.IDLE;
             clearDisplay();
             buildDisplay();
@@ -501,15 +180,13 @@ public class Table {
             }
         }
         broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 离开了游戏。");
-        joinedCount = getAllParticipants().size();
+        joinedCount = participantCount();
         setStatus("玩家: " + joinedCount + "/4");
     }
 
     public List<Player> getAllParticipants() {
-        List<Player> all = new ArrayList<>(waitingPlayers);
-        for (PlayerState ps : players) {
-            if (!all.contains(ps.getPlayer())) all.add(ps.getPlayer());
-        }
+        List<Player> all = new ArrayList<>(TableLayout.SEAT_COUNT);
+        visitParticipants(all::add);
         return all;
     }
 
@@ -522,10 +199,8 @@ public class Table {
             starter.sendMessage(ChatColor.RED + "只有本桌玩家可以开始游戏。");
             return;
         }
-        List<Map.Entry<Integer, Player>> seatedPlayers = seatMap.entrySet().stream()
-                .filter(entry -> entry.getValue() != null && entry.getValue().isOnline())
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toList());
+
+        List<Map.Entry<Integer, Player>> seatedPlayers = seatedPlayersInOrder();
         if (seatedPlayers.size() < 2) {
             if (starter != null) starter.sendMessage(ChatColor.RED + "至少需要 2 名玩家。");
             return;
@@ -535,9 +210,11 @@ public class Table {
         waitingPlayers.clear();
         seatMap.clear();
         for (Map.Entry<Integer, Player> entry : seatedPlayers) {
-            seatMap.put(entry.getKey(), entry.getValue());
-            movePlayerToSeat(entry.getValue(), entry.getKey());
-            players.add(new PlayerState(entry.getValue(), entry.getKey()));
+            Player player = entry.getValue();
+            seatMap.put(entry.getKey(), player);
+            registerPlayer(player);
+            movePlayerToSeat(player, entry.getKey());
+            players.add(new PlayerState(player, entry.getKey()));
         }
         joinedCount = players.size();
         state = GameState.DEALING;
@@ -549,24 +226,9 @@ public class Table {
     private void startRound() {
         centerCards.clear();
         mainCard = Card.randomMainType();
-
-        // 构建牌堆: 6A + 6Q + 6K + 2坤 + 1恶魔
-        List<Card> deck = new ArrayList<>();
-        for (int i = 0; i < 6; i++) deck.add(Card.A);
-        for (int i = 0; i < 6; i++) deck.add(Card.Q);
-        for (int i = 0; i < 6; i++) deck.add(Card.K);
-        deck.add(Card.KUN);
-        deck.add(Card.KUN);
-        Collections.shuffle(deck);
-
-        // 从主牌中随机选一张替换为恶魔牌
-        List<Integer> mainIndices = new ArrayList<>();
-        for (int i = 0; i < deck.size(); i++) {
-            if (deck.get(i).matchesMain(mainCard)) mainIndices.add(i);
-        }
-        if (!mainIndices.isEmpty()) {
-            deck.set(mainIndices.get((int) (Math.random() * mainIndices.size())), Card.DEMON);
-        }
+        List<Card> deck = new ArrayList<>(BASE_DECK);
+        java.util.Collections.shuffle(deck, ThreadLocalRandom.current());
+        replaceOneMainCardWithDemon(deck);
 
         for (PlayerState ps : players) ps.resetForNewRound();
 
@@ -578,10 +240,8 @@ public class Table {
         }
 
         broadcast(ChatColor.YELLOW + "新的一轮！主牌：" + ChatColor.GOLD + ChatColor.BOLD + "[{ " + mainCard.getDisplay() + " }]");
-
-        // 随机先手
         if (isFirstRound) {
-            currentPlayerIndex = (int) (Math.random() * players.size());
+            currentPlayerIndex = ThreadLocalRandom.current().nextInt(players.size());
             isFirstRound = false;
         }
         lastPlayer = null;
@@ -606,46 +266,25 @@ public class Table {
             current = players.get(currentPlayerIndex);
         }
 
-        cancelTurnTimer();
-        turnSecondsLeft = 30;
-        showTurnBossBar(current);
+        PlayerState finalCurrent = current;
+        turnTimer.start(finalCurrent, getAllParticipants(), mainCard, () -> handleTimeout(finalCurrent));
+        finalCurrent.getPlayer().sendTitle(ChatColor.GREEN + ">>>你的回合<<<", "", 10, 70, 20);
+        finalCurrent.getPlayer().playSound(finalCurrent.getPlayer().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1f, 1f);
 
-        current.getPlayer().sendTitle(ChatColor.GREEN + ">>>你的回合<<<", "", 10, 70, 20);
-        current.getPlayer().playSound(current.getPlayer().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1f, 1f);
-
-        // 渲染当前玩家的手牌
-        renderPlayerCards(current);
-        renderActionButtons(current, standard && lastPlayer != null && lastPlayer != current);
-
-        // 渲染中心牌
-        if (!centerCards.isEmpty()) renderCenterCards();
-
-        // 更新状态标签
-        setStatus(standard ? (current.getPlayer().getName() + " 的回合") : "先手回合");
+        display.renderPlayerCards(location, finalCurrent);
+        display.renderActionButtons(location, finalCurrent, standard && lastPlayer != null && lastPlayer != finalCurrent);
+        if (!centerCards.isEmpty()) display.renderCenterCards(location, centerCards);
+        setStatus(standard ? (finalCurrent.getPlayer().getName() + " 的回合") : "先手回合");
 
         for (PlayerState ps : players) {
-            if (ps == current) continue;
-            ps.getPlayer().sendMessage(ChatColor.YELLOW + "当前是 " + ChatColor.GOLD + current.getPlayer().getName() + ChatColor.YELLOW + " 的回合");
+            if (ps == finalCurrent) continue;
+            ps.getPlayer().sendMessage(ChatColor.YELLOW + "当前是 " + ChatColor.GOLD + finalCurrent.getPlayer().getName() + ChatColor.YELLOW + " 的回合");
         }
-
-        PlayerState finalCurrent = current;
-        turnTimer = new BukkitRunnable() {
-            @Override
-            public void run() {
-                turnSecondsLeft--;
-                updateTurnBossBar(finalCurrent);
-                if (turnSecondsLeft <= 0) {
-                    cancel();
-                    handleTimeout(finalCurrent);
-                }
-            }
-        }.runTaskTimer(plugin, 20L, 20L);
     }
 
     public void selectCard(Player player, int cardIndex) {
         PlayerState ps = findState(player);
-        if (currentPlayerIndex < 0 || currentPlayerIndex >= players.size()
-                || ps == null || ps != players.get(currentPlayerIndex)) {
+        if (!isCurrentPlayer(ps)) {
             player.sendMessage(ChatColor.RED + "现在不是你的回合。");
             return;
         }
@@ -664,8 +303,7 @@ public class Table {
 
     public void playCards(Player player) {
         PlayerState ps = findState(player);
-        if (state != GameState.PLAYING || currentPlayerIndex < 0 || currentPlayerIndex >= players.size()
-                || ps == null || ps != players.get(currentPlayerIndex)) {
+        if (state != GameState.PLAYING || !isCurrentPlayer(ps)) {
             player.sendMessage(ChatColor.RED + "现在不是你的回合。");
             return;
         }
@@ -678,29 +316,28 @@ public class Table {
             player.sendMessage(ChatColor.RED + "一次最多出 3 张牌。");
             return;
         }
-        if (sel.stream().anyMatch(i -> i < 0 || i >= ps.getHand().size())) {
+        if (!isValidSelection(ps, sel)) {
             ps.clearSelection();
             player.sendMessage(ChatColor.RED + "选择已过期，请重新选择手牌。");
             return;
         }
 
-        List<Card> played = sel.stream().map(i -> ps.getHand().get(i)).collect(Collectors.toList());
-        boolean hasDemon = played.contains(Card.DEMON);
-        if (hasDemon && played.size() > 1) {
+        List<Card> played = selectedCards(ps, sel);
+        if (played.contains(Card.DEMON) && played.size() > 1) {
             player.sendMessage(ChatColor.RED + "恶魔牌只能单出！");
             return;
         }
 
         ps.removeCards(sel);
-        centerCards = new ArrayList<>(played);
+        centerCards.clear();
+        centerCards.addAll(played);
         lastPlayer = ps;
         ps.clearSelection();
 
         broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 出了 " + ChatColor.GOLD + played.size() + ChatColor.YELLOW + " 张牌。");
-
-        clearPlayerDisplay(ps.getSeatIndex());
-        clearCenterDisplay();
-        renderCenterCards();
+        display.clearPlayerDisplay(ps.getSeatIndex());
+        display.clearCenterDisplay();
+        display.renderCenterCards(location, centerCards);
 
         currentPlayerIndex = nextIndex(currentPlayerIndex);
         startTurn(true);
@@ -708,8 +345,7 @@ public class Table {
 
     public void challenge(Player player) {
         PlayerState ps = findState(player);
-        if (state != GameState.PLAYING || currentPlayerIndex < 0 || currentPlayerIndex >= players.size()
-                || ps == null || ps != players.get(currentPlayerIndex)) {
+        if (state != GameState.PLAYING || !isCurrentPlayer(ps)) {
             player.sendMessage(ChatColor.RED + "现在不是你的回合。");
             return;
         }
@@ -717,16 +353,19 @@ public class Table {
             player.sendMessage(ChatColor.RED + "没有可质疑的牌。");
             return;
         }
-        cancelTurnTimer();
+        turnTimer.cancel();
         state = GameState.RESOLVING;
         ps.clearSelection();
 
         broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 质疑了 " + ChatColor.RED + ChatColor.BOLD + lastPlayer.getPlayer().getName());
+        display.renderCenterCards(location, centerCards);
 
-        renderCenterCards();
-
-        boolean hasDemon = centerCards.stream().anyMatch(c -> c == Card.DEMON);
-        boolean allMainOrWild = centerCards.stream().allMatch(c -> c.isMainOrWild(mainCard));
+        boolean hasDemon = false;
+        boolean allMainOrWild = true;
+        for (Card card : centerCards) {
+            if (card == Card.DEMON) hasDemon = true;
+            if (!card.isMainOrWild(mainCard)) allMainOrWild = false;
+        }
 
         StringBuilder reveal = new StringBuilder(ChatColor.YELLOW + "翻开的牌： ");
         for (Card c : centerCards) reveal.append("[").append(c.getDisplay()).append("] ");
@@ -734,8 +373,10 @@ public class Table {
 
         if (hasDemon) {
             broadcast(ChatColor.YELLOW + "哦！是" + ChatColor.RED + ChatColor.BOLD + "恶魔牌" + ChatColor.YELLOW + "，除了出牌者所有人都要挨枪！");
-            List<PlayerState> targets = players.stream()
-                    .filter(p -> p != lastPlayer && p.isAlive()).collect(Collectors.toList());
+            List<PlayerState> targets = new ArrayList<>();
+            for (PlayerState target : players) {
+                if (target != lastPlayer && target.isAlive()) targets.add(target);
+            }
             pendingShots = targets.size();
             if (pendingShots == 0) {
                 afterResolution();
@@ -763,14 +404,80 @@ public class Table {
         shoot(loser, this::afterResolution);
     }
 
+    public void endGame(Player sender) {
+        turnTimer.cancel();
+        state = GameState.ENDED;
+        leaveVehicles();
+        clearDisplay();
+        broadcast(ChatColor.YELLOW + "游戏被 " + sender.getName() + " 强制结束。");
+
+        if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE && !players.isEmpty()) {
+            PlayerState randomWinner = randomAliveOrAnyPlayer();
+            if (randomWinner != null) {
+                broadcast(ChatColor.YELLOW + "有人强制结束，随机胜者：" + ChatColor.GOLD + randomWinner.getPlayer().getName());
+                EconomyManager eco = plugin.getEconomyManager();
+                if (eco.isEnabled()) {
+                    eco.deposit(randomWinner.getPlayer(), joinedCount * 1.0);
+                }
+            }
+        }
+
+        unregisterAllParticipants();
+        players.clear();
+        waitingPlayers.clear();
+        seatMap.clear();
+        joinedCount = 0;
+        state = GameState.IDLE;
+        buildDisplay();
+    }
+
+    public void destroy() {
+        turnTimer.cancel();
+        leaveVehicles();
+        clearDisplay();
+        broadcast(ChatColor.YELLOW + "本桌已被删除。");
+        unregisterAllParticipants();
+        players.clear();
+        waitingPlayers.clear();
+        seatMap.clear();
+        joinedCount = 0;
+    }
+
+    public String getInfo() {
+        return "桌子 " + id + " 状态：" + state + " 人数：" + participantCount() + "/4 模式：" + betMode.getDisplay();
+    }
+
+    private boolean chargeEntryCost(Player player) {
+        if (!plugin.getConfigManager().isGamblingEnabled() || betMode == BetMode.LIFE) {
+            broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 加入对局！");
+            return true;
+        }
+
+        double cost = 1.0;
+        EconomyManager eco = plugin.getEconomyManager();
+        if (!eco.isEnabled()) {
+            player.sendMessage(ChatColor.RED + "经济系统未启用，无法加入赌局。");
+            return false;
+        }
+        if (!eco.has(player, cost)) {
+            player.sendMessage(ChatColor.RED + "你的余额不足，需要 " + eco.format(cost) + "。");
+            return false;
+        }
+        if (!eco.withdraw(player, cost)) {
+            player.sendMessage(ChatColor.RED + "扣费失败。");
+            return false;
+        }
+        broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 支付了 " + eco.format(cost) + "，加入赌局！");
+        return true;
+    }
+
     private void shoot(PlayerState ps, Runnable callback) {
         Player p = ps.getPlayer();
         int bullets = ps.getBullets();
-        int roll = (int) (Math.random() * bullets) + 1;
+        int roll = ThreadLocalRandom.current().nextInt(bullets) + 1;
         boolean real = roll == 1;
 
         p.getWorld().playSound(p.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.5f, 1.5f);
-
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (real) {
                 p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1.51f);
@@ -796,7 +503,7 @@ public class Table {
             currentPlayerIndex = nextAliveIndex(currentPlayerIndex);
             centerCards.clear();
             lastPlayer = null;
-            clearCenterDisplay();
+            display.clearCenterDisplay();
             startTurn(true);
         });
     }
@@ -816,75 +523,106 @@ public class Table {
     }
 
     private boolean checkWin() {
-        List<PlayerState> aliveWithCards = players.stream()
-                .filter(p -> p.isAlive() && p.hasCards()).collect(Collectors.toList());
-
-        if (aliveWithCards.size() <= 1) {
-            state = GameState.ENDED;
-            cancelTurnTimer();
-            for (Player player : getAllParticipants()) {
-                player.leaveVehicle();
+        int aliveWithCards = 0;
+        PlayerState winner = null;
+        for (PlayerState ps : players) {
+            if (ps.isAlive() && ps.hasCards()) {
+                aliveWithCards++;
+                winner = ps;
             }
-            clearDisplay();
-
-            PlayerState winner = aliveWithCards.isEmpty() ? null : aliveWithCards.get(0);
-            if (winner != null) {
-                broadcast(ChatColor.GOLD + "" + ChatColor.BOLD + "=== 游戏结束 ===");
-                broadcast(ChatColor.YELLOW + "恭喜 " + ChatColor.GOLD + ChatColor.BOLD + winner.getPlayer().getName() +
-                        ChatColor.YELLOW + " 获得了胜利！");
-
-                if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE) {
-                    EconomyManager eco = plugin.getEconomyManager();
-                    double reward = joinedCount * 1.0;
-                    if (eco.isEnabled()) {
-                        eco.deposit(winner.getPlayer(), reward);
-                        broadcast(ChatColor.YELLOW + "赢得 " + ChatColor.GOLD + eco.format(reward) + ChatColor.YELLOW + "！");
-                    }
-                }
-                winner.getPlayer().getWorld().spawnParticle(Particle.FIREWORKS_SPARK,
-                        winner.getPlayer().getLocation().add(0, 2, 0), 30, 0.5, 0.5, 0.5, 0.1);
-                broadcast(ChatColor.GREEN + "本局获胜：下注模式 " + betMode.getDisplay() + " > " + ChatColor.GOLD + winner.getPlayer().getName());
-            } else {
-                broadcast(ChatColor.YELLOW + "所有玩家都出局了，本局没有胜者。");
-            }
-
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                players.clear();
-                waitingPlayers.clear();
-                seatMap.clear();
-                state = GameState.IDLE;
-                buildDisplay();
-            }, 100L);
-            return true;
         }
-        return false;
+
+        if (aliveWithCards > 1) return false;
+
+        state = GameState.ENDED;
+        turnTimer.cancel();
+        leaveVehicles();
+        clearDisplay();
+
+        if (winner != null) {
+            broadcast(ChatColor.GOLD + "" + ChatColor.BOLD + "=== 游戏结束 ===");
+            broadcast(ChatColor.YELLOW + "恭喜 " + ChatColor.GOLD + ChatColor.BOLD + winner.getPlayer().getName() +
+                    ChatColor.YELLOW + " 获得了胜利！");
+            rewardWinner(winner);
+            winner.getPlayer().getWorld().spawnParticle(Particle.FIREWORKS_SPARK,
+                    winner.getPlayer().getLocation().add(0, 2, 0), 30, 0.5, 0.5, 0.5, 0.1);
+            broadcast(ChatColor.GREEN + "本局获胜：下注模式 " + betMode.getDisplay() + " > " + ChatColor.GOLD + winner.getPlayer().getName());
+        } else {
+            broadcast(ChatColor.YELLOW + "所有玩家都出局了，本局没有胜者。");
+        }
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            unregisterAllParticipants();
+            players.clear();
+            waitingPlayers.clear();
+            seatMap.clear();
+            joinedCount = 0;
+            state = GameState.IDLE;
+            buildDisplay();
+        }, 100L);
+        return true;
     }
 
-    public void endGame(Player sender) {
-        cancelTurnTimer();
-        state = GameState.ENDED;
-        for (Player player : getAllParticipants()) {
-            player.leaveVehicle();
+    private void rewardWinner(PlayerState winner) {
+        if (!plugin.getConfigManager().isGamblingEnabled() || betMode == BetMode.LIFE) return;
+        EconomyManager eco = plugin.getEconomyManager();
+        double reward = joinedCount * 1.0;
+        if (eco.isEnabled()) {
+            eco.deposit(winner.getPlayer(), reward);
+            broadcast(ChatColor.YELLOW + "赢得 " + ChatColor.GOLD + eco.format(reward) + ChatColor.YELLOW + "！");
         }
-        clearDisplay();
-        broadcast(ChatColor.YELLOW + "游戏被 " + sender.getName() + " 强制结束。");
+    }
 
-        if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE && !players.isEmpty()) {
-            List<PlayerState> alive = players.stream().filter(PlayerState::isAlive).collect(Collectors.toList());
-            PlayerState randomWinner = alive.isEmpty() ? players.get((int) (Math.random() * players.size()))
-                    : alive.get((int) (Math.random() * alive.size()));
-            broadcast(ChatColor.YELLOW + "有人强制结束，随机胜者：" + ChatColor.GOLD + randomWinner.getPlayer().getName());
-            EconomyManager eco = plugin.getEconomyManager();
-            if (eco.isEnabled()) {
-                eco.deposit(randomWinner.getPlayer(), joinedCount * 1.0);
+    private PlayerState randomAliveOrAnyPlayer() {
+        List<PlayerState> alive = new ArrayList<>();
+        for (PlayerState ps : players) {
+            if (ps.isAlive()) alive.add(ps);
+        }
+        List<PlayerState> pool = alive.isEmpty() ? players : alive;
+        if (pool.isEmpty()) return null;
+        return pool.get(ThreadLocalRandom.current().nextInt(pool.size()));
+    }
+
+    private List<Map.Entry<Integer, Player>> seatedPlayersInOrder() {
+        List<Map.Entry<Integer, Player>> seatedPlayers = new ArrayList<>(TableLayout.SEAT_COUNT);
+        for (int i = 0; i < TableLayout.SEAT_COUNT; i++) {
+            Player player = seatMap.get(i);
+            if (player != null && player.isOnline()) {
+                seatedPlayers.add(Map.entry(i, player));
             }
         }
+        return seatedPlayers;
+    }
 
-        players.clear();
-        waitingPlayers.clear();
-        seatMap.clear();
-        state = GameState.IDLE;
-        buildDisplay();
+    private void replaceOneMainCardWithDemon(List<Card> deck) {
+        List<Integer> mainIndices = new ArrayList<>();
+        for (int i = 0; i < deck.size(); i++) {
+            if (deck.get(i).matchesMain(mainCard)) mainIndices.add(i);
+        }
+        if (!mainIndices.isEmpty()) {
+            int selected = mainIndices.get(ThreadLocalRandom.current().nextInt(mainIndices.size()));
+            deck.set(selected, Card.DEMON);
+        }
+    }
+
+    private boolean isCurrentPlayer(PlayerState ps) {
+        return currentPlayerIndex >= 0 && currentPlayerIndex < players.size()
+                && ps != null && ps == players.get(currentPlayerIndex);
+    }
+
+    private boolean isValidSelection(PlayerState ps, List<Integer> selected) {
+        for (int index : selected) {
+            if (index < 0 || index >= ps.getHand().size()) return false;
+        }
+        return true;
+    }
+
+    private List<Card> selectedCards(PlayerState ps, List<Integer> selected) {
+        List<Card> cards = new ArrayList<>(selected.size());
+        for (int index : selected) {
+            cards.add(ps.getHand().get(index));
+        }
+        return cards;
     }
 
     private int nextIndex(int current) { return (current + 1) % players.size(); }
@@ -899,29 +637,70 @@ public class Table {
     }
 
     private PlayerState findState(Player player) {
-        return players.stream().filter(p -> p.getPlayer().equals(player)).findFirst().orElse(null);
+        int index = indexOfState(player);
+        return index >= 0 ? players.get(index) : null;
     }
 
-    private void cancelTurnTimer() {
-        if (turnTimer != null) { turnTimer.cancel(); turnTimer = null; }
-        hideTurnBossBar();
+    private int indexOfState(Player player) {
+        UUID uuid = player.getUniqueId();
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getPlayer().getUniqueId().equals(uuid)) return i;
+        }
+        return -1;
+    }
+
+    private void leaveVehicles() {
+        visitParticipants(Player::leaveVehicle);
     }
 
     private void broadcast(String message) {
-        for (Player p : getAllParticipants()) p.sendMessage(message);
+        visitParticipants(player -> player.sendMessage(message));
     }
 
-    public void destroy() {
-        cancelTurnTimer();
-        for (Player p : getAllParticipants()) p.leaveVehicle();
-        clearDisplay();
-        for (Player p : getAllParticipants()) p.sendMessage(ChatColor.YELLOW + "本桌已被删除。");
-        players.clear();
-        waitingPlayers.clear();
-        seatMap.clear();
+    private int participantCount() {
+        return visitParticipants(null);
     }
 
-    public String getInfo() {
-        return "桌子 " + id + " 状态：" + state + " 人数：" + getAllParticipants().size() + "/4 模式：" + betMode.getDisplay();
+    private int visitParticipants(Consumer<Player> visitor) {
+        Set<UUID> seen = new HashSet<>(TableLayout.SEAT_COUNT);
+        int count = 0;
+        for (Player player : waitingPlayers) {
+            if (visitParticipant(player, seen, visitor)) count++;
+        }
+        for (PlayerState ps : players) {
+            if (visitParticipant(ps.getPlayer(), seen, visitor)) count++;
+        }
+        for (Player player : seatMap.values()) {
+            if (visitParticipant(player, seen, visitor)) count++;
+        }
+        return count;
+    }
+
+    private boolean visitParticipant(Player player, Set<UUID> seen, Consumer<Player> visitor) {
+        if (player == null || !seen.add(player.getUniqueId())) return false;
+        if (visitor != null) visitor.accept(player);
+        return true;
+    }
+
+    private void registerPlayer(Player player) {
+        plugin.getTableManager().registerPlayer(player, this);
+    }
+
+    private void unregisterPlayer(Player player) {
+        plugin.getTableManager().unregisterPlayer(player);
+    }
+
+    private void unregisterAllParticipants() {
+        visitParticipants(player -> plugin.getTableManager().unregisterPlayer(player));
+    }
+
+    private static List<Card> createBaseDeck() {
+        List<Card> deck = new ArrayList<>(20);
+        for (int i = 0; i < 6; i++) deck.add(Card.A);
+        for (int i = 0; i < 6; i++) deck.add(Card.Q);
+        for (int i = 0; i < 6; i++) deck.add(Card.K);
+        deck.add(Card.KUN);
+        deck.add(Card.KUN);
+        return java.util.Collections.unmodifiableList(deck);
     }
 }
