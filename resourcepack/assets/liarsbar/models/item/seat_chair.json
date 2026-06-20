@@ -1,661 +1,290 @@
 {
-  "credit": "LiarsBarPaper blueprint pass - open-back tavern chair",
-  "textures": {
-    "navy": "liarsbar:item/furniture/navy",
-    "red": "liarsbar:item/furniture/red_felt",
-    "white": "liarsbar:item/furniture/card_white",
-    "gold": "liarsbar:item/furniture/brass",
-    "wood": "liarsbar:item/furniture/dark_wood",
-    "dark": "liarsbar:item/furniture/dark_metal",
-    "particle": "liarsbar:item/furniture/dark_wood"
-  },
-  "elements": [
-    {
-      "name": "front left leg",
-      "from": [
-        2.3,
-        0,
-        2.4
-      ],
-      "to": [
-        4.2,
-        6.7,
-        4.3
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "front right leg",
-      "from": [
-        11.8,
-        0,
-        2.4
-      ],
-      "to": [
-        13.7,
-        6.7,
-        4.3
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "back left tall post",
-      "from": [
-        2.2,
-        0,
-        11.8
-      ],
-      "to": [
-        4.3,
-        17.2,
-        13.9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "back right tall post",
-      "from": [
-        11.7,
-        0,
-        11.8
-      ],
-      "to": [
-        13.8,
-        17.2,
-        13.9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "front lower apron",
-      "from": [
-        4.2,
-        5.6,
-        1.8
-      ],
-      "to": [
-        11.8,
-        6.8,
-        3
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "back lower apron",
-      "from": [
-        4.3,
-        5.6,
-        13
-      ],
-      "to": [
-        11.7,
-        6.8,
-        14.2
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "left lower apron",
-      "from": [
-        1.8,
-        5.6,
-        4.3
-      ],
-      "to": [
-        3,
-        6.8,
-        11.8
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "right lower apron",
-      "from": [
-        13,
-        5.6,
-        4.3
-      ],
-      "to": [
-        14.2,
-        6.8,
-        11.8
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "flat wooden seat board",
-      "from": [
-        2,
-        6.8,
-        2
-      ],
-      "to": [
-        14,
-        7.8,
-        14
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "plain red cushion",
-      "from": [
-        2.8,
-        7.86,
-        2.8
-      ],
-      "to": [
-        13.2,
-        8.65,
-        13.2
-      ],
-      "faces": {
-        "north": {
-          "texture": "#red"
-        },
-        "east": {
-          "texture": "#red"
-        },
-        "south": {
-          "texture": "#red"
-        },
-        "west": {
-          "texture": "#red"
-        },
-        "up": {
-          "texture": "#red"
-        },
-        "down": {
-          "texture": "#red"
-        }
-      }
-    },
-    {
-      "name": "back lower rail",
-      "from": [
-        4.1,
-        10.1,
-        12.25
-      ],
-      "to": [
-        11.9,
-        11.2,
-        14.1
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "back middle rail",
-      "from": [
-        4.1,
-        12.8,
-        12.25
-      ],
-      "to": [
-        11.9,
-        13.7,
-        14.1
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "left back slat",
-      "from": [
-        5,
-        8.7,
-        11.75
-      ],
-      "to": [
-        6.1,
-        15.8,
-        12.25
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "middle back slat",
-      "from": [
-        7.45,
-        8.7,
-        11.75
-      ],
-      "to": [
-        8.55,
-        15.9,
-        12.25
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "right back slat",
-      "from": [
-        9.9,
-        8.7,
-        11.75
-      ],
-      "to": [
-        11,
-        15.8,
-        12.25
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "top rail left wing",
-      "from": [
-        3.4,
-        15.1,
-        12.1
-      ],
-      "to": [
-        5.2,
-        16.3,
-        14.2
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "top rail raised center",
-      "from": [
-        5.2,
-        15.7,
-        12.1
-      ],
-      "to": [
-        10.8,
-        17,
-        14.2
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "name": "top rail right wing",
-      "from": [
-        10.8,
-        15.1,
-        12.1
-      ],
-      "to": [
-        12.6,
-        16.3,
-        14.2
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    }
-  ],
-  "display": {
-    "gui": {
-      "rotation": [
-        30,
-        225,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
-      ]
-    },
-    "fixed": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ]
-    },
-    "head": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ]
-    }
-  }
+	"format_version": "1.21.11",
+	"credit": "LiarsBarPaper blueprint pass - open-back tavern chair",
+	"textures": {
+		"red": "liarsbar:item/furniture/red_felt",
+		"particle": "liarsbar:item/furniture/dark_wood",
+		"wood": "liarsbar:item/furniture/dark_wood"
+	},
+	"elements": [
+		{
+			"name": "front left leg",
+			"from": [2.3, 0, 2.4],
+			"to": [4.2, 6.7, 4.3],
+			"faces": {
+				"north": {"uv": [11.8, 9.3, 13.7, 16], "texture": "#wood"},
+				"east": {"uv": [11.7, 9.3, 13.6, 16], "texture": "#wood"},
+				"south": {"uv": [2.3, 9.3, 4.2, 16], "texture": "#wood"},
+				"west": {"uv": [2.4, 9.3, 4.3, 16], "texture": "#wood"},
+				"up": {"uv": [2.3, 2.4, 4.2, 4.3], "texture": "#wood"},
+				"down": {"uv": [2.3, 11.7, 4.2, 13.6], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "front right leg",
+			"from": [11.8, 0, 2.4],
+			"to": [13.7, 6.7, 4.3],
+			"faces": {
+				"north": {"uv": [2.3, 9.3, 4.2, 16], "texture": "#wood"},
+				"east": {"uv": [11.7, 9.3, 13.6, 16], "texture": "#wood"},
+				"south": {"uv": [11.8, 9.3, 13.7, 16], "texture": "#wood"},
+				"west": {"uv": [2.4, 9.3, 4.3, 16], "texture": "#wood"},
+				"up": {"uv": [11.8, 2.4, 13.7, 4.3], "texture": "#wood"},
+				"down": {"uv": [11.8, 11.7, 13.7, 13.6], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "back left tall post",
+			"from": [2.2, 0, 11.8],
+			"to": [4.3, 17.2, 13.9],
+			"faces": {
+				"north": {"uv": [11.7, 0, 13.8, 16], "texture": "#wood"},
+				"east": {"uv": [2.1, 0, 4.2, 16], "texture": "#wood"},
+				"south": {"uv": [2.2, 0, 4.3, 16], "texture": "#wood"},
+				"west": {"uv": [11.8, 0, 13.9, 16], "texture": "#wood"},
+				"up": {"uv": [2.2, 11.8, 4.3, 13.9], "texture": "#wood"},
+				"down": {"uv": [2.2, 2.1, 4.3, 4.2], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "back right tall post",
+			"from": [11.7, 0, 11.8],
+			"to": [13.8, 17.2, 13.9],
+			"faces": {
+				"north": {"uv": [2.2, 0, 4.3, 16], "texture": "#wood"},
+				"east": {"uv": [2.1, 0, 4.2, 16], "texture": "#wood"},
+				"south": {"uv": [11.7, 0, 13.8, 16], "texture": "#wood"},
+				"west": {"uv": [11.8, 0, 13.9, 16], "texture": "#wood"},
+				"up": {"uv": [11.7, 11.8, 13.8, 13.9], "texture": "#wood"},
+				"down": {"uv": [11.7, 2.1, 13.8, 4.2], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "front lower apron",
+			"from": [4.2, 5.6, 1.8],
+			"to": [11.8, 6.8, 3],
+			"faces": {
+				"north": {"uv": [4.2, 9.2, 11.8, 10.4], "texture": "#wood"},
+				"east": {"uv": [13, 9.2, 14.2, 10.4], "texture": "#wood"},
+				"south": {"uv": [4.2, 9.2, 11.8, 10.4], "texture": "#wood"},
+				"west": {"uv": [1.8, 9.2, 3, 10.4], "texture": "#wood"},
+				"up": {"uv": [4.2, 1.8, 11.8, 3], "texture": "#wood"},
+				"down": {"uv": [4.2, 13, 11.8, 14.2], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "back lower apron",
+			"from": [4.3, 5.6, 13],
+			"to": [11.7, 6.8, 14.2],
+			"faces": {
+				"north": {"uv": [4.3, 9.2, 11.7, 10.4], "texture": "#wood"},
+				"east": {"uv": [1.8, 9.2, 3, 10.4], "texture": "#wood"},
+				"south": {"uv": [4.3, 9.2, 11.7, 10.4], "texture": "#wood"},
+				"west": {"uv": [13, 9.2, 14.2, 10.4], "texture": "#wood"},
+				"up": {"uv": [4.3, 13, 11.7, 14.2], "texture": "#wood"},
+				"down": {"uv": [4.3, 1.8, 11.7, 3], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "left lower apron",
+			"from": [1.8, 5.6, 4.3],
+			"to": [3, 6.8, 11.8],
+			"faces": {
+				"north": {"uv": [13, 9.2, 14.2, 10.4], "texture": "#wood"},
+				"east": {"uv": [4.2, 9.2, 11.7, 10.4], "texture": "#wood"},
+				"south": {"uv": [1.8, 9.2, 3, 10.4], "texture": "#wood"},
+				"west": {"uv": [4.3, 9.2, 11.8, 10.4], "texture": "#wood"},
+				"up": {"uv": [1.8, 4.3, 3, 11.8], "texture": "#wood"},
+				"down": {"uv": [1.8, 4.2, 3, 11.7], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "right lower apron",
+			"from": [13, 5.6, 4.3],
+			"to": [14.2, 6.8, 11.8],
+			"faces": {
+				"north": {"uv": [1.8, 9.2, 3, 10.4], "texture": "#wood"},
+				"east": {"uv": [4.2, 9.2, 11.7, 10.4], "texture": "#wood"},
+				"south": {"uv": [13, 9.2, 14.2, 10.4], "texture": "#wood"},
+				"west": {"uv": [4.3, 9.2, 11.8, 10.4], "texture": "#wood"},
+				"up": {"uv": [13, 4.3, 14.2, 11.8], "texture": "#wood"},
+				"down": {"uv": [13, 4.2, 14.2, 11.7], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "front wooden seat lip",
+			"from": [2, 6.8, 2],
+			"to": [14, 7.8, 2.8],
+			"faces": {
+				"north": {"texture": "#wood"},
+				"east": {"texture": "#wood"},
+				"south": {"texture": "#wood"},
+				"west": {"texture": "#wood"},
+				"up": {"texture": "#wood"},
+				"down": {"texture": "#wood"}
+			}
+		},
+		{
+			"name": "back wooden seat lip",
+			"from": [2, 6.8, 11.2],
+			"to": [14, 7.8, 11.75],
+			"faces": {
+				"north": {"texture": "#wood"},
+				"east": {"texture": "#wood"},
+				"south": {"texture": "#wood"},
+				"west": {"texture": "#wood"},
+				"up": {"texture": "#wood"},
+				"down": {"texture": "#wood"}
+			}
+		},
+		{
+			"name": "left wooden seat lip",
+			"from": [2, 6.8, 2.8],
+			"to": [2.8, 7.8, 11.2],
+			"faces": {
+				"north": {"texture": "#wood"},
+				"east": {"texture": "#wood"},
+				"south": {"texture": "#wood"},
+				"west": {"texture": "#wood"},
+				"up": {"texture": "#wood"},
+				"down": {"texture": "#wood"}
+			}
+		},
+		{
+			"name": "right wooden seat lip",
+			"from": [13.2, 6.8, 2.8],
+			"to": [14, 7.8, 11.2],
+			"faces": {
+				"north": {"texture": "#wood"},
+				"east": {"texture": "#wood"},
+				"south": {"texture": "#wood"},
+				"west": {"texture": "#wood"},
+				"up": {"texture": "#wood"},
+				"down": {"texture": "#wood"}
+			}
+		},
+		{
+			"name": "plain red cushion",
+			"from": [2.8, 6.86, 2.8],
+			"to": [13.2, 7.65, 11.2],
+			"faces": {
+				"north": {"uv": [2.8, 7.35, 13.2, 8.14], "texture": "#red"},
+				"east": {"uv": [4.8, 7.35, 13.2, 8.14], "texture": "#red"},
+				"south": {"uv": [2.8, 7.35, 13.2, 8.14], "texture": "#red"},
+				"west": {"uv": [2.8, 7.35, 11.2, 8.14], "texture": "#red"},
+				"up": {"uv": [2.8, 2.8, 13.2, 11.2], "texture": "#red"},
+				"down": {"uv": [2.8, 4.8, 13.2, 13.2], "texture": "#red"}
+			}
+		},
+		{
+			"name": "back lower rail",
+			"from": [4.1, 10.1, 12.25],
+			"to": [11.9, 11.2, 14.1],
+			"faces": {
+				"north": {"uv": [4.1, 4.8, 11.9, 5.9], "texture": "#wood"},
+				"east": {"uv": [1.9, 4.8, 3.75, 5.9], "texture": "#wood"},
+				"south": {"uv": [4.1, 4.8, 11.9, 5.9], "texture": "#wood"},
+				"west": {"uv": [12.25, 4.8, 14.1, 5.9], "texture": "#wood"},
+				"up": {"uv": [4.1, 12.25, 11.9, 14.1], "texture": "#wood"},
+				"down": {"uv": [4.1, 1.9, 11.9, 3.75], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "back middle rail",
+			"from": [4.1, 12.8, 12.25],
+			"to": [11.9, 13.7, 14.1],
+			"faces": {
+				"north": {"uv": [4.1, 2.3, 11.9, 3.2], "texture": "#wood"},
+				"east": {"uv": [1.9, 2.3, 3.75, 3.2], "texture": "#wood"},
+				"south": {"uv": [4.1, 2.3, 11.9, 3.2], "texture": "#wood"},
+				"west": {"uv": [12.25, 2.3, 14.1, 3.2], "texture": "#wood"},
+				"up": {"uv": [4.1, 12.25, 11.9, 14.1], "texture": "#wood"},
+				"down": {"uv": [4.1, 1.9, 11.9, 3.75], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "left back slat",
+			"from": [5, 7.7, 11.75],
+			"to": [6.1, 15.8, 12.25],
+			"faces": {
+				"north": {"uv": [9.9, 0.2, 11, 8.3], "texture": "#wood"},
+				"east": {"uv": [3.75, 0.2, 4.25, 8.3], "texture": "#wood"},
+				"south": {"uv": [5, 0.2, 6.1, 8.3], "texture": "#wood"},
+				"west": {"uv": [11.75, 0.2, 12.25, 8.3], "texture": "#wood"},
+				"up": {"uv": [5, 11.75, 6.1, 12.25], "texture": "#wood"},
+				"down": {"uv": [5, 3.75, 6.1, 4.25], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "middle back slat",
+			"from": [7.45, 7.7, 11.75],
+			"to": [8.55, 15.9, 12.25],
+			"faces": {
+				"north": {"uv": [7.45, 0.1, 8.55, 8.3], "texture": "#wood"},
+				"east": {"uv": [3.75, 0.1, 4.25, 8.3], "texture": "#wood"},
+				"south": {"uv": [7.45, 0.1, 8.55, 8.3], "texture": "#wood"},
+				"west": {"uv": [11.75, 0.1, 12.25, 8.3], "texture": "#wood"},
+				"up": {"uv": [7.45, 11.75, 8.55, 12.25], "texture": "#wood"},
+				"down": {"uv": [7.45, 3.75, 8.55, 4.25], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "right back slat",
+			"from": [9.9, 7.7, 11.75],
+			"to": [11, 15.8, 12.25],
+			"faces": {
+				"north": {"uv": [5, 0.2, 6.1, 8.3], "texture": "#wood"},
+				"east": {"uv": [3.75, 0.2, 4.25, 8.3], "texture": "#wood"},
+				"south": {"uv": [9.9, 0.2, 11, 8.3], "texture": "#wood"},
+				"west": {"uv": [11.75, 0.2, 12.25, 8.3], "texture": "#wood"},
+				"up": {"uv": [9.9, 11.75, 11, 12.25], "texture": "#wood"},
+				"down": {"uv": [9.9, 3.75, 11, 4.25], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "top rail left wing",
+			"from": [3.4, 15.1, 12.1],
+			"to": [5.2, 16.3, 14.2],
+			"faces": {
+				"north": {"uv": [10.8, 0, 12.6, 1.2], "texture": "#wood"},
+				"east": {"uv": [1.8, 0, 3.9, 1.2], "texture": "#wood"},
+				"south": {"uv": [3.4, 0, 5.2, 1.2], "texture": "#wood"},
+				"west": {"uv": [12.1, 0, 14.2, 1.2], "texture": "#wood"},
+				"up": {"uv": [3.4, 12.1, 5.2, 14.2], "texture": "#wood"},
+				"down": {"uv": [3.4, 1.8, 5.2, 3.9], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "top rail raised center",
+			"from": [5.2, 15.7, 12.1],
+			"to": [10.8, 17, 14.2],
+			"faces": {
+				"north": {"uv": [5.2, 0, 10.8, 1.3], "texture": "#wood"},
+				"east": {"uv": [1.8, 0, 3.9, 1.3], "texture": "#wood"},
+				"south": {"uv": [5.2, 0, 10.8, 1.3], "texture": "#wood"},
+				"west": {"uv": [12.1, 0, 14.2, 1.3], "texture": "#wood"},
+				"up": {"uv": [5.2, 12.1, 10.8, 14.2], "texture": "#wood"},
+				"down": {"uv": [5.2, 1.8, 10.8, 3.9], "texture": "#wood"}
+			}
+		},
+		{
+			"name": "top rail right wing",
+			"from": [10.8, 15.1, 12.1],
+			"to": [12.6, 16.3, 14.2],
+			"faces": {
+				"north": {"uv": [3.4, 0, 5.2, 1.2], "texture": "#wood"},
+				"east": {"uv": [1.8, 0, 3.9, 1.2], "texture": "#wood"},
+				"south": {"uv": [10.8, 0, 12.6, 1.2], "texture": "#wood"},
+				"west": {"uv": [12.1, 0, 14.2, 1.2], "texture": "#wood"},
+				"up": {"uv": [10.8, 12.1, 12.6, 14.2], "texture": "#wood"},
+				"down": {"uv": [10.8, 1.8, 12.6, 3.9], "texture": "#wood"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }
