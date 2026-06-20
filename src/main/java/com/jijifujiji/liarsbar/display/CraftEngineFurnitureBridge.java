@@ -60,14 +60,19 @@ public final class CraftEngineFurnitureBridge {
                 return false;
             }
 
-            Object data = furniturePersistentData("ground");
-            Method place = findPlaceMethod(manager.getClass(), data.getClass(), furniture.get().getClass());
-            if (place == null) {
-                logger.warning("CraftEngine furniture place API is not available.");
+            PlaceCall placeCall = findPlaceCall(manager.getClass(), furniture.get().getClass());
+            if (placeCall == null) {
+                logger.warning("CraftEngine furniture place API is not available. Supported CraftEngine versions use place(Location, furniture, FurnitureExtraData/PersistentData, boolean[, player]).");
                 return false;
             }
 
-            Object placed = place.invoke(manager, location, furniture.get(), data, true, null);
+            Object data = createFurnitureData(placeCall.dataType());
+            if (data == null) {
+                logger.warning("CraftEngine furniture data API is not available for " + placeCall.dataType().getName());
+                return false;
+            }
+
+            Object placed = placeCall.invoke(manager, location, furniture.get(), data);
             tagPlacedFurniture(placed, tableId);
             return placed != null;
         } catch (ReflectiveOperationException | RuntimeException e) {
@@ -79,11 +84,8 @@ public final class CraftEngineFurnitureBridge {
     private void destroyCraftEngineFurniture(Entity entity) {
         try {
             Object manager = craftEngineFurnitureManager();
-            Method loaded = manager.getClass().getMethod("loadedFurnitureByMetaEntityId", int.class);
-            Object furniture = loaded.invoke(manager, entity.getEntityId());
-            if (furniture != null) {
-                Method destroy = furniture.getClass().getMethod("destroy", craftEnginePlayerClass());
-                destroy.invoke(furniture, new Object[] { null });
+            Object furniture = loadedFurniture(manager, entity.getEntityId());
+            if (furniture != null && destroyFurniture(furniture)) {
                 return;
             }
         } catch (ReflectiveOperationException | RuntimeException ignored) {
@@ -104,49 +106,125 @@ public final class CraftEngineFurnitureBridge {
     }
 
     private Optional<?> furnitureById(Object manager, Object key) throws ReflectiveOperationException {
-        Method method = manager.getClass().getMethod("furnitureById", key.getClass());
+        Method method = findMethod(manager.getClass(), "furnitureById", 1);
+        if (method == null || !method.getParameterTypes()[0].isAssignableFrom(key.getClass())) {
+            return Optional.empty();
+        }
         Object result = method.invoke(manager, key);
         return result instanceof Optional<?> optional ? optional : Optional.empty();
     }
 
-    private Object furniturePersistentData(String variant) throws ReflectiveOperationException {
-        Class<?> dataClass = Class.forName("net.momirealms.craftengine.core.entity.furniture.FurniturePersistentData");
-        return dataClass.getMethod("ofVariant", String.class).invoke(null, variant);
-    }
-
-    private Method findPlaceMethod(Class<?> managerClass, Class<?> dataClass, Class<?> furnitureClass) {
+    private PlaceCall findPlaceCall(Class<?> managerClass, Class<?> furnitureClass) {
         for (Method method : managerClass.getMethods()) {
             if (!method.getName().equals("place")) continue;
             Class<?>[] params = method.getParameterTypes();
-            if (params.length != 5) continue;
+            if (params.length != 4 && params.length != 5) continue;
             if (!Location.class.isAssignableFrom(params[0])) continue;
             if (!params[1].isAssignableFrom(furnitureClass)) continue;
-            if (!params[2].isAssignableFrom(dataClass)) continue;
             if (params[3] != boolean.class) continue;
-            return method;
+            if (!isSupportedFurnitureData(params[2])) continue;
+            return new PlaceCall(method, params[2]);
         }
         return null;
     }
 
-    private void tagPlacedFurniture(Object placed, String tableId) {
-        if (placed == null) return;
-        try {
-            Method entityMethod;
-            try {
-                entityMethod = placed.getClass().getMethod("bukkitEntity");
-            } catch (NoSuchMethodException ignored) {
-                entityMethod = placed.getClass().getMethod("getBukkitEntity");
-            }
-            Object entity = entityMethod.invoke(placed);
-            if (entity instanceof ItemDisplay display) {
-                display.addScoreboardTag(AUTO_FURNITURE_TAG);
-                display.addScoreboardTag(TableLayout.tableEntityTag(tableId));
-            }
-        } catch (ReflectiveOperationException ignored) {
+    private boolean isSupportedFurnitureData(Class<?> dataType) {
+        String name = dataType.getName();
+        return name.equals("net.momirealms.craftengine.core.entity.furniture.FurniturePersistentData")
+                || name.equals("net.momirealms.craftengine.core.entity.furniture.FurnitureExtraData");
+    }
+
+    private Object createFurnitureData(Class<?> dataType) throws ReflectiveOperationException {
+        String name = dataType.getName();
+        if (name.equals("net.momirealms.craftengine.core.entity.furniture.FurniturePersistentData")) {
+            return dataType.getMethod("ofVariant", String.class).invoke(null, "ground");
         }
+        if (name.equals("net.momirealms.craftengine.core.entity.furniture.FurnitureExtraData")) {
+            Object builder = dataType.getMethod("builder").invoke(null);
+            return builder.getClass().getMethod("build").invoke(builder);
+        }
+        return null;
+    }
+
+    private Object loadedFurniture(Object manager, int entityId) throws ReflectiveOperationException {
+        String[] methodNames = {
+                "loadedFurnitureByMetaEntityId",
+                "loadedFurnitureByRealEntityId",
+                "loadedFurnitureByEntityId"
+        };
+        for (String methodName : methodNames) {
+            try {
+                Method method = manager.getClass().getMethod(methodName, int.class);
+                Object furniture = method.invoke(manager, entityId);
+                if (furniture != null) return furniture;
+            } catch (NoSuchMethodException ignored) {
+            }
+        }
+        return null;
+    }
+
+    private boolean destroyFurniture(Object furniture) throws ReflectiveOperationException {
+        try {
+            Method destroy = furniture.getClass().getMethod("destroy");
+            destroy.invoke(furniture);
+            return true;
+        } catch (NoSuchMethodException ignored) {
+        }
+
+        try {
+            Method destroy = furniture.getClass().getMethod("destroy", craftEnginePlayerClass());
+            destroy.invoke(furniture, new Object[] { null });
+            return true;
+        } catch (NoSuchMethodException ignored) {
+        }
+        return false;
+    }
+
+    private void tagPlacedFurniture(Object placed, String tableId) {
+        Entity entity = placedFurnitureEntity(placed);
+        if (entity == null) return;
+        entity.addScoreboardTag(AUTO_FURNITURE_TAG);
+        entity.addScoreboardTag(TableLayout.tableEntityTag(tableId));
+    }
+
+    private Entity placedFurnitureEntity(Object placed) {
+        if (placed == null) return null;
+        String[] entityMethods = { "baseEntity", "bukkitEntity", "getBukkitEntity" };
+        for (String methodName : entityMethods) {
+            try {
+                Method method = placed.getClass().getMethod(methodName);
+                Object entity = method.invoke(placed);
+                if (entity instanceof Entity bukkitEntity) {
+                    return bukkitEntity;
+                }
+            } catch (ReflectiveOperationException ignored) {
+            }
+        }
+        if (placed instanceof ItemDisplay display) {
+            return display;
+        }
+        return null;
+    }
+
+    private Method findMethod(Class<?> type, String name, int parameterCount) {
+        for (Method method : type.getMethods()) {
+            if (method.getName().equals(name) && method.getParameterTypes().length == parameterCount) {
+                return method;
+            }
+        }
+        return null;
     }
 
     private Class<?> craftEnginePlayerClass() throws ClassNotFoundException {
         return Class.forName("net.momirealms.craftengine.core.entity.player.Player");
+    }
+
+    private record PlaceCall(Method method, Class<?> dataType) {
+        Object invoke(Object manager, Location location, Object furniture, Object data) throws ReflectiveOperationException {
+            if (method.getParameterTypes().length == 4) {
+                return method.invoke(manager, location, furniture, data, true);
+            }
+            return method.invoke(manager, location, furniture, data, true, null);
+        }
     }
 }
