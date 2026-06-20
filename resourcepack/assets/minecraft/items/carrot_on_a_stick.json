@@ -34,6 +34,13 @@
           "type": "minecraft:model",
           "model": "liarsbar:item/seat_chair"
         }
+      },
+      {
+        "threshold": 9999462,
+        "model": {
+          "type": "minecraft:model",
+          "model": "liarsbar:item/table_visual_world"
+        }
       }
     ]
   }

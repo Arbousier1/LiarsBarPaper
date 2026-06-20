@@ -1,0 +1,626 @@
+{
+  "credit": "LiarsBarPaper CraftEngine normalized table world model",
+  "textures": {
+    "red": "liarsbar:item/furniture/red_felt",
+    "gold": "liarsbar:item/furniture/brass",
+    "wood": "liarsbar:item/furniture/dark_wood",
+    "dark": "liarsbar:item/furniture/dark_metal",
+    "particle": "liarsbar:item/furniture/dark_wood"
+  },
+  "elements": [
+    {
+      "name": "west foot",
+      "from": [
+        2.8,
+        0,
+        6.8267
+      ],
+      "to": [
+        6.08,
+        1,
+        9.1733
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "east foot",
+      "from": [
+        9.92,
+        0,
+        6.8267
+      ],
+      "to": [
+        13.2,
+        1,
+        9.1733
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "north foot",
+      "from": [
+        7.12,
+        0,
+        1.0667
+      ],
+      "to": [
+        8.88,
+        1,
+        5.44
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "south foot",
+      "from": [
+        7.12,
+        0,
+        10.56
+      ],
+      "to": [
+        8.88,
+        1,
+        14.9333
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "square pedestal base",
+      "from": [
+        5.68,
+        0.8,
+        4.9067
+      ],
+      "to": [
+        10.32,
+        1.8,
+        11.0933
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "pedestal post",
+      "from": [
+        6.8,
+        1.7,
+        6.4
+      ],
+      "to": [
+        9.2,
+        11.25,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "upper support block",
+      "from": [
+        5.8,
+        11.15,
+        5.0667
+      ],
+      "to": [
+        10.2,
+        12,
+        10.9333
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "dark underside slab",
+      "from": [
+        0.6,
+        12,
+        0.8
+      ],
+      "to": [
+        15.4,
+        12.42,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "name": "wood tabletop front frame",
+      "from": [
+        0,
+        12.42,
+        0
+      ],
+      "to": [
+        16,
+        13.85,
+        1.6533
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "wood tabletop back frame",
+      "from": [
+        0,
+        12.42,
+        14.3467
+      ],
+      "to": [
+        16,
+        13.85,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "wood tabletop left frame",
+      "from": [
+        0,
+        12.42,
+        1.6533
+      ],
+      "to": [
+        1.14,
+        13.85,
+        14.3467
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "wood tabletop right frame",
+      "from": [
+        14.86,
+        12.42,
+        1.6533
+      ],
+      "to": [
+        16,
+        13.85,
+        14.3467
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "single red felt inset",
+      "from": [
+        1.4,
+        12.42,
+        1.8667
+      ],
+      "to": [
+        14.6,
+        13.85,
+        14.1333
+      ],
+      "faces": {
+        "north": {
+          "texture": "#red"
+        },
+        "east": {
+          "texture": "#red"
+        },
+        "south": {
+          "texture": "#red"
+        },
+        "west": {
+          "texture": "#red"
+        },
+        "up": {
+          "texture": "#red"
+        },
+        "down": {
+          "texture": "#red"
+        }
+      }
+    },
+    {
+      "name": "brass front rail",
+      "from": [
+        1.14,
+        12.42,
+        1.6533
+      ],
+      "to": [
+        14.86,
+        13.85,
+        1.8667
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "name": "brass back rail",
+      "from": [
+        1.14,
+        12.42,
+        14.1333
+      ],
+      "to": [
+        14.86,
+        13.85,
+        14.3467
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "name": "brass left rail",
+      "from": [
+        1.14,
+        12.42,
+        1.8667
+      ],
+      "to": [
+        1.4,
+        13.85,
+        14.1333
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "name": "brass right rail",
+      "from": [
+        14.6,
+        12.42,
+        1.8667
+      ],
+      "to": [
+        14.86,
+        13.85,
+        14.1333
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

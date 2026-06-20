@@ -96,6 +96,16 @@ items:
           alignment: center
       furniture: liarsbar:table_visual
 
+  liarsbar:table_visual_world:
+    material: carrot_on_a_stick
+    custom_model_data: 9999462
+    item_model: liarsbar:table_visual_world
+    model: liarsbar:item/table_visual_world
+    legacy_model:
+      path: liarsbar:item/table_visual_world
+    data:
+      item_name: "<!i><gold>Liar's Bar Table Visual</gold>"
+
   liarsbar:seat_chair:
     material: carrot_on_a_stick
     custom_model_data: 9999461
@@ -138,10 +148,11 @@ furniture:
           view_distance: 64
           ray_tracing: false
         elements:
-          - item: liarsbar:table_visual
+          - item: liarsbar:table_visual_world
             display_transform: none
             billboard: fixed
             translation: 0,0.35,0
+            scale: 2.5,1,1.875
             brightness:
               block_light: 15
               sky_light: 15

@@ -27,6 +27,12 @@
         "custom_model_data": 9999461
       },
       "model": "liarsbar:item/seat_chair"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9999462
+      },
+      "model": "liarsbar:item/table_visual_world"
     }
   ]
 }
