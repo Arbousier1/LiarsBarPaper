@@ -134,6 +134,36 @@ public final class DisplayManager {
         return interaction;
     }
 
+    public static Entity spawnCollisionBox(Location location) {
+        World world = location.getWorld();
+        if (world == null) return null;
+        Entity entity = world.spawnEntity(location, EntityType.SHULKER);
+        entity.setPersistent(false);
+        entity.setGravity(false);
+        entity.setSilent(true);
+        entity.setInvulnerable(true);
+        entity.addScoreboardTag("liarsbar_collision");
+
+        if (entity instanceof LivingEntity living) {
+            living.setRemoveWhenFarAway(false);
+            living.setCanPickupItems(false);
+            living.setCollidable(true);
+        }
+
+        invokeIfPresent(entity, "setAI", new Class<?>[] { boolean.class }, false);
+        invokeIfPresent(entity, "setInvisible", new Class<?>[] { boolean.class }, true);
+        invokeIfPresent(entity, "setPeek", new Class<?>[] { float.class }, 0.0f);
+        invokeIfPresent(entity, "setPeek", new Class<?>[] { int.class }, 0);
+        return entity;
+    }
+
+    private static void invokeIfPresent(Object target, String method, Class<?>[] parameterTypes, Object... args) {
+        try {
+            target.getClass().getMethod(method, parameterTypes).invoke(target, args);
+        } catch (Exception ignored) {
+        }
+    }
+
     public static TextDisplay spawnLabel(Location location, String text,
                                           Color bgColor, boolean seeThrough) {
         World world = location.getWorld();

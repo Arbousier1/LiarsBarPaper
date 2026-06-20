@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class Table {
 
     private static final double[][] SEAT_OFFSETS = {
-            {2.0, 0.3, 0},     // 0: east
-            {0, 0.3, 1.75},    // 1: south
-            {-2.0, 0.3, 0},    // 2: west
-            {0, 0.3, -1.75}    // 3: north
+            {2.0, 0.44, 0},     // 0: east
+            {0, 0.44, 1.75},    // 1: south
+            {-2.0, 0.44, 0},    // 2: west
+            {0, 0.44, -1.75}    // 3: north
     };
 
     private static final double[][] CARD_OFFSETS = {
@@ -33,6 +33,7 @@ public class Table {
     private static final String CHAIR_FURNITURE_MODEL = "liarsbar:seat_chair";
     private static final int TABLE_FURNITURE_MODEL_DATA = 9999460;
     private static final int CHAIR_FURNITURE_MODEL_DATA = 9999461;
+    private static final double TABLE_COLLISION_Y = 0.08;
 
     private final LiarsBarPlugin plugin;
     private final String id;
@@ -165,9 +166,17 @@ public class Table {
         addDisplay(DisplayManager.spawnFurniture(location.clone().add(0, 0.35, 0),
                 "Liars Bar Table", TABLE_FURNITURE_MODEL, TABLE_FURNITURE_MODEL_DATA,
                 0f, 1.0f, 3.4f, 1.6f));
+        addTableCollision();
 
         for (int i = 0; i < 4; i++) {
             addChairVisual(i);
+        }
+    }
+
+    private void addTableCollision() {
+        double[] xOffsets = {-0.9, 0.0, 0.9};
+        for (double xOffset : xOffsets) {
+            addDisplay(DisplayManager.spawnCollisionBox(location.clone().add(xOffset, TABLE_COLLISION_Y, 0)));
         }
     }
 

@@ -29,6 +29,12 @@ public class EntityInteractListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) return;
         Entity entity = event.getRightClicked();
         DisplayManager.ClickAction action = DisplayManager.getClickAction(entity.getEntityId());
+        if (action == null && entity.getScoreboardTags().contains("liarsbar_collision")) {
+            Interaction target = findTargetedInteraction(event.getPlayer());
+            if (target != null) {
+                action = DisplayManager.getClickAction(target.getEntityId());
+            }
+        }
         if (action == null) return;
         event.setCancelled(true);
         handleAction(event.getPlayer(), action);

@@ -1,109 +1,213 @@
 items:
   liarsbar:card_a:
     material: music_disc_relic
+    custom_model_data: 9999450
     item_model: liarsbar:card_a
-    model:
-      type: minecraft:model
+    model: liarsbar:item/game/jijifujiji_a
+    legacy_model:
       path: liarsbar:item/game/jijifujiji_a
     data:
-      custom-model-data: 9999450
       item_name: "<!i><red>A</red>"
 
   liarsbar:card_q:
     material: music_disc_relic
+    custom_model_data: 9999451
     item_model: liarsbar:card_q
-    model:
-      type: minecraft:model
+    model: liarsbar:item/game/jijifujiji_q
+    legacy_model:
       path: liarsbar:item/game/jijifujiji_q
     data:
-      custom-model-data: 9999451
       item_name: "<!i><blue>Q</blue>"
 
   liarsbar:card_k:
     material: music_disc_relic
+    custom_model_data: 9999452
     item_model: liarsbar:card_k
-    model:
-      type: minecraft:model
+    model: liarsbar:item/game/jijifujiji_k
+    legacy_model:
       path: liarsbar:item/game/jijifujiji_k
     data:
-      custom-model-data: 9999452
       item_name: "<!i><gold>K</gold>"
 
   liarsbar:card_kun:
     material: music_disc_relic
+    custom_model_data: 9999453
     item_model: liarsbar:card_kun
-    model:
-      type: minecraft:model
+    model: liarsbar:item/game/jijifujiji_kun
+    legacy_model:
       path: liarsbar:item/game/jijifujiji_kun
     data:
-      custom-model-data: 9999453
       item_name: "<!i><light_purple>KUN</light_purple>"
 
   liarsbar:card_demon:
     material: music_disc_relic
+    custom_model_data: 9999454
     item_model: liarsbar:card_demon
-    model:
-      type: minecraft:model
+    model: liarsbar:item/game/jijifujiji_tnt
+    legacy_model:
       path: liarsbar:item/game/jijifujiji_tnt
     data:
-      custom-model-data: 9999454
       item_name: "<!i><dark_purple>DEMON</dark_purple>"
 
   liarsbar:card_back:
     material: music_disc_relic
+    custom_model_data: 9999455
     item_model: liarsbar:card_back
-    model:
-      type: minecraft:model
+    model: liarsbar:item/game/jijifujiji_back
+    legacy_model:
       path: liarsbar:item/game/jijifujiji_back
     data:
-      custom-model-data: 9999455
       item_name: "<!i><gray>Card Back</gray>"
 
   liarsbar:gun_police:
     material: carrot_on_a_stick
+    custom_model_data: 9999420
     item_model: liarsbar:gun_police
-    model:
-      type: minecraft:model
+    model: liarsbar:item/gun/jijifujiji_gun_police
+    legacy_model:
       path: liarsbar:item/gun/jijifujiji_gun_police
     data:
-      custom-model-data: 9999420
       item_name: "<!i><gray>Gun</gray>"
 
   liarsbar:liar_bar_gun:
     material: carrot_on_a_stick
+    custom_model_data: 9999456
     item_model: liarsbar:liar_bar_gun
-    model:
-      type: minecraft:model
+    model: liarsbar:item/gun/jijifujiji_liar_bar_gun
+    legacy_model:
       path: liarsbar:item/gun/jijifujiji_liar_bar_gun
     data:
-      custom-model-data: 9999456
       item_name: "<!i><red>Liar's Bar Gun</red>"
 
   liarsbar:table_visual:
     material: carrot_on_a_stick
+    custom_model_data: 9999460
     item_model: liarsbar:table_visual
-    model:
-      type: minecraft:model
+    model: liarsbar:item/table_visual
+    legacy_model:
       path: liarsbar:item/table_visual
     data:
-      custom-model-data: 9999460
       item_name: "<!i><gold>Liar's Bar Table</gold>"
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four
+          alignment: center
+      furniture: liarsbar:table_visual
 
   liarsbar:seat_chair:
     material: carrot_on_a_stick
+    custom_model_data: 9999461
     item_model: liarsbar:seat_chair
-    model:
-      type: minecraft:model
+    model: liarsbar:item/seat_chair
+    legacy_model:
       path: liarsbar:item/seat_chair
     data:
-      custom-model-data: 9999461
       item_name: "<!i><gold>Liar's Bar Chair</gold>"
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four
+          alignment: center
+      furniture: liarsbar:seat_chair
 
   liarsbar:fantuan:
     material: paper
     item_model: liarsbar:fantuan
-    model:
-      type: minecraft:model
+    model: liarsbar:item/jijifujiji_fantuan
+    legacy_model:
       path: liarsbar:item/jijifujiji_fantuan
     data:
       item_name: "<!i><white>Fantuan</white>"
+
+furniture:
+  liarsbar:table_visual:
+    settings:
+      item: liarsbar:table_visual
+      hit_times: 5
+      sounds:
+        break: minecraft:block.wood.break
+        place: minecraft:block.wood.place
+        hit: minecraft:block.wood.hit
+    variants:
+      ground:
+        loot_spawn_offset: 0,0.5,0
+        entity_culling:
+          view_distance: 64
+          ray_tracing: false
+        elements:
+          - item: liarsbar:table_visual
+            display_transform: none
+            billboard: fixed
+            translation: 0,0.35,0
+            brightness:
+              block_light: 15
+              sky_light: 15
+            view_range: 64
+            shadow_radius: 1.2
+            shadow_strength: 0.35
+        hitboxes:
+          - position: -0.9,0,0
+            type: shulker
+            direction: up
+            peek: 100
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+          - position: 0,0,0
+            type: shulker
+            direction: up
+            peek: 100
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+          - position: 0.9,0,0
+            type: shulker
+            direction: up
+            peek: 100
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+    loot:
+      template: default:loot_table/furniture
+      arguments:
+        item: liarsbar:table_visual
+
+  liarsbar:seat_chair:
+    settings:
+      item: liarsbar:seat_chair
+      hit_times: 3
+      sounds:
+        break: minecraft:block.wood.break
+        place: minecraft:block.wood.place
+        hit: minecraft:block.wood.hit
+    variants:
+      ground:
+        loot_spawn_offset: 0,0.35,0
+        elements:
+          - item: liarsbar:seat_chair
+            display_transform: none
+            billboard: fixed
+            translation: 0,0.42,0
+            brightness:
+              block_light: 15
+              sky_light: 15
+            view_range: 64
+            shadow_radius: 0.55
+            shadow_strength: 0.35
+        hitboxes:
+          - position: 0,0,0
+            type: shulker
+            direction: up
+            peek: 70
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+            seats:
+              - 0,0,-0.12 0
+    loot:
+      template: default:loot_table/furniture
+      arguments:
+        item: liarsbar:seat_chair
