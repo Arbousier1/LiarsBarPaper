@@ -16,6 +16,8 @@ import java.lang.reflect.Method;
 public final class CraftEngineFurnitureInteractListener implements Listener {
 
     private static final String EVENT_CLASS = "net.momirealms.craftengine.bukkit.api.event.FurnitureInteractEvent";
+    private static final String HIT_EVENT_CLASS = "net.momirealms.craftengine.bukkit.api.event.FurnitureHitEvent";
+    private static final String BREAK_EVENT_CLASS = "net.momirealms.craftengine.bukkit.api.event.FurnitureBreakEvent";
 
     private final LiarsBarPlugin plugin;
 
@@ -27,6 +29,7 @@ public final class CraftEngineFurnitureInteractListener implements Listener {
     public static void register(LiarsBarPlugin plugin) {
         CraftEngineFurnitureInteractListener listener = new CraftEngineFurnitureInteractListener(plugin);
         listener.registerFurnitureInteract();
+        listener.registerFurnitureProtection();
         listener.registerSeatVehicleEvent("org.bukkit.event.entity.EntityMountEvent", EventPriority.NORMAL, listener::handleSeatMount);
         listener.registerSeatVehicleEvent("org.spigotmc.event.entity.EntityMountEvent", EventPriority.NORMAL, listener::handleSeatMount);
         listener.registerSeatVehicleEvent("org.bukkit.event.entity.EntityDismountEvent", EventPriority.LOWEST, listener::handleSeatDismount);
@@ -47,12 +50,42 @@ public final class CraftEngineFurnitureInteractListener implements Listener {
     }
 
     @SuppressWarnings("unchecked")
+    private void registerFurnitureProtection() {
+        registerFurnitureProtectionEvent(HIT_EVENT_CLASS, EventPriority.LOWEST);
+        registerFurnitureProtectionEvent(BREAK_EVENT_CLASS, EventPriority.HIGHEST);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerFurnitureProtectionEvent(String className, EventPriority priority) {
+        try {
+            Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName(className).asSubclass(Event.class);
+            EventExecutor executor = (ignored, event) -> protectLiarsBarFurniture(event);
+            plugin.getServer().getPluginManager().registerEvent(
+                    eventClass, this, priority, executor, plugin, true);
+        } catch (ClassNotFoundException e) {
+            plugin.getLogger().warning("CraftEngine furniture protection event API was not found: " + className);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private void registerSeatVehicleEvent(String className, EventPriority priority, EventExecutor executor) {
         try {
             Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName(className).asSubclass(Event.class);
             plugin.getServer().getPluginManager().registerEvent(eventClass, this, priority, executor, plugin, true);
         } catch (ClassNotFoundException ignored) {
             // Paper/Spigot have used different packages for mount events across versions.
+        }
+    }
+
+    private void protectLiarsBarFurniture(Event event) {
+        if (!(event instanceof Cancellable cancellable)) return;
+        try {
+            Object furniture = event.getClass().getMethod("furniture").invoke(event);
+            if (plugin.getCraftEngineFurnitureBridge().isLiarsBarFurniture(furniture)) {
+                cancellable.setCancelled(true);
+            }
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            plugin.getLogger().warning("Failed to protect CraftEngine furniture: " + e.getMessage());
         }
     }
 

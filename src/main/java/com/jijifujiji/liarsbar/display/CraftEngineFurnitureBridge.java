@@ -76,6 +76,15 @@ public final class CraftEngineFurnitureBridge {
         }
     }
 
+    public boolean isLiarsBarFurniture(Object furniture) {
+        if (furniture == null) return false;
+        try {
+            return isLiarsBarFurnitureId(furnitureId(furniture));
+        } catch (ReflectiveOperationException | RuntimeException ignored) {
+            return false;
+        }
+    }
+
     private boolean placeFurniture(String furnitureId, String tableId, Location location) {
         try {
             Object manager = craftEngineFurnitureManager();
