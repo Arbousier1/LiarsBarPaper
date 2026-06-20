@@ -4,18 +4,18 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class DisplayManager {
 
     private static final Map<Integer, ClickAction> CLICK_ACTIONS = new ConcurrentHashMap<>();
-    private static final NamespacedKey CLICK_ACTION_KEY = new NamespacedKey("liarsbar", "click_action");
+    private static final String CLICK_ACTION_TAG_PREFIX = "liarsbar_action_";
 
     private DisplayManager() {}
 
@@ -26,7 +26,8 @@ public final class DisplayManager {
     public static void registerClickAction(Entity entity, ClickAction action) {
         if (entity == null || action == null) return;
         registerClickAction(entity.getEntityId(), action);
-        entity.getPersistentDataContainer().set(CLICK_ACTION_KEY, PersistentDataType.STRING, serializeClickAction(action));
+        clearActionTags(entity);
+        entity.addScoreboardTag(CLICK_ACTION_TAG_PREFIX + encodeActionTag(serializeClickAction(action)));
     }
 
     public static ClickAction getClickAction(int entityId) {
@@ -38,8 +39,7 @@ public final class DisplayManager {
         ClickAction action = getClickAction(entity.getEntityId());
         if (action != null) return action;
 
-        String raw = entity.getPersistentDataContainer().get(CLICK_ACTION_KEY, PersistentDataType.STRING);
-        action = deserializeClickAction(raw);
+        action = deserializeClickAction(readActionTag(entity));
         if (action != null) {
             registerClickAction(entity.getEntityId(), action);
         }
@@ -62,6 +62,35 @@ public final class DisplayManager {
 
     private static String serializeClickAction(ClickAction action) {
         return action.type().name() + "|" + action.tableId() + "|" + action.seatIndex() + "|" + action.cardIndex();
+    }
+
+    private static String encodeActionTag(String raw) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(raw.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String decodeActionTag(String encoded) {
+        try {
+            return new String(Base64.getUrlDecoder().decode(encoded), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException ignored) {
+            return null;
+        }
+    }
+
+    private static void clearActionTags(Entity entity) {
+        for (String tag : new ArrayList<>(entity.getScoreboardTags())) {
+            if (tag.startsWith(CLICK_ACTION_TAG_PREFIX)) {
+                entity.removeScoreboardTag(tag);
+            }
+        }
+    }
+
+    private static String readActionTag(Entity entity) {
+        for (String tag : entity.getScoreboardTags()) {
+            if (tag.startsWith(CLICK_ACTION_TAG_PREFIX)) {
+                return decodeActionTag(tag.substring(CLICK_ACTION_TAG_PREFIX.length()));
+            }
+        }
+        return null;
     }
 
     private static ClickAction deserializeClickAction(String raw) {
