@@ -28,11 +28,11 @@ public class EntityInteractListener implements Listener {
     public void onEntityInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         Entity entity = event.getRightClicked();
-        DisplayManager.ClickAction action = DisplayManager.getClickAction(entity.getEntityId());
+        DisplayManager.ClickAction action = DisplayManager.getClickAction(entity);
         if (action == null && entity.getScoreboardTags().contains("liarsbar_collision")) {
             Interaction target = findTargetedInteraction(event.getPlayer());
             if (target != null) {
-                action = DisplayManager.getClickAction(target.getEntityId());
+                action = DisplayManager.getClickAction(target);
             }
         }
         if (action == null) return;
@@ -49,7 +49,7 @@ public class EntityInteractListener implements Listener {
         Interaction target = findTargetedInteraction(event.getPlayer());
         if (target == null) return;
 
-        DisplayManager.ClickAction clickAction = DisplayManager.getClickAction(target.getEntityId());
+        DisplayManager.ClickAction clickAction = DisplayManager.getClickAction(target);
         if (clickAction == null) return;
 
         event.setCancelled(true);
@@ -65,7 +65,7 @@ public class EntityInteractListener implements Listener {
 
         for (Entity entity : player.getNearbyEntities(maxDist, maxDist, maxDist)) {
             if (!(entity instanceof Interaction interaction)) continue;
-            if (DisplayManager.getClickAction(interaction.getEntityId()) == null) continue;
+            if (DisplayManager.getClickAction(interaction) == null) continue;
 
             Location center = interaction.getLocation().clone()
                     .add(0, interaction.getInteractionHeight() / 2.0, 0);

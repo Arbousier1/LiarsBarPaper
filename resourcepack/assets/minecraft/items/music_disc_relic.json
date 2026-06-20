@@ -1,7 +1,11 @@
 {
   "model": {
-    "type": "range_dispatch",
-    "property": "custom_model_data",
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/music_disc_relic"
+    },
     "entries": [
       {
         "threshold": 9999450,

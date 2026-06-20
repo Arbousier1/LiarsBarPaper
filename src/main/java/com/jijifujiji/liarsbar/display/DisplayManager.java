@@ -4,6 +4,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class DisplayManager {
 
     private static final Map<Integer, ClickAction> CLICK_ACTIONS = new ConcurrentHashMap<>();
+    private static final NamespacedKey CLICK_ACTION_KEY = new NamespacedKey("liarsbar", "click_action");
 
     private DisplayManager() {}
 
@@ -21,8 +23,27 @@ public final class DisplayManager {
         if (action != null) CLICK_ACTIONS.put(entityId, action);
     }
 
+    public static void registerClickAction(Entity entity, ClickAction action) {
+        if (entity == null || action == null) return;
+        registerClickAction(entity.getEntityId(), action);
+        entity.getPersistentDataContainer().set(CLICK_ACTION_KEY, PersistentDataType.STRING, serializeClickAction(action));
+    }
+
     public static ClickAction getClickAction(int entityId) {
         return CLICK_ACTIONS.get(entityId);
+    }
+
+    public static ClickAction getClickAction(Entity entity) {
+        if (entity == null) return null;
+        ClickAction action = getClickAction(entity.getEntityId());
+        if (action != null) return action;
+
+        String raw = entity.getPersistentDataContainer().get(CLICK_ACTION_KEY, PersistentDataType.STRING);
+        action = deserializeClickAction(raw);
+        if (action != null) {
+            registerClickAction(entity.getEntityId(), action);
+        }
+        return action;
     }
 
     public static void unregisterClickAction(int entityId) {
@@ -36,6 +57,22 @@ public final class DisplayManager {
     public record ClickAction(ActionType type, String tableId, int seatIndex, int cardIndex) {
         public enum ActionType {
             JOIN_SEAT, PLAY_CARD, PLAY_BUTTON, CHALLENGE_BUTTON, START_BUTTON
+        }
+    }
+
+    private static String serializeClickAction(ClickAction action) {
+        return action.type().name() + "|" + action.tableId() + "|" + action.seatIndex() + "|" + action.cardIndex();
+    }
+
+    private static ClickAction deserializeClickAction(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        String[] parts = raw.split("\\|", -1);
+        if (parts.length != 4) return null;
+        try {
+            return new ClickAction(ClickAction.ActionType.valueOf(parts[0]), parts[1],
+                    Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+        } catch (IllegalArgumentException ignored) {
+            return null;
         }
     }
 
@@ -68,10 +105,18 @@ public final class DisplayManager {
     public static ItemDisplay spawnFurniture(Location location, String displayName, String itemModel,
                                              int customModelData, float yaw, float scale,
                                              float displayWidth, float displayHeight) {
+        return spawnFurniture(location, displayName, itemModel, customModelData, yaw, scale,
+                displayWidth, displayHeight, false);
+    }
+
+    public static ItemDisplay spawnFurniture(Location location, String displayName, String itemModel,
+                                             int customModelData, float yaw, float scale,
+                                             float displayWidth, float displayHeight,
+                                             boolean persistent) {
         World world = location.getWorld();
         if (world == null) return null;
         ItemDisplay display = world.spawn(location, ItemDisplay.class);
-        display.setPersistent(false);
+        display.setPersistent(persistent);
         display.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.NONE);
         display.setViewRange(64f);
         display.setBrightness(new Display.Brightness(15, 15));
@@ -121,24 +166,37 @@ public final class DisplayManager {
 
     public static Interaction spawnInteraction(Location location, float width, float height,
                                                 ClickAction action) {
+        return spawnInteraction(location, width, height, action, false, true);
+    }
+
+    public static Interaction spawnInteraction(Location location, float width, float height,
+                                                ClickAction action, boolean persistent, boolean responsive) {
         World world = location.getWorld();
         if (world == null) return null;
         Interaction interaction = world.spawn(location, Interaction.class);
-        interaction.setPersistent(false);
-        interaction.setResponsive(true);
+        interaction.setPersistent(persistent);
+        interaction.setResponsive(responsive);
         interaction.setInteractionWidth(width);
         interaction.setInteractionHeight(height);
         if (action != null) {
-            registerClickAction(interaction.getEntityId(), action);
+            registerClickAction(interaction, action);
         }
         return interaction;
+    }
+
+    public static Interaction spawnSeatVehicle(Location location, boolean persistent) {
+        Interaction seat = spawnInteraction(location, 0.05f, 0.05f, null, persistent, false);
+        if (seat != null) {
+            seat.addScoreboardTag("liarsbar_seat_vehicle");
+        }
+        return seat;
     }
 
     public static Entity spawnCollisionBox(Location location) {
         World world = location.getWorld();
         if (world == null) return null;
         Entity entity = world.spawnEntity(location, EntityType.SHULKER);
-        entity.setPersistent(false);
+        entity.setPersistent(true);
         entity.setGravity(false);
         entity.setSilent(true);
         entity.setInvulnerable(true);

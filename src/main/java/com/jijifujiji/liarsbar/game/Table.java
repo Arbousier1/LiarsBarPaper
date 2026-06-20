@@ -15,11 +15,17 @@ import java.util.stream.Collectors;
 public class Table {
 
     private static final double[][] SEAT_OFFSETS = {
-            {2.0, 0.44, 0},     // 0: east
-            {0, 0.44, 1.75},    // 1: south
-            {-2.0, 0.44, 0},    // 2: west
-            {0, 0.44, -1.75}    // 3: north
+            {2.0, 0, 0},     // 0: east
+            {0, 0, 1.75},    // 1: south
+            {-2.0, 0, 0},    // 2: west
+            {0, 0, -1.75}    // 3: north
     };
+    private static final double CHAIR_VISUAL_Y = 0.42;
+    private static final double CHAIR_MODEL_CENTER_Y = 8.0 / 16.0;
+    private static final double CHAIR_RED_CUSHION_TOP_Y = CHAIR_VISUAL_Y + ((7.65 / 16.0) - CHAIR_MODEL_CENTER_Y);
+    private static final double SEAT_CLICK_Y = 0.10;
+    private static final double SEAT_RIDE_Y = CHAIR_RED_CUSHION_TOP_Y;
+    private static final double SEAT_CARD_BASE_Y = 0.44;
 
     private static final double[][] CARD_OFFSETS = {
             {0.5, 0, 0},      // east: cards go north of seat
@@ -34,6 +40,7 @@ public class Table {
     private static final int TABLE_FURNITURE_MODEL_DATA = 9999460;
     private static final int CHAIR_FURNITURE_MODEL_DATA = 9999461;
     private static final double TABLE_COLLISION_Y = 0.08;
+    private static final String MANAGED_ENTITY_TAG = "liarsbar_managed";
 
     private final LiarsBarPlugin plugin;
     private final String id;
@@ -58,6 +65,7 @@ public class Table {
     // Display entities
     private final List<Entity> displayEntities = new ArrayList<>();
     private final List<Entity> seatInteractions = new ArrayList<>();
+    private final List<Entity> seatVehicles = new ArrayList<>();
     private TextDisplay modeLabel;
     private TextDisplay statusLabel;
     private TextDisplay turnLabel;
@@ -100,7 +108,7 @@ public class Table {
     }
 
     private Location getSeatLocation(int seatIndex) {
-        Location seatLoc = location.clone().add(SEAT_OFFSETS[seatIndex][0], SEAT_OFFSETS[seatIndex][1], SEAT_OFFSETS[seatIndex][2]);
+        Location seatLoc = location.clone().add(SEAT_OFFSETS[seatIndex][0], SEAT_RIDE_Y, SEAT_OFFSETS[seatIndex][2]);
         seatLoc.setYaw(SEAT_YAWS[seatIndex]);
         seatLoc.setPitch(0f);
         return seatLoc;
@@ -110,11 +118,9 @@ public class Table {
         if (location == null || location.getWorld() == null) return;
         player.leaveVehicle();
         player.teleport(getSeatLocation(seatIndex));
-        if (seatIndex >= 0 && seatIndex < seatInteractions.size()) {
-            Entity seat = seatInteractions.get(seatIndex);
-            if (seat != null && seat.isValid()) {
-                seat.addPassenger(player);
-            }
+        Entity seat = findSeatVehicle(seatIndex);
+        if (seat != null && seat.isValid()) {
+            seat.addPassenger(player);
         }
     }
 
@@ -134,25 +140,33 @@ public class Table {
         statusLabel = DisplayManager.spawnLabel(location.clone().add(0, 1.6, 0),
                 "等待玩家加入...", Color.fromRGB(0xB22234), false);
 
-        // Seat interactions
+        // Seat click hitboxes and low ride anchors are separate so players do not sit too high.
         for (int i = 0; i < 4; i++) {
-            Location seatLoc = location.clone().add(SEAT_OFFSETS[i][0], SEAT_OFFSETS[i][1], SEAT_OFFSETS[i][2]);
-            Interaction seat = DisplayManager.spawnInteraction(seatLoc, 0.8f, 1.6f,
-                    new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.JOIN_SEAT, id, i, -1));
-            if (seat != null) {
-                seatInteractions.add(seat);
-                displayEntities.add(seat);
+            Location clickLoc = location.clone().add(SEAT_OFFSETS[i][0], SEAT_CLICK_Y, SEAT_OFFSETS[i][2]);
+            Interaction seat = DisplayManager.spawnInteraction(clickLoc, 0.9f, 1.1f,
+                    new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.JOIN_SEAT, id, i, -1),
+                    true, true);
+            seatInteractions.add(seat);
+            addDisplay(seat);
+
+            Location rideLoc = getSeatLocation(i);
+            Interaction vehicle = DisplayManager.spawnSeatVehicle(rideLoc, true);
+            if (vehicle != null) {
+                vehicle.addScoreboardTag(seatVehicleTag(i));
             }
+            seatVehicles.add(vehicle);
+            addDisplay(vehicle);
         }
 
         // Start button
         Location btnLoc = location.clone().add(0, 1.28, 0);
         startButton = DisplayManager.spawnInteraction(btnLoc, 0.6f, 0.6f,
-                new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, id, -1, -1));
-        if (startButton != null) displayEntities.add(startButton);
+                new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, id, -1, -1),
+                true, true);
+        addDisplay(startButton);
 
-        if (modeLabel != null) displayEntities.add(modeLabel);
-        if (statusLabel != null) displayEntities.add(statusLabel);
+        addDisplay(modeLabel);
+        addDisplay(statusLabel);
 
         for (Map.Entry<Integer, Player> entry : seatMap.entrySet()) {
             Player player = entry.getValue();
@@ -165,7 +179,7 @@ public class Table {
     private void renderFurniture() {
         addDisplay(DisplayManager.spawnFurniture(location.clone().add(0, 0.35, 0),
                 "Liars Bar Table", TABLE_FURNITURE_MODEL, TABLE_FURNITURE_MODEL_DATA,
-                0f, 1.0f, 3.4f, 1.6f));
+                0f, 1.0f, 3.4f, 1.6f, true));
         addTableCollision();
 
         for (int i = 0; i < 4; i++) {
@@ -181,10 +195,10 @@ public class Table {
     }
 
     private void addChairVisual(int seatIndex) {
-        Location chair = location.clone().add(SEAT_OFFSETS[seatIndex][0], 0.42, SEAT_OFFSETS[seatIndex][2]);
+        Location chair = location.clone().add(SEAT_OFFSETS[seatIndex][0], CHAIR_VISUAL_Y, SEAT_OFFSETS[seatIndex][2]);
         addDisplay(DisplayManager.spawnFurniture(chair,
                 "Liars Bar Chair", CHAIR_FURNITURE_MODEL, CHAIR_FURNITURE_MODEL_DATA,
-                chairYaw(seatIndex), 1.0f, 1.1f, 1.5f));
+                chairYaw(seatIndex), 1.0f, 1.1f, 1.5f, true));
     }
 
     private float chairYaw(int seatIndex) {
@@ -192,10 +206,68 @@ public class Table {
         return yaw > 180f ? yaw - 360f : yaw;
     }
 
+    private String tableEntityTag() {
+        return "liarsbar_table_" + id.replaceAll("[^A-Za-z0-9_-]", "_");
+    }
+
+    private String seatVehicleTag(int seatIndex) {
+        return "liarsbar_seat_vehicle_" + seatIndex;
+    }
+
+    private Entity findSeatVehicle(int seatIndex) {
+        if (seatIndex >= 0 && seatIndex < seatVehicles.size()) {
+            Entity cached = seatVehicles.get(seatIndex);
+            if (cached != null && cached.isValid()) return cached;
+        }
+        if (location == null || location.getWorld() == null) return null;
+
+        String tableTag = tableEntityTag();
+        String seatTag = seatVehicleTag(seatIndex);
+        Location seatLoc = getSeatLocation(seatIndex);
+        for (Entity entity : location.getWorld().getNearbyEntities(seatLoc, 0.6, 0.6, 0.6)) {
+            if (entity.getScoreboardTags().contains(MANAGED_ENTITY_TAG)
+                    && entity.getScoreboardTags().contains(tableTag)
+                    && entity.getScoreboardTags().contains(seatTag)) {
+                while (seatVehicles.size() <= seatIndex) seatVehicles.add(null);
+                seatVehicles.set(seatIndex, entity);
+                if (!displayEntities.contains(entity)) {
+                    displayEntities.add(entity);
+                }
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    private void clearPersistedDisplayEntities() {
+        String tableTag = tableEntityTag();
+        for (Entity entity : location.getWorld().getNearbyEntities(location, 8.0, 4.0, 8.0)) {
+            boolean managedForTable = entity.getScoreboardTags().contains(MANAGED_ENTITY_TAG)
+                    && entity.getScoreboardTags().contains(tableTag);
+            boolean legacyCollision = entity.getScoreboardTags().contains("liarsbar_collision")
+                    && entity.getLocation().distanceSquared(location) <= 4.0;
+            if (managedForTable || legacyCollision) {
+                DisplayManager.unregisterClickAction(entity.getEntityId());
+                entity.remove();
+            }
+        }
+    }
+
     private void addDisplay(Entity entity) {
         if (entity != null) {
+            entity.addScoreboardTag(MANAGED_ENTITY_TAG);
+            entity.addScoreboardTag(tableEntityTag());
             displayEntities.add(entity);
         }
+    }
+
+    private void removeDisplay(Entity entity) {
+        if (entity == null) return;
+        DisplayManager.unregisterClickAction(entity.getEntityId());
+        if (entity.isValid()) {
+            entity.remove();
+        }
+        displayEntities.remove(entity);
     }
 
     public void renderPlayerCards(PlayerState ps) {
@@ -203,7 +275,7 @@ public class Table {
         if (location == null || location.getWorld() == null) return;
 
         Location seatLoc = location.clone().add(SEAT_OFFSETS[ps.getSeatIndex()][0],
-                SEAT_OFFSETS[ps.getSeatIndex()][1], SEAT_OFFSETS[ps.getSeatIndex()][2]);
+                SEAT_CARD_BASE_Y, SEAT_OFFSETS[ps.getSeatIndex()][2]);
         double[] cardOff = CARD_OFFSETS[ps.getSeatIndex()];
         float yaw = SEAT_YAWS[ps.getSeatIndex()];
 
@@ -219,7 +291,7 @@ public class Table {
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, yaw, 0.8f);
                 cardDisplays.add(cardDisplay);
-                displayEntities.add(cardDisplay);
+                addDisplay(cardDisplay);
             }
 
             Interaction cardInteract = DisplayManager.spawnInteraction(cardLoc, 0.5f, 0.7f,
@@ -227,7 +299,7 @@ public class Table {
                             id, ps.getSeatIndex(), i));
             if (cardInteract != null) {
                 cardInteractions.add(cardInteract);
-                displayEntities.add(cardInteract);
+                addDisplay(cardInteract);
             }
         }
         playerCardDisplays.put(ps.getSeatIndex(), cardDisplays);
@@ -246,7 +318,7 @@ public class Table {
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, 0f, 0.6f);
                 centerCardDisplays.add(cardDisplay);
-                displayEntities.add(cardDisplay);
+                addDisplay(cardDisplay);
             }
         }
     }
@@ -254,19 +326,21 @@ public class Table {
     public void renderActionButtons(PlayerState current, boolean canChallenge) {
         if (location == null || location.getWorld() == null) return;
         Location seatLoc = location.clone().add(SEAT_OFFSETS[current.getSeatIndex()][0],
-                SEAT_OFFSETS[current.getSeatIndex()][1], SEAT_OFFSETS[current.getSeatIndex()][2]);
+                SEAT_CARD_BASE_Y, SEAT_OFFSETS[current.getSeatIndex()][2]);
 
-        if (playButton != null) { playButton.remove(); displayEntities.remove(playButton); }
-        if (challengeButton != null) { challengeButton.remove(); displayEntities.remove(challengeButton); }
+        removeDisplay(playButton);
+        removeDisplay(challengeButton);
+        playButton = null;
+        challengeButton = null;
 
         playButton = DisplayManager.spawnInteraction(seatLoc.clone().add(0, -0.3, 0), 0.5f, 0.5f,
                 new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.PLAY_BUTTON, id, -1, -1));
-        if (playButton != null) displayEntities.add(playButton);
+        addDisplay(playButton);
 
         if (canChallenge && lastPlayer != null && lastPlayer != current) {
             challengeButton = DisplayManager.spawnInteraction(seatLoc.clone().add(0, -0.3, 0.5), 0.5f, 0.5f,
                     new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.CHALLENGE_BUTTON, id, -1, -1));
-            if (challengeButton != null) displayEntities.add(challengeButton);
+            addDisplay(challengeButton);
         }
     }
 
@@ -331,6 +405,10 @@ public class Table {
         DisplayManager.removeManagedEntities(new ArrayList<>(displayEntities));
         displayEntities.clear();
         seatInteractions.clear();
+        seatVehicles.clear();
+        if (location != null && location.getWorld() != null) {
+            clearPersistedDisplayEntities();
+        }
         modeLabel = null;
         statusLabel = null;
         turnLabel = null;
