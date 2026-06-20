@@ -473,16 +473,16 @@
       }
     },
     {
-      "name": "revolver cylinder",
+      "name": "pixel revolver main frame",
       "from": [
-        17.8,
-        14.42,
-        4
+        15.5,
+        14.46,
+        4.9
       ],
       "to": [
         20.4,
-        15.15,
-        6.6
+        15.04,
+        8.2
       ],
       "faces": {
         "north": {
@@ -506,16 +506,16 @@
       }
     },
     {
-      "name": "revolver barrel",
+      "name": "pixel revolver raised cylinder",
       "from": [
-        20.2,
-        14.55,
-        4.85
+        16,
+        15.08,
+        5.25
       ],
       "to": [
-        25.2,
-        14.94,
-        5.75
+        18.55,
+        15.54,
+        7.75
       ],
       "faces": {
         "north": {
@@ -539,16 +539,214 @@
       }
     },
     {
-      "name": "revolver grip",
+      "name": "pixel revolver cylinder glint",
       "from": [
-        16.9,
-        14.48,
-        6.75
+        16.55,
+        15.58,
+        5.75
+      ],
+      "to": [
+        18,
+        15.72,
+        7.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver barrel",
+      "from": [
+        20.45,
+        14.64,
+        5.85
+      ],
+      "to": [
+        25.65,
+        15.12,
+        7.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver muzzle",
+      "from": [
+        25.65,
+        14.56,
+        5.65
+      ],
+      "to": [
+        26.55,
+        15.24,
+        7.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver top rib",
+      "from": [
+        20.55,
+        15.17,
+        5.48
+      ],
+      "to": [
+        24.85,
+        15.38,
+        6.08
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver front sight",
+      "from": [
+        24.25,
+        15.4,
+        5.42
+      ],
+      "to": [
+        25.05,
+        15.72,
+        6.12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver hammer",
+      "from": [
+        14.65,
+        14.9,
+        4.15
+      ],
+      "to": [
+        16.35,
+        15.42,
+        4.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "down": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver trigger guard",
+      "from": [
+        17.35,
+        14.5,
+        8.2
       ],
       "to": [
         19.3,
-        14.95,
-        9.25
+        14.88,
+        10.05
       ],
       "faces": {
         "north": {
@@ -572,49 +770,49 @@
       }
     },
     {
-      "name": "small brass dealer marker",
+      "name": "pixel revolver trigger",
       "from": [
-        -6.8,
-        14.3,
-        16.4
-      ],
-      "to": [
-        -4.2,
-        14.62,
-        19
-      ],
-      "faces": {
-        "north": {
-          "texture": "#gold"
-        },
-        "east": {
-          "texture": "#gold"
-        },
-        "south": {
-          "texture": "#gold"
-        },
-        "west": {
-          "texture": "#gold"
-        },
-        "up": {
-          "texture": "#gold"
-        },
-        "down": {
-          "texture": "#gold"
-        }
-      }
-    },
-    {
-      "name": "dealer marker dark inset",
-      "from": [
-        -6.35,
-        14.66,
-        16.85
-      ],
-      "to": [
-        -4.65,
+        18.05,
         14.92,
-        18.55
+        8.85
+      ],
+      "to": [
+        18.65,
+        15.25,
+        9.72
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gold"
+        },
+        "east": {
+          "texture": "#gold"
+        },
+        "south": {
+          "texture": "#gold"
+        },
+        "west": {
+          "texture": "#gold"
+        },
+        "up": {
+          "texture": "#gold"
+        },
+        "down": {
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver grip neck",
+      "from": [
+        15.05,
+        14.5,
+        8.2
+      ],
+      "to": [
+        17.25,
+        15,
+        9.4
       ],
       "faces": {
         "north": {
@@ -634,6 +832,72 @@
         },
         "down": {
           "texture": "#dark"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver wooden grip top",
+      "from": [
+        14.35,
+        14.42,
+        9.4
+      ],
+      "to": [
+        16.95,
+        14.98,
+        10.95
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "name": "pixel revolver wooden grip heel",
+      "from": [
+        13.7,
+        14.36,
+        10.95
+      ],
+      "to": [
+        16.2,
+        14.92,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
         }
       }
     }

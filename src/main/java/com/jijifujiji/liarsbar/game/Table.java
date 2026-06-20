@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class Table {
 
     private static final double[][] SEAT_OFFSETS = {
-            {2.5, 0.3, 0},    // 0: east
-            {0, 0.3, 2.5},    // 1: south
-            {-2.5, 0.3, 0},   // 2: west
-            {0, 0.3, -2.5}    // 3: north
+            {2.0, 0.3, 0},     // 0: east
+            {0, 0.3, 1.75},    // 1: south
+            {-2.0, 0.3, 0},    // 2: west
+            {0, 0.3, -1.75}    // 3: north
     };
 
     private static final double[][] CARD_OFFSETS = {
