@@ -62,12 +62,31 @@ public final class TableLayout {
         return tableLocation.clone().add(seatX(seatIndex), SEAT_CARD_BASE_Y - 0.3, seatZ(seatIndex) + zOffset);
     }
 
+    public static Location tableFurnitureLocation(Location tableLocation) {
+        Location furniture = tableLocation.clone();
+        furniture.setYaw(0f);
+        furniture.setPitch(0f);
+        return furniture;
+    }
+
+    public static Location chairFurnitureLocation(Location tableLocation, int seatIndex) {
+        Location furniture = tableLocation.clone().add(seatX(seatIndex), 0, seatZ(seatIndex));
+        furniture.setYaw(chairYaw(seatIndex));
+        furniture.setPitch(0f);
+        return furniture;
+    }
+
     public static String tableEntityTag(String tableId) {
         return "liarsbar_table_" + normalizeTableId(tableId);
     }
 
     public static String seatVehicleTag(int seatIndex) {
         return "liarsbar_seat_vehicle_" + seatIndex;
+    }
+
+    private static float chairYaw(int seatIndex) {
+        float yaw = SEAT_YAWS[seatIndex] + 180f;
+        return yaw > 180f ? yaw - 360f : yaw;
     }
 
     private static double seatX(int seatIndex) {

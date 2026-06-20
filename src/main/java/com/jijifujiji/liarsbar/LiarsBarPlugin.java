@@ -3,6 +3,7 @@ package com.jijifujiji.liarsbar;
 import com.jijifujiji.liarsbar.command.LiarBarCommand;
 import com.jijifujiji.liarsbar.command.LiarBarTabCompleter;
 import com.jijifujiji.liarsbar.config.ConfigManager;
+import com.jijifujiji.liarsbar.display.CraftEngineFurnitureBridge;
 import com.jijifujiji.liarsbar.display.DisplayManager;
 import com.jijifujiji.liarsbar.game.EconomyManager;
 import com.jijifujiji.liarsbar.game.TableManager;
@@ -24,6 +25,7 @@ public final class LiarsBarPlugin extends JavaPlugin {
     private ConfigManager configManager;
     private EconomyManager economyManager;
     private TableManager tableManager;
+    private CraftEngineFurnitureBridge craftEngineFurnitureBridge;
 
     @Override
     public void onLoad() {
@@ -36,6 +38,7 @@ public final class LiarsBarPlugin extends JavaPlugin {
         this.configManager = new ConfigManager(this);
         this.economyManager = new EconomyManager(getLogger());
         this.economyManager.setup();
+        this.craftEngineFurnitureBridge = new CraftEngineFurnitureBridge(this);
         this.tableManager = new TableManager(this, configManager);
 
         getCommand("liarbar").setExecutor(new LiarBarCommand(this));
@@ -56,6 +59,7 @@ public final class LiarsBarPlugin extends JavaPlugin {
     public ConfigManager getConfigManager() { return configManager; }
     public EconomyManager getEconomyManager() { return economyManager; }
     public TableManager getTableManager() { return tableManager; }
+    public CraftEngineFurnitureBridge getCraftEngineFurnitureBridge() { return craftEngineFurnitureBridge; }
 
     private void installCraftEngineBundle() {
         try (InputStream indexStream = getResource(CRAFT_ENGINE_BUNDLE_ROOT + "/_bundle_index.txt")) {

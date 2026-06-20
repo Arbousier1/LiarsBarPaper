@@ -110,6 +110,14 @@ public class Table {
         display.clear(location);
     }
 
+    public boolean syncCraftEngineFurniture() {
+        return plugin.getCraftEngineFurnitureBridge().placeTableSet(id, location);
+    }
+
+    public void clearCraftEngineFurniture() {
+        plugin.getCraftEngineFurnitureBridge().clearTableSet(id, location);
+    }
+
     private void setStatus(String text) {
         display.setStatus(text);
     }
@@ -435,6 +443,7 @@ public class Table {
         turnTimer.cancel();
         leaveVehicles();
         clearDisplay();
+        clearCraftEngineFurniture();
         broadcast(ChatColor.YELLOW + "本桌已被删除。");
         unregisterAllParticipants();
         players.clear();

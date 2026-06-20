@@ -63,8 +63,10 @@ public class LiarBarCommand implements CommandExecutor {
         plugin.getConfigManager().setTableLocation(id, loc);
         Table table = plugin.getTableManager().createTable(id, loc);
         table.setLocation(loc);
+        boolean furniturePlaced = table.syncCraftEngineFurniture();
         table.buildDisplay();
-        player.sendMessage(ChatColor.GREEN + "已设置 " + ChatColor.GOLD + id.toUpperCase() + ChatColor.GREEN + " 桌坐标。");
+        player.sendMessage(ChatColor.GREEN + "已设置 " + ChatColor.GOLD + id.toUpperCase() + ChatColor.GREEN + " 桌坐标。"
+                + (furniturePlaced ? ChatColor.GREEN + " CE 桌椅已同步。" : ChatColor.YELLOW + " CE 桌椅同步失败，请检查 CraftEngine 家具配置。"));
     }
 
     private void handleBuild(Player player, String[] args) {
@@ -81,8 +83,10 @@ public class LiarBarCommand implements CommandExecutor {
             player.sendMessage(ChatColor.RED + "桌子不存在，请先用 /liarbar set 设置坐标。");
             return;
         }
+        boolean furniturePlaced = table.syncCraftEngineFurniture();
         table.buildDisplay();
-        player.sendMessage(ChatColor.GREEN + "已为 " + ChatColor.GOLD + table.getId().toUpperCase() + ChatColor.GREEN + " 桌生成 Display Entity 座位。");
+        player.sendMessage(ChatColor.GREEN + "已为 " + ChatColor.GOLD + table.getId().toUpperCase() + ChatColor.GREEN + " 桌同步游戏交互。"
+                + (furniturePlaced ? ChatColor.GREEN + " CE 桌椅已同步。" : ChatColor.YELLOW + " CE 桌椅同步失败，请检查 CraftEngine 家具配置。"));
     }
 
     private void handleCreate(Player player, String[] args) {
@@ -101,8 +105,11 @@ public class LiarBarCommand implements CommandExecutor {
         }
         Location loc = player.getLocation();
         plugin.getConfigManager().setTableLocation(id, loc);
-        plugin.getTableManager().createTable(id, loc);
-        player.sendMessage(ChatColor.GREEN + "成功创建桌子 " + ChatColor.GOLD + id);
+        Table table = plugin.getTableManager().createTable(id, loc);
+        boolean furniturePlaced = table.syncCraftEngineFurniture();
+        table.buildDisplay();
+        player.sendMessage(ChatColor.GREEN + "成功创建桌子 " + ChatColor.GOLD + id
+                + (furniturePlaced ? ChatColor.GREEN + "，CE 桌椅已同步。" : ChatColor.YELLOW + "，但 CE 桌椅同步失败，请检查 CraftEngine 家具配置。"));
     }
 
     private void handleDelete(Player player, String[] args) {
