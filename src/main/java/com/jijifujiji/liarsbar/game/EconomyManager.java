@@ -1,5 +1,6 @@
 package com.jijifujiji.liarsbar.game;
 
+import com.jijifujiji.liarsbar.i18n.Messages;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -13,23 +14,26 @@ public class EconomyManager {
 
     private Economy economy;
     private final Logger logger;
+    private final Messages messages;
 
-    public EconomyManager(Logger logger) {
+    public EconomyManager(Logger logger, Messages messages) {
         this.logger = logger;
+        this.messages = messages;
     }
 
     public boolean setup() {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
-            logger.warning("未检测到 Vault 插件，经济功能将不可用。");
+            logger.warning(messages.plain("log.vault-missing"));
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            logger.warning("未找到 Vault 经济服务提供者。");
+            logger.warning(messages.plain("log.vault-provider-missing"));
             return false;
         }
         economy = rsp.getProvider();
-        logger.info("Vault 经济系统已连接：" + (economy != null ? economy.getName() : "未知"));
+        logger.info(messages.plain("log.vault-connected", "provider",
+                economy != null ? economy.getName() : messages.plain("log.vault-unknown-provider")));
         return economy != null;
     }
 
@@ -46,8 +50,8 @@ public class EconomyManager {
         if (economy == null) return false;
         EconomyResponse resp = economy.withdrawPlayer(player, amount);
         if (!resp.transactionSuccess()) {
-            logger.log(Level.WARNING, "Vault 扣费失败: {0} 扣 {1}: {2}",
-                    new Object[]{player.getName(), amount, resp.errorMessage});
+            logger.log(Level.WARNING, messages.plain("log.vault-withdraw-failed",
+                    "player", player.getName(), "amount", amount, "error", resp.errorMessage));
             return false;
         }
         return true;
@@ -57,8 +61,8 @@ public class EconomyManager {
         if (economy == null) return false;
         EconomyResponse resp = economy.depositPlayer(player, amount);
         if (!resp.transactionSuccess()) {
-            logger.log(Level.WARNING, "Vault 存款失败: {0} 存 {1}: {2}",
-                    new Object[]{player.getName(), amount, resp.errorMessage});
+            logger.log(Level.WARNING, messages.plain("log.vault-deposit-failed",
+                    "player", player.getName(), "amount", amount, "error", resp.errorMessage));
             return false;
         }
         return true;

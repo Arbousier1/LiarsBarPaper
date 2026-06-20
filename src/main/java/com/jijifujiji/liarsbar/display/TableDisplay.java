@@ -1,9 +1,11 @@
 package com.jijifujiji.liarsbar.display;
 
+import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import com.jijifujiji.liarsbar.game.BetMode;
 import com.jijifujiji.liarsbar.game.Card;
 import com.jijifujiji.liarsbar.game.PlayerState;
 import com.jijifujiji.liarsbar.game.TableLayout;
+import com.jijifujiji.liarsbar.i18n.Messages;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -20,6 +22,7 @@ public final class TableDisplay {
 
     private final String tableId;
     private final String tableEntityTag;
+    private final Messages messages;
     private final List<Entity> managedEntities = new ArrayList<>();
     private final Map<Integer, List<ItemDisplay>> playerCardDisplays = new HashMap<>();
     private final Map<Integer, List<Interaction>> playerCardInteractions = new HashMap<>();
@@ -31,9 +34,10 @@ public final class TableDisplay {
     private Interaction challengeButton;
     private Interaction startButton;
 
-    public TableDisplay(String tableId) {
+    public TableDisplay(LiarsBarPlugin plugin, String tableId) {
         this.tableId = tableId;
         this.tableEntityTag = TableLayout.tableEntityTag(tableId);
+        this.messages = plugin.messages();
     }
 
     public void build(Location location, BetMode betMode) {
@@ -41,9 +45,9 @@ public final class TableDisplay {
         if (location == null || location.getWorld() == null) return;
 
         modeLabel = DisplayManager.spawnLabel(location.clone().add(0, 2.2, 0),
-                betMode.getDisplay(), Color.fromRGB(0x0B2A66), false);
+                messages.betMode(betMode), Color.fromRGB(0x0B2A66), false);
         statusLabel = DisplayManager.spawnLabel(location.clone().add(0, 1.6, 0),
-                "等待玩家加入...", Color.fromRGB(0xB22234), false);
+                messages.get("display.status.waiting"), Color.fromRGB(0xB22234), false);
 
         startButton = DisplayManager.spawnInteraction(location.clone().add(0, 1.28, 0), 0.6f, 0.6f,
                 new DisplayManager.ClickAction(DisplayManager.ClickAction.ActionType.START_BUTTON, tableId, -1, -1),
@@ -72,7 +76,7 @@ public final class TableDisplay {
             Card card = hand.get(i);
             Location cardLoc = TableLayout.playerCardLocation(location, ps.getSeatIndex(), i);
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    card.getDisplay(), card.getItemModel(), card.getCustomModelData(), tableId, ps.getSeatIndex(), i);
+                    messages.card(card), card.getItemModel(), card.getCustomModelData(), tableId, ps.getSeatIndex(), i);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, yaw, 0.8f);
                 cardDisplays.add(cardDisplay);
@@ -112,7 +116,7 @@ public final class TableDisplay {
             Card card = centerCards.get(i);
             Location cardLoc = TableLayout.centerCardLocation(location, i, centerCards.size());
             ItemDisplay cardDisplay = DisplayManager.spawnCard(cardLoc,
-                    card.getDisplay(), card.getItemModel(), card.getCustomModelData(), tableId, -1, -1);
+                    messages.card(card), card.getItemModel(), card.getCustomModelData(), tableId, -1, -1);
             if (cardDisplay != null) {
                 DisplayManager.applyCardTransform(cardDisplay, 0f, 0.6f);
                 centerCardDisplays.add(cardDisplay);

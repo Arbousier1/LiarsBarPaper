@@ -151,16 +151,13 @@ furniture:
           - item: liarsbar:table_visual_world
             display_transform: none
             billboard: fixed
-            translation: 0,0.35,0
+            translation: 0,0.5,0
             scale: 2.5,1,1.875
-            brightness:
-              block_light: 15
-              sky_light: 15
             view_range: 64
             shadow_radius: 1.2
             shadow_strength: 0.35
         hitboxes:
-          # Model footprint: X -1.25..1.25, Z -0.9375..0.9375, top ~0.76 after element translation.
+          # Model footprint: X -1.25..1.25, Z -0.9375..0.9375, bottom at ground after element translation.
           - position: -0.75,0,-0.47
             type: shulker
             direction: up
@@ -223,16 +220,13 @@ furniture:
           - item: liarsbar:seat_chair
             display_transform: none
             billboard: fixed
-            translation: 0,0.42,0
-            brightness:
-              block_light: 15
-              sky_light: 15
+            translation: 0,0.5,0
             view_range: 64
             shadow_radius: 0.55
             shadow_strength: 0.35
         hitboxes:
           # Seat position is CraftEngine-local: X/Z are the red cushion center.
-          # Keep Y at 0 because CraftEngine applies the passenger seat height internally.
+          # CraftEngine adds +0.6 to seat Y, so this keeps the player tight to the cushion.
           - position: 0,0,0
             type: shulker
             direction: up
@@ -241,7 +235,7 @@ furniture:
             interactive: true
             interaction_entity: true
             seats:
-              - 0,0,-0.06 0
+              - 0,-0.12,-0.06 0
     loot:
       template: default:loot_table/furniture
       arguments:

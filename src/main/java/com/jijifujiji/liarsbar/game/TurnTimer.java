@@ -2,7 +2,6 @@ package com.jijifujiji.liarsbar.game;
 
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -67,12 +66,10 @@ public final class TurnTimer {
         if (bossBar == null) return;
         double progress = Math.max(0.0, Math.min(1.0, secondsLeft / (double) TURN_SECONDS));
         bossBar.setProgress(progress);
-        bossBar.setTitle(ChatColor.GOLD + current.getPlayer().getName()
-                + ChatColor.YELLOW + " 的回合  "
-                + ChatColor.RED + secondsLeft + "s"
-                + ChatColor.GRAY + " | "
-                + ChatColor.YELLOW + "主牌 " + ChatColor.GOLD + mainCard.getDisplay()
-                + ChatColor.GRAY + " | "
-                + ChatColor.YELLOW + "子弹 " + ChatColor.GOLD + current.getBullets() + "/6");
+        bossBar.setTitle(plugin.messages().get("bossbar.turn",
+                "player", current.getPlayer().getName(),
+                "seconds", secondsLeft,
+                "main_card", plugin.messages().cardType(mainCard),
+                "bullets", current.getBullets()));
     }
 }

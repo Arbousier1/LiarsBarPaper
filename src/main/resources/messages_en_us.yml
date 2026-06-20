@@ -1,0 +1,176 @@
+plugin:
+  enabled: "LiarsBarPaper has been enabled."
+  disabled: "LiarsBarPaper has been disabled."
+
+common:
+  on: "&aON"
+  off: "&cOFF"
+  enabled: "&aenabled"
+  disabled: "&cdisabled"
+
+bet-mode:
+  life: "Life"
+  fantuan: "Fantuan Coins"
+  kunkun: "Kunkun Coins"
+
+card:
+  a: "A"
+  q: "Q"
+  k: "K"
+  kun: "KUN"
+  demon: "Demon"
+
+card-type:
+  a: "A"
+  q: "Q"
+  k: "K"
+
+state:
+  idle: "Idle"
+  waiting: "Waiting"
+  dealing: "Dealing"
+  playing: "Playing"
+  resolving: "Resolving"
+  ended: "Ended"
+
+craftengine:
+  sync-success: "&a CraftEngine furniture synced."
+  sync-failure: "&e CraftEngine furniture sync failed. Check your CraftEngine furniture config."
+  sync-create-success: "&a, CraftEngine furniture synced."
+  sync-create-failure: "&e, but CraftEngine furniture sync failed. Check your CraftEngine furniture config."
+
+command:
+  only-player: "&cOnly players can use this command."
+  no-permission: "&cYou do not have permission."
+  placeholder:
+    table-id: "<tableId>"
+  usage:
+    set: "&cUsage: /liarbar set <tableId>"
+    build: "&cUsage: /liarbar build <tableId>"
+    create: "&cUsage: /liarbar create <tableId>"
+    delete: "&cUsage: /liarbar delete <tableId>"
+    join: "&cUsage: /liarbar join <tableId>"
+    mode: "&cUsage: /liarbar mode <tableId> <life|fantuan|kunkun>"
+    select: "&cUsage: /liarbar select <index>"
+  table:
+    set: "&aSet table &6{table}&a location.{sync}"
+    built: "&aSynced gameplay entities for table &6{table}&a.{sync}"
+    created: "&aCreated table &6{table}{sync}"
+    deleted: "&aDeleted table {table}"
+    exists: "&cTable {table} already exists."
+    not-found: "&cTable not found."
+    not-found-set-first: "&cTable not found. Use /liarbar set first."
+    not-found-or-not-in-game: "&cTable not found, or you are not in a game."
+  gambling:
+    status: "&eGambling mode: {state}"
+    changed: "&aGambling mode is now {state}"
+  join:
+    full: "&cCannot join. All seats are occupied."
+  leave:
+    not-in-game: "&cYou are not in any game."
+    left: "&eYou left the game."
+  mode:
+    changed: "&aTable mode changed to: &6{mode}"
+    running: "&cYou cannot change mode while the game is running."
+  select:
+    invalid-number: "&cEnter a valid card index (1-5)."
+  info:
+    header: "&6===== Liar's Bar Tables ====="
+    empty: "&eNo tables yet."
+    hint: "&7Click a seat entity to sit down. The game starts automatically at 4 players."
+  help:
+    - "&6===== LiarsBarPaper ====="
+    - "&e/liarbar set <ID>&f  Set the table center"
+    - "&e/liarbar build <ID>&f  Spawn Display Entity interactions"
+    - "&e/liarbar create <ID>&f  Create and save a table"
+    - "&e/liarbar delete <ID>&f  Delete a table"
+    - "&7Table IDs are not limited to A-E, for example lobby_1, vip_2, table_10."
+    - "&e/liarbar gambling [on|off]&f  Toggle gambling"
+    - "&e/liarbar join <ID>&f  Join a table"
+    - "&e/liarbar leave&f  Leave the game"
+    - "&e/liarbar mode <ID> <life|fantuan|kunkun>&f  Set table mode"
+    - "&e/liarbar select <1-5>&f  Select a hand card"
+    - "&e/liarbar play&f  Play selected cards"
+    - "&e/liarbar challenge&f  Challenge the previous player"
+    - "&e/liarbar start [ID]&f  Start the game"
+    - "&e/liarbar stop [ID]&f  Stop the game"
+    - "&e/liarbar info&f  List tables"
+    - "&7You can also click seats to sit and click cards to select/play."
+
+display:
+  status:
+    waiting: "Waiting for players..."
+    players: "Players: {count}/4"
+    player-turn: "{player}'s turn"
+    first-turn: "Opening turn"
+
+bossbar:
+  turn: "&6{player}&e's turn  &c{seconds}s&7 | &eMain &6{main_card}&7 | &eBullets &6{bullets}/6"
+
+game:
+  join:
+    use-craftengine-seat: "&eClick the red cushion on a CraftEngine chair to sit."
+    already-other-table: "&cYou are already at another table. Leave it first."
+    running: "&cThe game is running. Please wait for the next round."
+    seat-occupied: "&cThat seat is already occupied."
+    already-this-table: "&cYou are already at this table."
+    joined: "&6{player}&a joined the game!"
+    paid-joined: "&6{player}&a paid {cost} and joined the wager!"
+  leave:
+    during-game: "&cYou cannot leave the seat while the game is running."
+    broadcast: "&6{player}&e left the game."
+  start:
+    invalid-state: "&cThe game cannot be started right now."
+    not-table-player: "&cOnly players at this table can start the game."
+    need-players: "&cAt least 2 players are required."
+    started: "&eGame started! Mode: &6&l{mode}"
+  round:
+    new-main: "&eNew round! Main card: &6&l[{ {main_card} }]"
+  turn:
+    title: ">>> Your Turn <<<"
+    current: "&eIt is now &6{player}&e's turn"
+    timeout-challenge: "&6{player}&e timed out and challenges automatically."
+    timeout-play: "&6{player}&e timed out and plays automatically."
+  card:
+    not-your-turn: "&cIt is not your turn."
+    invalid-index: "&cInvalid hand card index."
+    selected: "&aSelected card #{index} [{card}]"
+    cancelled: "&cCancelled card #{index}"
+    select-first: "&cSelect cards to play first."
+    max-three: "&cYou can play at most 3 cards at once."
+    expired: "&cYour selection expired. Select your cards again."
+    demon-single: "&cThe Demon card must be played alone!"
+    played: "&6{player}&e played &6{count}&e card(s)."
+  challenge:
+    no-cards: "&cThere are no cards to challenge."
+    challenged: "&6{player}&e challenged &c&l{target}"
+    reveal-prefix: "&eRevealed cards: "
+    reveal-card: "[{card}] "
+    demon: "&eOh! It is the &c&lDemon&e. Everyone except the player who played it takes a shot!"
+    liar: "&eNot the &c&lmain card&e! &6{player}&e, take a shot."
+    truthful: "&eIt is the &c&lmain card&e! &6{player}&e, pull the trigger."
+  economy:
+    disabled: "&cEconomy is unavailable, so you cannot join this wager."
+    not-enough: "&cYou do not have enough balance. Required: {cost}."
+    withdraw-failed: "&cPayment failed."
+    reward: "&eWon &6{reward}&e!"
+  shoot:
+    dead: "&6{player}&4 took the live round."
+    blank: "&6{player}&a got lucky. Blank round! Bullets left: {bullets}."
+  end:
+    forced: "&eThe game was force-stopped by {player}."
+    forced-random-winner: "&eForce stop detected. Random winner: &6{player}"
+    deleted: "&eThis table has been deleted."
+    header: "&6&l=== Game Over ==="
+    winner: "&eCongratulations, &6&l{player}&e wins!"
+    summary: "&aWinner: mode {mode} > &6{player}"
+    no-winner: "&eAll players are out. No winner this game."
+  info: "Table {table} State: {state} Players: {players}/4 Mode: {mode}"
+
+log:
+  vault-missing: "Vault was not found. Economy features are disabled."
+  vault-provider-missing: "No Vault economy provider was found."
+  vault-connected: "Vault economy connected: {provider}"
+  vault-unknown-provider: "unknown"
+  vault-withdraw-failed: "Vault withdraw failed: {player} withdraw {amount}: {error}"
+  vault-deposit-failed: "Vault deposit failed: {player} deposit {amount}: {error}"

@@ -1,4 +1,7 @@
 # 骗子酒馆配置文件
+# language: 插件语言。可选 zh_cn / en_us，也可复制 messages_zh_cn.yml 后自定义。
+language: zh_cn
+
 # gambling-mode: 是否允许玩家赌饭团币/坤坤币（true=开启，false=仅赌命）
 gambling-mode: true
 

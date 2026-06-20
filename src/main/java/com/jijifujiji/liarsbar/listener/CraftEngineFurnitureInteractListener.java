@@ -10,6 +10,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
 
@@ -39,7 +40,7 @@ public final class CraftEngineFurnitureInteractListener implements Listener {
     @SuppressWarnings("unchecked")
     private void registerFurnitureInteract() {
         try {
-            Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName(EVENT_CLASS).asSubclass(Event.class);
+            Class<? extends Event> eventClass = craftEngineEventClass(EVENT_CLASS);
             EventExecutor executor = (ignored, event) -> handleFurnitureInteract(event);
             plugin.getServer().getPluginManager().registerEvent(
                     eventClass, this, EventPriority.NORMAL, executor, plugin, true);
@@ -58,13 +59,26 @@ public final class CraftEngineFurnitureInteractListener implements Listener {
     @SuppressWarnings("unchecked")
     private void registerFurnitureProtectionEvent(String className, EventPriority priority) {
         try {
-            Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName(className).asSubclass(Event.class);
+            Class<? extends Event> eventClass = craftEngineEventClass(className);
             EventExecutor executor = (ignored, event) -> protectLiarsBarFurniture(event);
             plugin.getServer().getPluginManager().registerEvent(
                     eventClass, this, priority, executor, plugin, true);
         } catch (ClassNotFoundException e) {
             plugin.getLogger().warning("CraftEngine furniture protection event API was not found: " + className);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<? extends Event> craftEngineEventClass(String className) throws ClassNotFoundException {
+        Plugin craftEngine = plugin.getServer().getPluginManager().getPlugin("CraftEngine");
+        if (craftEngine != null) {
+            try {
+                return (Class<? extends Event>) Class.forName(className, true, craftEngine.getClass().getClassLoader())
+                        .asSubclass(Event.class);
+            } catch (ClassNotFoundException ignored) {
+            }
+        }
+        return (Class<? extends Event>) Class.forName(className).asSubclass(Event.class);
     }
 
     @SuppressWarnings("unchecked")

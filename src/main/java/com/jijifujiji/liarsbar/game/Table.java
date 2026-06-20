@@ -3,7 +3,6 @@ package com.jijifujiji.liarsbar.game;
 import com.jijifujiji.liarsbar.LiarsBarPlugin;
 import com.jijifujiji.liarsbar.display.TableDisplay;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -46,7 +45,7 @@ public class Table {
         this.plugin = plugin;
         this.id = id;
         this.location = location == null ? null : location.clone();
-        this.display = new TableDisplay(id);
+        this.display = new TableDisplay(plugin, id);
         this.turnTimer = new TurnTimer(plugin);
     }
 
@@ -110,8 +109,12 @@ public class Table {
         display.setStatus(text);
     }
 
+    private String msg(String key, Object... replacements) {
+        return plugin.messages().get(key, replacements);
+    }
+
     public boolean joinSeat(Player player, int seatIndex) {
-        player.sendMessage(ChatColor.YELLOW + "\u8bf7\u76f4\u63a5\u70b9\u51fb CraftEngine \u6905\u5b50\u7684\u7ea2\u8272\u5750\u57ab\u5165\u5ea7\u3002");
+        player.sendMessage(msg("game.join.use-craftengine-seat"));
         return false;
     }
 
@@ -124,22 +127,22 @@ public class Table {
         }
         Table currentTable = plugin.getTableManager().findTableByPlayer(player);
         if (currentTable != null && currentTable != this) {
-            player.sendMessage(ChatColor.RED + "\u4f60\u5df2\u7ecf\u5728\u5176\u4ed6\u684c\u4e86\uff0c\u8bf7\u5148\u79bb\u5f00\u5f53\u524d\u684c\u3002");
+            player.sendMessage(msg("game.join.already-other-table"));
             return false;
         }
         if (state != GameState.IDLE && state != GameState.WAITING) {
-            player.sendMessage(ChatColor.RED + "\u6e38\u620f\u8fdb\u884c\u4e2d\uff0c\u8bf7\u7b49\u5f85\u4e0b\u4e00\u5c40\u3002");
+            player.sendMessage(msg("game.join.running"));
             return false;
         }
         if (seatMap.containsKey(seatIndex)) {
             Player occupant = seatMap.get(seatIndex);
             if (occupant != null && occupant.isOnline() && !occupant.equals(player)) {
-                player.sendMessage(ChatColor.RED + "\u8fd9\u4e2a\u5ea7\u4f4d\u5df2\u7ecf\u6709\u4eba\u4e86\u3002");
+                player.sendMessage(msg("game.join.seat-occupied"));
                 return false;
             }
         }
         if (isInGame(player)) {
-            player.sendMessage(ChatColor.RED + "\u4f60\u5df2\u7ecf\u5728\u672c\u684c\u4e86\u3002");
+            player.sendMessage(msg("game.join.already-this-table"));
             return false;
         }
         return true;
@@ -159,7 +162,7 @@ public class Table {
         waitingPlayers.add(player);
         registerPlayer(player);
         joinedCount = participantCount();
-        setStatus("\u73a9\u5bb6: " + joinedCount + "/4");
+        setStatus(msg("display.status.players", "count", joinedCount));
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1f, 1.34f);
 
         if (state == GameState.IDLE) state = GameState.WAITING;
@@ -178,7 +181,7 @@ public class Table {
             return true;
         }
         if (state == GameState.DEALING || state == GameState.PLAYING || state == GameState.RESOLVING) {
-            player.sendMessage(ChatColor.RED + "\u5bf9\u5c40\u8fdb\u884c\u4e2d\uff0c\u6682\u65f6\u4e0d\u80fd\u79bb\u5f00\u5ea7\u4f4d\u3002");
+            player.sendMessage(msg("game.leave.during-game"));
             return false;
         }
         return true;
@@ -227,9 +230,9 @@ public class Table {
                 startTurn(true);
             }
         }
-        broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 离开了游戏。");
+        broadcast(msg("game.leave.broadcast", "player", player.getName()));
         joinedCount = participantCount();
-        setStatus("玩家: " + joinedCount + "/4");
+        setStatus(msg("display.status.players", "count", joinedCount));
     }
 
     public List<Player> getAllParticipants() {
@@ -240,17 +243,17 @@ public class Table {
 
     public void startGame(Player starter) {
         if (state != GameState.WAITING && state != GameState.IDLE) {
-            if (starter != null) starter.sendMessage(ChatColor.RED + "游戏不处于可开始状态。");
+            if (starter != null) starter.sendMessage(msg("game.start.invalid-state"));
             return;
         }
         if (starter != null && !seatMap.containsValue(starter) && !starter.hasPermission("liarsbar.admin")) {
-            starter.sendMessage(ChatColor.RED + "只有本桌玩家可以开始游戏。");
+            starter.sendMessage(msg("game.start.not-table-player"));
             return;
         }
 
         List<Map.Entry<Integer, Player>> seatedPlayers = seatedPlayersInOrder();
         if (seatedPlayers.size() < 2) {
-            if (starter != null) starter.sendMessage(ChatColor.RED + "至少需要 2 名玩家。");
+            if (starter != null) starter.sendMessage(msg("game.start.need-players"));
             return;
         }
 
@@ -265,7 +268,7 @@ public class Table {
         }
         joinedCount = players.size();
         state = GameState.DEALING;
-        broadcast(ChatColor.YELLOW + "游戏开始！模式：" + ChatColor.GOLD + ChatColor.BOLD + betMode.getDisplay());
+        broadcast(msg("game.start.started", "mode", plugin.messages().betMode(betMode)));
         isFirstRound = true;
         startRound();
     }
@@ -286,7 +289,7 @@ public class Table {
             }
         }
 
-        broadcast(ChatColor.YELLOW + "新的一轮！主牌：" + ChatColor.GOLD + ChatColor.BOLD + "[{ " + mainCard.getDisplay() + " }]");
+        broadcast(msg("game.round.new-main", "main_card", plugin.messages().cardType(mainCard)));
         if (isFirstRound) {
             currentPlayerIndex = ThreadLocalRandom.current().nextInt(players.size());
             isFirstRound = false;
@@ -315,63 +318,67 @@ public class Table {
 
         PlayerState finalCurrent = current;
         turnTimer.start(finalCurrent, getAllParticipants(), mainCard, () -> handleTimeout(finalCurrent));
-        finalCurrent.getPlayer().sendTitle(ChatColor.GREEN + ">>>你的回合<<<", "", 10, 70, 20);
+        finalCurrent.getPlayer().sendTitle(msg("game.turn.title"), "", 10, 70, 20);
         finalCurrent.getPlayer().playSound(finalCurrent.getPlayer().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1f, 1f);
 
         display.renderPlayerCards(location, finalCurrent);
         display.renderActionButtons(location, finalCurrent, standard && lastPlayer != null && lastPlayer != finalCurrent);
         if (!centerCards.isEmpty()) display.renderCenterCards(location, centerCards);
-        setStatus(standard ? (finalCurrent.getPlayer().getName() + " 的回合") : "先手回合");
+        setStatus(standard
+                ? msg("display.status.player-turn", "player", finalCurrent.getPlayer().getName())
+                : msg("display.status.first-turn"));
 
         for (PlayerState ps : players) {
             if (ps == finalCurrent) continue;
-            ps.getPlayer().sendMessage(ChatColor.YELLOW + "当前是 " + ChatColor.GOLD + finalCurrent.getPlayer().getName() + ChatColor.YELLOW + " 的回合");
+            ps.getPlayer().sendMessage(msg("game.turn.current", "player", finalCurrent.getPlayer().getName()));
         }
     }
 
     public void selectCard(Player player, int cardIndex) {
         PlayerState ps = findState(player);
         if (!isCurrentPlayer(ps)) {
-            player.sendMessage(ChatColor.RED + "现在不是你的回合。");
+            player.sendMessage(msg("game.card.not-your-turn"));
             return;
         }
         if (cardIndex < 0 || cardIndex >= ps.getHand().size()) {
-            player.sendMessage(ChatColor.RED + "无效的手牌序号。");
+            player.sendMessage(msg("game.card.invalid-index"));
             return;
         }
         ps.toggleSelection(cardIndex);
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1.2f);
         if (ps.getSelected().contains(cardIndex)) {
-            player.sendMessage(ChatColor.GREEN + "已选择第 " + (cardIndex + 1) + " 张牌 [" + ps.getHand().get(cardIndex).getDisplay() + "]");
+            player.sendMessage(msg("game.card.selected",
+                    "index", cardIndex + 1,
+                    "card", plugin.messages().card(ps.getHand().get(cardIndex))));
         } else {
-            player.sendMessage(ChatColor.RED + "已取消第 " + (cardIndex + 1) + " 张牌");
+            player.sendMessage(msg("game.card.cancelled", "index", cardIndex + 1));
         }
     }
 
     public void playCards(Player player) {
         PlayerState ps = findState(player);
         if (state != GameState.PLAYING || !isCurrentPlayer(ps)) {
-            player.sendMessage(ChatColor.RED + "现在不是你的回合。");
+            player.sendMessage(msg("game.card.not-your-turn"));
             return;
         }
         List<Integer> sel = ps.getSortedSelection();
         if (sel.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "请先点击选择要出的牌。");
+            player.sendMessage(msg("game.card.select-first"));
             return;
         }
         if (sel.size() > 3) {
-            player.sendMessage(ChatColor.RED + "一次最多出 3 张牌。");
+            player.sendMessage(msg("game.card.max-three"));
             return;
         }
         if (!isValidSelection(ps, sel)) {
             ps.clearSelection();
-            player.sendMessage(ChatColor.RED + "选择已过期，请重新选择手牌。");
+            player.sendMessage(msg("game.card.expired"));
             return;
         }
 
         List<Card> played = selectedCards(ps, sel);
         if (played.contains(Card.DEMON) && played.size() > 1) {
-            player.sendMessage(ChatColor.RED + "恶魔牌只能单出！");
+            player.sendMessage(msg("game.card.demon-single"));
             return;
         }
 
@@ -381,7 +388,7 @@ public class Table {
         lastPlayer = ps;
         ps.clearSelection();
 
-        broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 出了 " + ChatColor.GOLD + played.size() + ChatColor.YELLOW + " 张牌。");
+        broadcast(msg("game.card.played", "player", player.getName(), "count", played.size()));
         display.clearPlayerDisplay(ps.getSeatIndex());
         display.clearCenterDisplay();
         display.renderCenterCards(location, centerCards);
@@ -393,18 +400,20 @@ public class Table {
     public void challenge(Player player) {
         PlayerState ps = findState(player);
         if (state != GameState.PLAYING || !isCurrentPlayer(ps)) {
-            player.sendMessage(ChatColor.RED + "现在不是你的回合。");
+            player.sendMessage(msg("game.card.not-your-turn"));
             return;
         }
         if (lastPlayer == null || lastPlayer == ps) {
-            player.sendMessage(ChatColor.RED + "没有可质疑的牌。");
+            player.sendMessage(msg("game.challenge.no-cards"));
             return;
         }
         turnTimer.cancel();
         state = GameState.RESOLVING;
         ps.clearSelection();
 
-        broadcast(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 质疑了 " + ChatColor.RED + ChatColor.BOLD + lastPlayer.getPlayer().getName());
+        broadcast(msg("game.challenge.challenged",
+                "player", player.getName(),
+                "target", lastPlayer.getPlayer().getName()));
         display.renderCenterCards(location, centerCards);
 
         boolean hasDemon = false;
@@ -414,12 +423,14 @@ public class Table {
             if (!card.isMainOrWild(mainCard)) allMainOrWild = false;
         }
 
-        StringBuilder reveal = new StringBuilder(ChatColor.YELLOW + "翻开的牌： ");
-        for (Card c : centerCards) reveal.append("[").append(c.getDisplay()).append("] ");
+        StringBuilder reveal = new StringBuilder(msg("game.challenge.reveal-prefix"));
+        for (Card c : centerCards) {
+            reveal.append(msg("game.challenge.reveal-card", "card", plugin.messages().card(c)));
+        }
         broadcast(reveal.toString());
 
         if (hasDemon) {
-            broadcast(ChatColor.YELLOW + "哦！是" + ChatColor.RED + ChatColor.BOLD + "恶魔牌" + ChatColor.YELLOW + "，除了出牌者所有人都要挨枪！");
+            broadcast(msg("game.challenge.demon"));
             List<PlayerState> targets = new ArrayList<>();
             for (PlayerState target : players) {
                 if (target != lastPlayer && target.isAlive()) targets.add(target);
@@ -440,12 +451,10 @@ public class Table {
 
         PlayerState loser;
         if (!allMainOrWild) {
-            broadcast(ChatColor.YELLOW + "不是" + ChatColor.RED + ChatColor.BOLD + "主牌" + ChatColor.YELLOW + "！" +
-                    ChatColor.GOLD + lastPlayer.getPlayer().getName() + ChatColor.YELLOW + " 冲着自己来一枪吧！");
+            broadcast(msg("game.challenge.liar", "player", lastPlayer.getPlayer().getName()));
             loser = lastPlayer;
         } else {
-            broadcast(ChatColor.YELLOW + "是" + ChatColor.RED + ChatColor.BOLD + "主牌" + ChatColor.YELLOW + "！" +
-                    ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " 按下扳机吧！");
+            broadcast(msg("game.challenge.truthful", "player", player.getName()));
             loser = ps;
         }
         shoot(loser, this::afterResolution);
@@ -456,12 +465,12 @@ public class Table {
         state = GameState.ENDED;
         leaveVehicles();
         clearDisplay();
-        broadcast(ChatColor.YELLOW + "游戏被 " + sender.getName() + " 强制结束。");
+        broadcast(msg("game.end.forced", "player", sender.getName()));
 
         if (plugin.getConfigManager().isGamblingEnabled() && betMode != BetMode.LIFE && !players.isEmpty()) {
             PlayerState randomWinner = randomAliveOrAnyPlayer();
             if (randomWinner != null) {
-                broadcast(ChatColor.YELLOW + "有人强制结束，随机胜者：" + ChatColor.GOLD + randomWinner.getPlayer().getName());
+                broadcast(msg("game.end.forced-random-winner", "player", randomWinner.getPlayer().getName()));
                 EconomyManager eco = plugin.getEconomyManager();
                 if (eco.isEnabled()) {
                     eco.deposit(randomWinner.getPlayer(), joinedCount * 1.0);
@@ -483,7 +492,7 @@ public class Table {
         leaveVehicles();
         clearDisplay();
         clearCraftEngineFurniture();
-        broadcast(ChatColor.YELLOW + "本桌已被删除。");
+        broadcast(msg("game.end.deleted"));
         unregisterAllParticipants();
         players.clear();
         waitingPlayers.clear();
@@ -492,30 +501,34 @@ public class Table {
     }
 
     public String getInfo() {
-        return "桌子 " + id + " 状态：" + state + " 人数：" + participantCount() + "/4 模式：" + betMode.getDisplay();
+        return msg("game.info",
+                "table", id,
+                "state", plugin.messages().state(state),
+                "players", participantCount(),
+                "mode", plugin.messages().betMode(betMode));
     }
 
     private boolean chargeEntryCost(Player player) {
         if (!plugin.getConfigManager().isGamblingEnabled() || betMode == BetMode.LIFE) {
-            broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 加入对局！");
+            broadcast(msg("game.join.joined", "player", player.getName()));
             return true;
         }
 
         double cost = 1.0;
         EconomyManager eco = plugin.getEconomyManager();
         if (!eco.isEnabled()) {
-            player.sendMessage(ChatColor.RED + "经济系统未启用，无法加入赌局。");
+            player.sendMessage(msg("game.economy.disabled"));
             return false;
         }
         if (!eco.has(player, cost)) {
-            player.sendMessage(ChatColor.RED + "你的余额不足，需要 " + eco.format(cost) + "。");
+            player.sendMessage(msg("game.economy.not-enough", "cost", eco.format(cost)));
             return false;
         }
         if (!eco.withdraw(player, cost)) {
-            player.sendMessage(ChatColor.RED + "扣费失败。");
+            player.sendMessage(msg("game.economy.withdraw-failed"));
             return false;
         }
-        broadcast(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " 支付了 " + eco.format(cost) + "，加入赌局！");
+        broadcast(msg("game.join.paid-joined", "player", player.getName(), "cost", eco.format(cost)));
         return true;
     }
 
@@ -531,13 +544,13 @@ public class Table {
                 p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1.51f);
                 p.getWorld().spawnParticle(Particle.FLAME, p.getLocation().add(0, 1.7, 0), 20, 0.2, 0.2, 0.2, 0.05);
                 p.getWorld().spawnParticle(Particle.SMOKE_LARGE, p.getLocation().add(0, 1.7, 0), 10, 0.2, 0.2, 0.2, 0.02);
-                broadcast(ChatColor.GOLD + p.getName() + ChatColor.DARK_RED + " 的脑袋被开了瓢。");
+                broadcast(msg("game.shoot.dead", "player", p.getName()));
                 ps.setAlive(false);
                 ps.setBullets(0);
                 p.setHealth(0);
             } else {
                 p.getWorld().playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1f, 0.97f);
-                broadcast(ChatColor.GOLD + p.getName() + ChatColor.GREEN + " 运气不错，空弹！子弹剩余 " + (bullets - 1) + " 发。");
+                broadcast(msg("game.shoot.blank", "player", p.getName(), "bullets", bullets - 1));
                 ps.setBullets(bullets - 1);
             }
             callback.run();
@@ -558,10 +571,10 @@ public class Table {
 
     private void handleTimeout(PlayerState ps) {
         if (lastPlayer != null && lastPlayer != ps) {
-            broadcast(ChatColor.GOLD + ps.getPlayer().getName() + ChatColor.YELLOW + " 回合超时，自动质疑。");
+            broadcast(msg("game.turn.timeout-challenge", "player", ps.getPlayer().getName()));
             challenge(ps.getPlayer());
         } else {
-            broadcast(ChatColor.GOLD + ps.getPlayer().getName() + ChatColor.YELLOW + " 回合超时，自动出牌。");
+            broadcast(msg("game.turn.timeout-play", "player", ps.getPlayer().getName()));
             if (!ps.getHand().isEmpty()) {
                 ps.clearSelection();
                 ps.toggleSelection(0);
@@ -588,15 +601,16 @@ public class Table {
         clearDisplay();
 
         if (winner != null) {
-            broadcast(ChatColor.GOLD + "" + ChatColor.BOLD + "=== 游戏结束 ===");
-            broadcast(ChatColor.YELLOW + "恭喜 " + ChatColor.GOLD + ChatColor.BOLD + winner.getPlayer().getName() +
-                    ChatColor.YELLOW + " 获得了胜利！");
+            broadcast(msg("game.end.header"));
+            broadcast(msg("game.end.winner", "player", winner.getPlayer().getName()));
             rewardWinner(winner);
             winner.getPlayer().getWorld().spawnParticle(Particle.FIREWORKS_SPARK,
                     winner.getPlayer().getLocation().add(0, 2, 0), 30, 0.5, 0.5, 0.5, 0.1);
-            broadcast(ChatColor.GREEN + "本局获胜：下注模式 " + betMode.getDisplay() + " > " + ChatColor.GOLD + winner.getPlayer().getName());
+            broadcast(msg("game.end.summary",
+                    "mode", plugin.messages().betMode(betMode),
+                    "player", winner.getPlayer().getName()));
         } else {
-            broadcast(ChatColor.YELLOW + "所有玩家都出局了，本局没有胜者。");
+            broadcast(msg("game.end.no-winner"));
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -617,7 +631,7 @@ public class Table {
         double reward = joinedCount * 1.0;
         if (eco.isEnabled()) {
             eco.deposit(winner.getPlayer(), reward);
-            broadcast(ChatColor.YELLOW + "赢得 " + ChatColor.GOLD + eco.format(reward) + ChatColor.YELLOW + "！");
+            broadcast(msg("game.economy.reward", "reward", eco.format(reward)));
         }
     }
 

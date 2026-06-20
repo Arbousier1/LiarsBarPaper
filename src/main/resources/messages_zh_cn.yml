@@ -1,0 +1,176 @@
+plugin:
+  enabled: "骗子酒馆 Paper 插件已加载！"
+  disabled: "骗子酒馆 Paper 插件已卸载！"
+
+common:
+  on: "&a开"
+  off: "&c关"
+  enabled: "&6开启"
+  disabled: "&c关闭"
+
+bet-mode:
+  life: "赌命"
+  fantuan: "饭团币"
+  kunkun: "坤坤币"
+
+card:
+  a: "A"
+  q: "Q"
+  k: "K"
+  kun: "坤"
+  demon: "恶魔"
+
+card-type:
+  a: "A"
+  q: "Q"
+  k: "K"
+
+state:
+  idle: "空闲"
+  waiting: "等待中"
+  dealing: "发牌中"
+  playing: "游戏中"
+  resolving: "结算中"
+  ended: "已结束"
+
+craftengine:
+  sync-success: "&a CE 桌椅已同步。"
+  sync-failure: "&e CE 桌椅同步失败，请检查 CraftEngine 家具配置。"
+  sync-create-success: "&a，CE 桌椅已同步。"
+  sync-create-failure: "&e，但 CE 桌椅同步失败，请检查 CraftEngine 家具配置。"
+
+command:
+  only-player: "&c此命令仅限玩家执行。"
+  no-permission: "&c无权限。"
+  placeholder:
+    table-id: "<桌子ID>"
+  usage:
+    set: "&c用法：/liarbar set <桌子ID>"
+    build: "&c用法：/liarbar build <桌子ID>"
+    create: "&c用法：/liarbar create <桌子ID>"
+    delete: "&c用法：/liarbar delete <桌子ID>"
+    join: "&c用法：/liarbar join <桌子ID>"
+    mode: "&c用法：/liarbar mode <桌子ID> <life|fantuan|kunkun>"
+    select: "&c用法：/liarbar select <序号>"
+  table:
+    set: "&a已设置 &6{table}&a 桌坐标。{sync}"
+    built: "&a已为 &6{table}&a 桌同步游戏交互。{sync}"
+    created: "&a成功创建桌子 &6{table}{sync}"
+    deleted: "&a已删除桌子 {table}"
+    exists: "&c桌子 {table} 已存在。"
+    not-found: "&c桌子不存在。"
+    not-found-set-first: "&c桌子不存在，请先用 /liarbar set 设置坐标。"
+    not-found-or-not-in-game: "&c桌子不存在或你不在任何游戏中。"
+  gambling:
+    status: "&e赌博模式：{state}"
+    changed: "&a赌博模式已{state}"
+  join:
+    full: "&c无法加入，座位已满。"
+  leave:
+    not-in-game: "&c你不在任何游戏中。"
+    left: "&e已离开游戏。"
+  mode:
+    changed: "&a已将桌子模式设为：&6{mode}"
+    running: "&c游戏进行中，不能切换模式。"
+  select:
+    invalid-number: "&c请输入有效的序号（1-5）。"
+  info:
+    header: "&6===== 骗子酒馆 桌子列表 ====="
+    empty: "&e暂无桌子。"
+    hint: "&7点击座位实体即可入座，满4人自动开始。"
+  help:
+    - "&6===== 骗子酒馆 Paper 插件 ====="
+    - "&e/liarbar set <ID>&f  设置桌子坐标"
+    - "&e/liarbar build <ID>&f  生成 Display Entity 座位"
+    - "&e/liarbar create <ID>&f  快速创建并保存"
+    - "&e/liarbar delete <ID>&f  删除桌子"
+    - "&7桌子 ID 不限 A-E，例如 lobby_1、vip_2、table_10。"
+    - "&e/liarbar gambling [on|off]&f  开关赌博"
+    - "&e/liarbar join <ID>&f  加入桌子"
+    - "&e/liarbar leave&f  离开游戏"
+    - "&e/liarbar mode <ID> <life|fantuan|kunkun>&f  设置模式"
+    - "&e/liarbar select <1-5>&f  选择手牌"
+    - "&e/liarbar play&f  出牌"
+    - "&e/liarbar challenge&f  质疑上家"
+    - "&e/liarbar start [ID]&f  开始游戏"
+    - "&e/liarbar stop [ID]&f  结束游戏"
+    - "&e/liarbar info&f  查看桌子列表"
+    - "&7也可以直接点击座位实体入座，点击手牌选牌出牌！"
+
+display:
+  status:
+    waiting: "等待玩家加入..."
+    players: "玩家: {count}/4"
+    player-turn: "{player} 的回合"
+    first-turn: "先手回合"
+
+bossbar:
+  turn: "&6{player}&e 的回合  &c{seconds}s&7 | &e主牌 &6{main_card}&7 | &e子弹 &6{bullets}/6"
+
+game:
+  join:
+    use-craftengine-seat: "&e请直接点击 CraftEngine 椅子的红色坐垫入座。"
+    already-other-table: "&c你已经在其他桌了，请先离开当前桌。"
+    running: "&c游戏进行中，请等待下一局。"
+    seat-occupied: "&c这个座位已经有人了。"
+    already-this-table: "&c你已经在本桌了。"
+    joined: "&6{player}&a 加入对局！"
+    paid-joined: "&6{player}&a 支付了 {cost}，加入赌局！"
+  leave:
+    during-game: "&c对局进行中，暂时不能离开座位。"
+    broadcast: "&6{player}&e 离开了游戏。"
+  start:
+    invalid-state: "&c游戏不处于可开始状态。"
+    not-table-player: "&c只有本桌玩家可以开始游戏。"
+    need-players: "&c至少需要 2 名玩家。"
+    started: "&e游戏开始！模式：&6&l{mode}"
+  round:
+    new-main: "&e新的一轮！主牌：&6&l[{ {main_card} }]"
+  turn:
+    title: ">>>你的回合<<<"
+    current: "&e当前是 &6{player}&e 的回合"
+    timeout-challenge: "&6{player}&e 回合超时，自动质疑。"
+    timeout-play: "&6{player}&e 回合超时，自动出牌。"
+  card:
+    not-your-turn: "&c现在不是你的回合。"
+    invalid-index: "&c无效的手牌序号。"
+    selected: "&a已选择第 {index} 张牌 [{card}]"
+    cancelled: "&c已取消第 {index} 张牌"
+    select-first: "&c请先点击选择要出的牌。"
+    max-three: "&c一次最多出 3 张牌。"
+    expired: "&c选择已过期，请重新选择手牌。"
+    demon-single: "&c恶魔牌只能单出！"
+    played: "&6{player}&e 出了 &6{count}&e 张牌。"
+  challenge:
+    no-cards: "&c没有可质疑的牌。"
+    challenged: "&6{player}&e 质疑了 &c&l{target}"
+    reveal-prefix: "&e翻开的牌： "
+    reveal-card: "[{card}] "
+    demon: "&e哦！是&c&l恶魔牌&e，除了出牌者所有人都要挨枪！"
+    liar: "&e不是&c&l主牌&e！&6{player}&e 冲着自己来一枪吧！"
+    truthful: "&e是&c&l主牌&e！&6{player}&e 按下扳机吧！"
+  economy:
+    disabled: "&c经济系统未启用，无法加入赌局。"
+    not-enough: "&c你的余额不足，需要 {cost}。"
+    withdraw-failed: "&c扣费失败。"
+    reward: "&e赢得 &6{reward}&e！"
+  shoot:
+    dead: "&6{player}&4 的脑袋被开了瓢。"
+    blank: "&6{player}&a 运气不错，空弹！子弹剩余 {bullets} 发。"
+  end:
+    forced: "&e游戏被 {player} 强制结束。"
+    forced-random-winner: "&e有人强制结束，随机胜者：&6{player}"
+    deleted: "&e本桌已被删除。"
+    header: "&6&l=== 游戏结束 ==="
+    winner: "&e恭喜 &6&l{player}&e 获得了胜利！"
+    summary: "&a本局获胜：下注模式 {mode} > &6{player}"
+    no-winner: "&e所有玩家都出局了，本局没有胜者。"
+  info: "桌子 {table} 状态：{state} 人数：{players}/4 模式：{mode}"
+
+log:
+  vault-missing: "未检测到 Vault 插件，经济功能将不可用。"
+  vault-provider-missing: "未找到 Vault 经济服务提供者。"
+  vault-connected: "Vault 经济系统已连接：{provider}"
+  vault-unknown-provider: "未知"
+  vault-withdraw-failed: "Vault 扣费失败: {player} 扣 {amount}: {error}"
+  vault-deposit-failed: "Vault 存款失败: {player} 存 {amount}: {error}"

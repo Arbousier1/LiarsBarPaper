@@ -1,9 +1,9 @@
 package com.jijifujiji.liarsbar.game;
 
 public enum BetMode {
-    LIFE("赌命"),
-    FANTUAN("饭团币"),
-    KUNKUN("坤坤币");
+    LIFE("Life"),
+    FANTUAN("Fantuan Coins"),
+    KUNKUN("Kunkun Coins");
 
     private final String display;
 

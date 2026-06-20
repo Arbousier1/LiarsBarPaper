@@ -79,10 +79,20 @@ public final class CraftEngineFurnitureBridge {
     public boolean isLiarsBarFurniture(Object furniture) {
         if (furniture == null) return false;
         try {
-            return isLiarsBarFurnitureId(furnitureId(furniture));
+            if (isLiarsBarFurnitureId(furnitureId(furniture))) {
+                return true;
+            }
         } catch (ReflectiveOperationException | RuntimeException ignored) {
-            return false;
         }
+        return isLiarsBarFurnitureEntity(placedFurnitureEntity(furniture));
+    }
+
+    public boolean isLiarsBarFurnitureEntity(Entity entity) {
+        if (entity == null) return false;
+        if (entity.getScoreboardTags().contains(AUTO_FURNITURE_TAG)) {
+            return true;
+        }
+        return isLiarsBarFurnitureId(persistentFurnitureId(entity));
     }
 
     private boolean placeFurniture(String furnitureId, String tableId, Location location) {
@@ -184,7 +194,12 @@ public final class CraftEngineFurnitureBridge {
     }
 
     private String furnitureId(Object furniture) throws ReflectiveOperationException {
-        Object config = furniture.getClass().getField("config").get(furniture);
+        Object config;
+        try {
+            config = furniture.getClass().getField("config").get(furniture);
+        } catch (NoSuchFieldException ignored) {
+            config = furniture.getClass().getMethod("config").invoke(furniture);
+        }
         Object id = config.getClass().getMethod("id").invoke(config);
         return id == null ? "" : id.toString();
     }

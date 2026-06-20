@@ -4,8 +4,8 @@ public enum Card {
     A("A", "liarsbar:card_a", 9999450),
     Q("Q", "liarsbar:card_q", 9999451),
     K("K", "liarsbar:card_k", 9999452),
-    KUN("坤", "liarsbar:card_kun", 9999453),
-    DEMON("恶魔", "liarsbar:card_demon", 9999454);
+    KUN("KUN", "liarsbar:card_kun", 9999453),
+    DEMON("Demon", "liarsbar:card_demon", 9999454);
 
     private final String display;
     private final String itemModel;

@@ -36,7 +36,9 @@ public class LiarBarTabCompleter implements TabCompleter {
             }
         } else if (args.length == 2) {
             String sub = args[0].toLowerCase();
-            if (sub.equals("create") || sub.equals("set") || sub.equals("build")) return List.of("<桌子ID>");
+            if (sub.equals("create") || sub.equals("set") || sub.equals("build")) {
+                return List.of(plugin.messages().plain("command.placeholder.table-id"));
+            }
             if (sub.equals("select")) {
                 return Arrays.asList("1", "2", "3", "4", "5");
             }

@@ -7,6 +7,7 @@ import com.jijifujiji.liarsbar.display.CraftEngineFurnitureBridge;
 import com.jijifujiji.liarsbar.display.DisplayManager;
 import com.jijifujiji.liarsbar.game.EconomyManager;
 import com.jijifujiji.liarsbar.game.TableManager;
+import com.jijifujiji.liarsbar.i18n.Messages;
 import com.jijifujiji.liarsbar.listener.CraftEngineFurnitureInteractListener;
 import com.jijifujiji.liarsbar.listener.EntityInteractListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,7 @@ public final class LiarsBarPlugin extends JavaPlugin {
     private static LiarsBarPlugin instance;
     private static final String CRAFT_ENGINE_BUNDLE_ROOT = "craftengine/liarsbar";
     private ConfigManager configManager;
+    private Messages messages;
     private EconomyManager economyManager;
     private TableManager tableManager;
     private CraftEngineFurnitureBridge craftEngineFurnitureBridge;
@@ -37,7 +39,8 @@ public final class LiarsBarPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         this.configManager = new ConfigManager(this);
-        this.economyManager = new EconomyManager(getLogger());
+        this.messages = new Messages(this);
+        this.economyManager = new EconomyManager(getLogger(), messages);
         this.economyManager.setup();
         this.craftEngineFurnitureBridge = new CraftEngineFurnitureBridge(this);
         this.tableManager = new TableManager(this, configManager);
@@ -47,18 +50,21 @@ public final class LiarsBarPlugin extends JavaPlugin {
         CraftEngineFurnitureInteractListener.register(this);
         getServer().getPluginManager().registerEvents(new EntityInteractListener(this), this);
 
-        getLogger().info("骗子酒馆 Paper 插件已加载！");
+        getLogger().info(messages.plain("plugin.enabled"));
     }
 
     @Override
     public void onDisable() {
         if (tableManager != null) tableManager.shutdownAll();
         DisplayManager.clearAll();
-        getLogger().info("骗子酒馆 Paper 插件已卸载！");
+        if (messages != null) {
+            getLogger().info(messages.plain("plugin.disabled"));
+        }
     }
 
     public static LiarsBarPlugin getInstance() { return instance; }
     public ConfigManager getConfigManager() { return configManager; }
+    public Messages messages() { return messages; }
     public EconomyManager getEconomyManager() { return economyManager; }
     public TableManager getTableManager() { return tableManager; }
     public CraftEngineFurnitureBridge getCraftEngineFurnitureBridge() { return craftEngineFurnitureBridge; }
