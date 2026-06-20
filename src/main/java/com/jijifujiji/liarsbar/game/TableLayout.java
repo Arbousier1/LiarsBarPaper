@@ -85,8 +85,7 @@ public final class TableLayout {
     }
 
     private static float chairYaw(int seatIndex) {
-        float yaw = SEAT_YAWS[seatIndex] + 180f;
-        return yaw > 180f ? yaw - 360f : yaw;
+        return SEAT_YAWS[seatIndex];
     }
 
     private static double seatX(int seatIndex) {
