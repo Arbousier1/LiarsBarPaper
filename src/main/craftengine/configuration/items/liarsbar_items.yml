@@ -153,42 +153,42 @@ furniture:
           - position: -0.75,0,-0.47
             type: shulker
             direction: up
-            peek: 76
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
           - position: 0,0,-0.47
             type: shulker
             direction: up
-            peek: 76
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
           - position: 0.75,0,-0.47
             type: shulker
             direction: up
-            peek: 76
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
           - position: -0.75,0,0.47
             type: shulker
             direction: up
-            peek: 76
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
           - position: 0,0,0.47
             type: shulker
             direction: up
-            peek: 76
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
           - position: 0.75,0,0.47
             type: shulker
             direction: up
-            peek: 76
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
@@ -225,7 +225,7 @@ furniture:
           - position: 0,0,0
             type: shulker
             direction: up
-            peek: 100
+            peek: 0
             blocks_building: true
             interactive: true
             interaction_entity: true
