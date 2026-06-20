@@ -149,24 +149,46 @@ furniture:
             shadow_radius: 1.2
             shadow_strength: 0.35
         hitboxes:
-          - position: -0.9,0,0
+          # Model footprint: X -1.25..1.25, Z -0.9375..0.9375, top ~0.76 after element translation.
+          - position: -0.75,0,-0.47
             type: shulker
             direction: up
-            peek: 100
+            peek: 76
             blocks_building: true
             interactive: true
             interaction_entity: true
-          - position: 0,0,0
+          - position: 0,0,-0.47
             type: shulker
             direction: up
-            peek: 100
+            peek: 76
             blocks_building: true
             interactive: true
             interaction_entity: true
-          - position: 0.9,0,0
+          - position: 0.75,0,-0.47
             type: shulker
             direction: up
-            peek: 100
+            peek: 76
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+          - position: -0.75,0,0.47
+            type: shulker
+            direction: up
+            peek: 76
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+          - position: 0,0,0.47
+            type: shulker
+            direction: up
+            peek: 76
+            blocks_building: true
+            interactive: true
+            interaction_entity: true
+          - position: 0.75,0,0.47
+            type: shulker
+            direction: up
+            peek: 76
             blocks_building: true
             interactive: true
             interaction_entity: true
@@ -198,15 +220,17 @@ furniture:
             shadow_radius: 0.55
             shadow_strength: 0.35
         hitboxes:
+          # Model footprint: X/Z about -0.39..0.39; full-height hitbox follows the chair back.
+          # Seat Y matches the red cushion top: 0.42 + ((7.65 - 8) / 16) ~= 0.40.
           - position: 0,0,0
             type: shulker
             direction: up
-            peek: 70
+            peek: 100
             blocks_building: true
             interactive: true
             interaction_entity: true
             seats:
-              - 0,0,-0.12 0
+              - 0,0.40,-0.12 0
     loot:
       template: default:loot_table/furniture
       arguments:
